@@ -1,28 +1,50 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">现保科技</router-link>
-    </div>
-    <router-view/>
+    <router-view class="router-view" />
   </div>
 </template>
 
-<style lang="less">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+export default {
+  name: 'App',
+  created() {
+    var resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+    window.addEventListener(resizeEvt, subRecalc, false);
+    document.addEventListener('DOMContentLoaded', subRecalc, false);
+    function subRecalc(){
+      var docEl = document.documentElement,
+      clientWidth = Math.min( window.innerWidth , docEl.clientWidth );
+      docEl.style.fontSize = ( clientWidth / 750 * 100)+"px";
     }
   }
 }
+</script>
+
+<style lang="less">
+  html,body{
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    color: #444444;
+  }
+  html {overflow-x: hidden;height: 100%;}
+  body{
+    font-size: .28em;
+    line-height: 1;
+    -webkit-overflow-scrolling:touch;
+  }
+  #app,.router-view {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  .router-view{
+    overflow: auto;
+  }
+  .icon {
+       width: 1em; height: 1em;
+       vertical-align: -0.15em;
+       fill: currentColor;
+       overflow: hidden;
+    }
 </style>
