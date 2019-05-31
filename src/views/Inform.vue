@@ -168,6 +168,7 @@
 </template>
 
 <script>
+import { getBeneficiaryDetail } from "@/api/beneficiary";
 export default {
   components: {},
   props: {},
@@ -176,14 +177,25 @@ export default {
       value: false,
       value1: "",
       username: "",
-      text: ''
+      text: '',
+      form: {}
     };
   },
   computed: {},
   watch: {},
   created() {},
-  mounted() {},
-  methods: {}
+  mounted() {
+    let policyId =  this.$route.query.policyId || '2266434895041527813',
+    this.getData(policyId);
+  },
+  methods: {
+    getData(policyId) {
+      getBeneficiaryDetail(policyId).then(res => {
+        console.log(res)
+        this.form = res
+      });
+    }
+  }
 };
 </script>
 <style lang="less" scoped>

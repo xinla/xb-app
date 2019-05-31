@@ -1,15 +1,29 @@
 import axios from '@/libs/api.request'
 import config from '@/config'
 
-const service = config.services.beneficiary
+const controller = config.controllers.beneficiary
+
+/**
+ * 查看权益
+ * @param {*} data 
+ */
+export const getBeneficiaryDetail = (data) => {
+  return axios.request({
+    url: `/getPolicyRight/${data.policyId}/${data.insuredCurrentAge}/${data.insuredMaxAge}/${data.insuredCountAge}`,
+    method: 'GET',
+    headers: {
+      auth_token: data.token
+    }
+  })
+}
 
 /**
  * 保单id查询受益人信息
  * @param {*} 投保单id 
  */
-export const getBeneficiaryDetail = (id) => {
+export const getBeneficiaryMemmberDetail = (id) => {
   return axios.request({
-    url: service + `/${id}`,
+    url: controller + `/${id}`,
     method: 'get'
   })
 }
@@ -20,7 +34,7 @@ export const getBeneficiaryDetail = (id) => {
  */
 export const saveBeneficiary = (data) => {
   return axios.request({
-    url: service + `/saveOrUpdatePolicyBeneficiary`,
+    url: controller + `/saveOrUpdatePolicyBeneficiary`,
     method: 'post',
     data,
   })

@@ -9,7 +9,7 @@
           <use xlink:href="#icon_letter"></use>
         </svg>
         <span class="arrows arrows-right"></span>
-        <span>邓超</span>先生
+        <span>{{result.applicantName}}</span>先生
       </div>
 
       <div class="relation-wrap">
@@ -17,26 +17,26 @@
           <svg class="icon icon-title icon_loverelationship" aria-hidden="true">
             <use xlink:href="#icon_loverelationship"></use>
           </svg>
-          <span>关爱关系</span>
+          <span>{{result.applicantRelationInsured}}关系</span>
         </div>
         <ul class="relation-ul">
           <li class="relation-li">
-            <p class="value">邓超</p>
+            <p class="value">{{result.applicantName}}</p>
             <p class="key">投保人</p>
           </li>
           <li class="relation-li">
-            <p class="value">邓超</p>
-            <p class="key">投保人</p>
+            <p class="value">{{result.insuredName}}</p>
+            <p class="key">被保人</p>
           </li>
           <li class="relation-li">
-            <p class="value">邓超</p>
-            <p class="key">投保人</p>
+            <p class="value">{{result.insuredAge}}</p>
+            <p class="key">被保人年龄</p>
           </li>
           <li class="relation-li">
-            <p class="value">邓超</p>
-            <p class="key">投保人</p>
+            <p class="value">{{result.applicantRelationInsured}}</p>
+            <p class="key">关系</p>
           </li>
-        </ul>
+        </ul> 
       </div>
     </div>
 
@@ -47,46 +47,52 @@
         </svg>
         <span>投保计划</span>
       </div>
-      <div class="title">
-        <svg class="icon icon-title icon_zhuxian" aria-hidden="true">
-          <use xlink:href="#icon_zhuxian"></use>
-        </svg>
-        <span>投保计划</span>
-      </div>
-      <div class="content">
-        <div class="item-wrap">
-          <div class="item">
-            <p class="key">保险额度</p>
-            <p class="value">100万</p>
-          </div>
-          <div class="item">
-            <p class="key">保险额度</p>
-            <p class="value">100万</p>
-          </div>
+ 
+      <div v-for="(item, index) in result.vitPolicyRightRiskVoList" :key="index">
+        <div class="title">
+          <svg v-if="index === 0" class="icon icon-title icon_zhuxian" aria-hidden="true" :key="0">
+            <use xlink:href="#icon_zhuxian"></use>
+          </svg>
+          <svg v-if="index === 1" class="icon icon-title icon_fuxian" aria-hidden="true" :key="1">
+            <use xlink:href="#icon_fuxian"></use>
+          </svg>
+          <span>{{item.productName}}</span>
         </div>
-        <div class="item-wrap">
-          <div class="item">
-            <p class="key">保险额度</p>
-            <p class="value">100万</p>
-          </div>
-          <div class="item">
-            <p class="key">保险额度</p>
-            <p class="value">100万</p>
-          </div>
-        </div>
-        <div class="item-wrap" style="line-height:1.4rem;">
-          <div class="item">
-            <p class="key">保费</p>
+        <div class="content">
+          <div class="item-wrap">
+            <div class="item">
+              <p class="key">保障额度</p>
+              <p class="value">{{item.guaranteeName}}</p>
             </div>
-          <div class="item">
-            <span class="blue">￥1000</span>
-            <span class="key">万/年</span>
+            <div class="item">
+              <p class="key">保障期间</p>
+              <p class="value">{{item.policyPeriodName}}</p>
+            </div>
+          </div>
+          <div class="item-wrap">
+            <div class="item">
+              <p class="key">交费额度</p>
+              <p class="value">{{item.paymentPeriodName}}</p>
+            </div>
+            <div class="item">
+              <p class="key">交费方式</p>
+              <p class="value">{{item.paymentMethodName}}</p>
+            </div>
+          </div>
+          <div class="item-wrap" style="line-height:1.4rem;">
+            <div class="item">
+              <p class="key">保费</p>
+            </div>
+            <div class="item">
+              <span class="blue">￥{{item.premium}}</span>
+              <span class="key">万/年</span>
+            </div>
           </div>
         </div>
+        <div class="blue ac" style="padding: .4rem 0 .2rem;">查看保单条款详情></div>
       </div>
-      <div class="blue ac" style="padding: .4rem 0 .2rem;">查看保单条款详情></div>
 
-      <div class="title">
+      <!-- <div class="title">
         <svg class="icon icon-title icon_fuxian" aria-hidden="true">
           <use xlink:href="#icon_fuxian"></use>
         </svg>
@@ -120,19 +126,21 @@
           </div>
         </div>
       </div>
-      <div class="blue ac" style="padding: .4rem 0 .2rem;">查看保单条款详情></div>
+      <div class="blue ac" style="padding: .4rem 0 .2rem;">查看保单条款详情></div> -->
+
     </div>
 
     <div class="container1">
+      
       <div class="title title-boder" style="border-bottom: 1px solid #f1f3f5;">
         <svg class="icon icon-title icon_liyi" aria-hidden="true">
           <use xlink:href="#icon_liyi"></use>
         </svg>
         <span>利益说明</span>
       </div>
-      
+
       <div style="margin: .8rem 0 .3rem;">
-        <mt-range v-model="rangeValue" :min="10" :max="90" :step="1">
+        <mt-range v-model="result.insuredAge" :min="10" :max="90" :step="1">
           <div slot="start">
             <svg class="icon icon_add_circle" aria-hidden="true" style="margin-right: 10px;">
               <use xlink:href="#icon_add_circle"></use>
@@ -146,54 +154,56 @@
         </mt-range>
       </div>
 
-      <div class="title">
-        <span>长城吉康人生重大疾病保险</span>
-      </div>
-      <div class="content">
-        <div class="title2">
-          <svg class="icon icon-title icon_baofei" aria-hidden="true">
-            <use xlink:href="#icon_baofei"></use>
-          </svg>
-          <span>保费</span>
+      <div v-for="(item, index) in result.vitPolicyRightRiskVoList" :key="index">
+        <div class="title">
+          <span>{{item.productName}}</span>
         </div>
-        <div style="line-height: 1rem;">
-          <div class="item">
-            <p class="key al">当前保费</p>
+        <div class="content">
+          <div class="title2">
+            <svg class="icon icon-title icon_baofei" aria-hidden="true">
+              <use xlink:href="#icon_baofei"></use>
+            </svg>
+            <span>保费</span>
           </div>
-          <div class="item">
-            <p class="value ar">100万</p>
+          <div style="line-height: 1rem;">
+            <div class="item">
+              <p class="key al">当期保费</p>
+            </div>
+            <div class="item">
+              <p class="value ar">{{item.currentPremium}}</p>
+            </div>
+          </div>
+          <div style="line-height: 1rem;">
+            <div class="item">
+              <p class="key al">累计保费</p>
+            </div>
+            <div class="item">
+              <p class="value ar">{{item.totalPremium}}</p>
+            </div>
           </div>
         </div>
-        <div style="line-height: 1rem;">
-          <div class="item">
-            <p class="key al">保险额度</p>
+
+        <div class="content" v-for="(item, index) in JSON.parse(item.insurableInterest)" :key="index">
+          <div class="title2">
+            <svg class="icon icon-title icon_bao" aria-hidden="true">
+              <use xlink:href="#icon_bao"></use>
+            </svg>
+            <span>{{item.scheduleName}}</span>
           </div>
-          <div class="item">
-            <p class="value ar">100万</p>
+          <div style="padding: .2rem 0;line-height: .8rem;">
+            <div v-for="(unit, unqiue) in item.content" :key="unqiue">
+              <div class="item">
+                <p class="key al">{{unit.title}}</p>
+              </div>
+              <div class="item">
+                <p class="yellow ar">{{unit.algorithmValue}}</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="content">
-        <div class="title2">
-          <svg class="icon icon-title icon_bao" aria-hidden="true">
-            <use xlink:href="#icon_bao"></use>
-          </svg>
-          <span>保险金</span>
-        </div>
-        <div style="padding: .2rem 0;line-height: .8rem;">
-          <div v-for="item in 10" :key="item">
-            <div class="item">
-              <p class="key al">当前保费</p>
-            </div>
-            <div class="item">
-              <p class="yellow ar">100万</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="title">
+      <!-- <div class="title">
         <span>长城附加意外上海保险（2014）</span>
       </div>
       <div class="content">
@@ -241,44 +251,71 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="content">
         <div class="title2">
           <svg class="icon icon-title icon_baofei" aria-hidden="true">
             <use xlink:href="#icon_baofei"></use>
           </svg>
-          <span>保费合计</span>
+          <span>合计保费</span>
         </div>
         <div class="item-wrap2">
-          <div v-for="item in 2" :key="item" class="item-wrap2">
+          <div class="item-wrap2">
             <div class="item">
-              <p class="key al">未从公费</p>
+              <p class="key al">合计当期保费</p>
             </div>
             <div class="item">
-              <p class="yellow ar">100万</p>
+              <p class="yellow ar">{{result.currentTotalPremium}}</p>
+            </div>
+          </div>
+          <div class="item-wrap2">
+            <div class="item">
+              <p class="key al">合计累计保费</p>
+            </div>
+            <div class="item">
+              <p class="yellow ar">{{result.countTotalPremium}}</p>
             </div>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
 
 <script>
+import { getBeneficiaryDetail } from "@/api/beneficiary";
 export default {
   components: {},
   props: {},
   data() {
     return {
-      rangeValue: 37
+      rangeValue: 37,
+      result: {}
     };
   },
   computed: {},
   watch: {},
   created() {},
-  mounted() {},
-  methods: {}
+  mounted() {
+    let query = {
+      policyId: this.$route.query.policyId || '2266434895041527813',
+      insuredCurrentAge: this.$route.query.insuredCurrentAge || 22,
+      insuredMaxAge: this.$route.query.insuredMaxAge || 64,
+      insuredCountAge: this.$route.query.insuredCountAge || 28,
+      token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU1OTMxMDI5OSwiaWF0IjoxNTU5MzA2Njk5LCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.c0MFlDEumriUFvsBybnPrLTUD9NZ2Mb-vdZP-sPP9Hg'
+    }
+    this.getData(query);
+  },
+  methods: {
+    getData(query) {
+      getBeneficiaryDetail(query).then(res => {
+        console.log(res)
+        this.result = res
+      });
+    }
+  }
 };
 </script>
 <style lang="less" scoped>
@@ -307,7 +344,7 @@ export default {
   display: inline-block;
   width: 20%;
   height: 0.3rem;
-  margin: 0 .3rem;
+  margin: 0 0.3rem;
   border: 1px solid #f1f3f5;
   border-top-color: transparent;
 }
@@ -341,7 +378,7 @@ export default {
     &:last-child {
       border: 0;
     }
-    .key{
+    .key {
       color: #a6abb7;
     }
   }
@@ -392,15 +429,15 @@ export default {
 }
 
 // range 下指向箭头
-/deep/.range-tip::after{
-      content: "";
-    display: block;
-    width: 0;
-    height: 0;
-    border: 5px solid transparent;
-    border-top-color: rgb(101, 130, 255);
-    position: relative;
-    top: 0px;
-    left: 36%;
+/deep/.range-tip::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  border: 5px solid transparent;
+  border-top-color: rgb(101, 130, 255);
+  position: relative;
+  top: 0px;
+  left: 36%;
 }
 </style>

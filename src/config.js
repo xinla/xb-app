@@ -1,13 +1,13 @@
 const config = {
   baseUrl: {
     // dev: 'http://192.168.1.55', // 虚拟机
-    dev: 'http://192.168.1.11:1314/api/policy-service/v1/policy', // 本地
+    dev: 'http://192.168.1.11:8888/api/policy-service/v1/policy', // 本地
     dev2: 'http://192.168.1.21:8115/v1',
     pro: 'https://produce.com'
   },
 }
 
-config.services = {
+config.controllers = {
   company: '/xbcompany',
   menuSet: '/xbBasePermissionMenu',
   systemHelp: '/xbSystemHelp',
