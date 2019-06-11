@@ -8,28 +8,10 @@ const config = {
 }
 
 config.controllers = {
-  company: '/xbcompany',
-  menuSet: '/xbBasePermissionMenu',
-  systemHelp: '/xbSystemHelp',
-  system: '/system',
-  user: '/user',
-  systemMessage: '/imNoticeMsg',
-  businessInformation: '/xbCompanyBusinessInformation',
-  product: '/product',
-  supplier: '/xbsupplier',
-  supplierUser: '/xbSupplierUser',
-  supplierOrganization: '/xbSupplierOrganization',
-  supplierNews: '/xbSupplierNews',
-  typeRule: '/typeRule',
-  profession: '/xbProfession',
-  roleGroup: '/roleGroup',
-  role: '/role',
-  nationality: '/vitNationality',
-  policyDictCategory: '/policyDictCategory',
 
   beneficiary: '/beneficiary',
-  role: '/role',
-  role: '/role',
+  inform: '/tellInfo',
+  product: '/product',
   role: '/role',
 
 

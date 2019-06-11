@@ -140,13 +140,13 @@
       </div>
 
       <div style="margin: .8rem 0 .3rem;">
-        <mt-range v-model="result.insuredAge" :min="10" :max="90" :step="1">
-          <div slot="start">
+        <mt-range v-model="age" :min="query.insuredCurrentAge" :max="query.insuredMaxAge" :step="1" :key='query.insuredCountAge'>
+          <div slot="start" @click="age++">
             <svg class="icon icon_add_circle" aria-hidden="true" style="margin-right: 10px;">
               <use xlink:href="#icon_add_circle"></use>
-            </svg>
+            </svg>{{query.insuredCurrentAge}}
           </div>
-          <div slot="end">
+          <div slot="end" @click="age--">
             <svg class="icon icon_reduce_circle" aria-hidden="true" style="margin-left: 10px;">
               <use xlink:href="#icon_reduce_circle"></use>
             </svg>
@@ -285,33 +285,57 @@
 </template>
 
 <script>
-import { getBeneficiaryDetail } from "@/api/beneficiary";
+import { getBeneficiaryDetail, getInsuredAgeRange } from "@/api/beneficiary";
 export default {
   components: {},
   props: {},
   data() {
     return {
-      rangeValue: 37,
-      result: {}
+      query: {
+        id: '',
+        insuredCurrentAge: 0,
+        insuredMaxAge: 0,
+        insuredCountAge: undefined,
+        token: '',
+      },
+      age: undefined,
+      result: {},
+      timer: undefined
     };
   },
   computed: {},
-  watch: {},
+  watch: {
+    'age'() {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.query.insuredCountAge = this.age
+        this.getData()
+      }, 500)
+    }
+  },
   created() {},
   mounted() {
-    let query = {
-      policyId: this.$route.query.policyId || '2266434895041527813',
-      insuredCurrentAge: this.$route.query.insuredCurrentAge || 22,
-      insuredMaxAge: this.$route.query.insuredMaxAge || 64,
-      insuredCountAge: this.$route.query.insuredCountAge || 28,
-      token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU1OTMxMDI5OSwiaWF0IjoxNTU5MzA2Njk5LCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.c0MFlDEumriUFvsBybnPrLTUD9NZ2Mb-vdZP-sPP9Hg'
+    this.query = {
+      id: this.$route.query.id || '2266434895041527813',
+      token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU1OTM4MDQ1MywiaWF0IjoxNTU5Mzc2ODUzLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.tOcwghVeSUi62W4u9XNx0dAaduI7vOgIjLanuRCFTx4'
     }
-    this.getData(query);
+    this.init();
   },
   methods: {
-    getData(query) {
-      getBeneficiaryDetail(query).then(res => {
-        console.log(res)
+    init() {
+      getInsuredAgeRange(this.query).then(res => {
+        // console.log(res)
+        this.query.insuredCurrentAge = res.currentAge
+        this.query.insuredMaxAge = res.maxAge
+        this.query.insuredCountAge = res.currentAge
+        this.age = res.currentAge
+        this.getData()
+      })
+    },
+    getData() {
+      // console.log(this.query)
+      getBeneficiaryDetail(this.query).then(res => {
+        // console.log(res)
         this.result = res
       });
     }

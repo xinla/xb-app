@@ -1,27 +1,18 @@
 <template>
   <div class="main" @scroll="scroll">
-    <img src="@/assets/banner@2x.png" class="banner">
+    <img :src="product.webBanner" class="banner">
 
     <div class="tab-wrap">
-      <div class="tab-title">保障利益</div>
-      <mt-tab-container value="1" swipeable>
-        <mt-tab-container-item id="1">
+      <div class="tab-title" v-for="(item, index) in product.insurableInterest" :key="index">{{item.scheduleName}}</div>
+      <mt-tab-container v-model="tabActive" swipeable>
+        <mt-tab-container-item v-for="(item, index) in product.insurableInterest" :key="index" :id="index" >
           <ul class="tab1">
-            <li>
-              <span>标题文字</span>
-              <span class="fr">标题文字</span>
-            </li>
-            <li>
-              <span>标题文字</span>
-              <span class="fr">标题文字</span>
-            </li>
-            <li>
-              <span>标题文字</span>
-              <span class="fr">标题文字</span>
+            <li v-for="(unit, unique) in item.content" :key="unique">
+              <span>{{unit.title}}</span>
+              <span class="fr">{{unit.algorithm}}</span>
             </li>
           </ul>
         </mt-tab-container-item>
-        <mt-tab-container-item id="2">874989654sfawef wr</mt-tab-container-item>
       </mt-tab-container>
     </div>
 
@@ -41,26 +32,57 @@
     </ul>
     <mt-tab-container v-model="active" swipeable>
       <mt-tab-container-item id="1">
-        <img src="@/assets/test.png" alt="">
-        </ul>
+        <img :src="product.descPicture" alt="">
+        <!-- </ul> -->
       </mt-tab-container-item>
       <mt-tab-container-item id="2">874989654sfawef wr</mt-tab-container-item>
+      <mt-tab-container-item id="3">
+        <div class="insurance-text" v-html="product.underwritingRulesText"></div>
+      </mt-tab-container-item>
+      <mt-tab-container-item id="4">
+        <!-- <object v-for="(item, index) in product.attachment.productCourse" width="100%" height="100%" :data="item.url" type="application/pdf" :key="index">
+            <embed :src="item.url" type="application/pdf" :key="index">
+                <p>This browser does not support PDFs. Please download the PDF to view it: <a :href="item.url">Download PDF</a>.</p>
+            </embed>
+        </object> -->
+        <img v-for="(item, index) in product.attachment.productCourse" :src="item.url" :key="index">
+      </mt-tab-container-item>
     </mt-tab-container>
   </div>
 </template>
 
 <script>
+import { getProductDetail } from "@/api/product";
+
 export default {
   data() {
     return {
+      tabActive: 0,
       active: "1",
-      offsetTop: 0
+      offsetTop: 0,
+      product: {
+        attachment:{}
+      }
     };
   },
   mounted() {
+    let query = {
+      id: this.$route.query.id || '2266402544886480903',
+      token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDE1MDczOCwiaWF0IjoxNTYwMTQ3MTM4LCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.J0Mcx9__QX9TG2Ljyy7eGQuOBtBuIS1tQ7qdrB1Ttt4'
+    }
+    this.getData(query)
+    
     this.offsetTop = this.$refs['tab2-title-wrap'].offsetTop
   },
   methods: {
+    getData(query) {
+      getProductDetail(query).then(res =>{
+        res.insurableInterest = JSON.parse(res.insurableInterest) || []
+        res.attachment.productCourse = JSON.parse(res.attachment.productCourse) || []
+        this.product = res
+        console.log(res)
+      })
+    },
     scroll($event) {
       // console.log(this.$refs['tab2-title-wrap'].offsetTop)
       if ($event.target.scrollTop >= this.offsetTop) {
@@ -124,6 +146,9 @@ export default {
     border-radius: 3px;
     margin: 0 auto;
   }
+}
+.insurance-text{
+  margin: .2rem;
 }
 </style>
 

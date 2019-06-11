@@ -3,71 +3,239 @@
     <div class="container">
       <div class="title">
         <b>健康告知</b>
-        <span class="button">查看全部</span>
-        <span class="button">查看提示</span>
+        <!-- <span class="button">查看全部</span>
+        <span class="button">查看提示</span>-->
       </div>
 
-      <div class="number-line">2</div>
-
       <div>
-        <p>
-          您是否每日吸烟超过10支，若是，请详述每日吸烟支数
-          及吸烟年限；每日饮酒（白酒）超过100毫升？或是，
-          请详述饮酒量、饮酒年限。
-        </p>
-        <div class="switch-wrap">
-          <div class="half">
-            投保人
-            <mt-switch v-model="value"></mt-switch>
-          </div>
-          <div class="half">
-            被保人
-            <mt-switch v-model="value"></mt-switch>
-          </div>
-        </div>
+        <div v-for="(item, index) in healthTell" :key="index">
+          <div class="number-line">{{index + 1}}</div>
+          <p v-if="item.index != 7">{{listQuestionHealthTell[item.index].question}}</p>
 
-        <div class="input-wrap">
-          <div class="title2">被保人吸烟情况</div>
-          <div class="half">
-            吸烟
-            <input class="input" v-model="username">年
-          </div>
-          <div class="half">
-            每天
-            <input class="input" v-model="username">支
-          </div>
-        </div>
+          <template v-if="!([1,12].includes(item.index))">
+            <div v-for="(unit, unique) in item.answers" :key="'a' + unique">
+              <p
+                v-if="healthTell[index].children"
+              >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
+              <div class="switch-wrap">
+                <div class="half">
+                  投保人
+                  <mt-switch v-model="unit.applicant"></mt-switch>
+                </div>
+                <div class="half">
+                  被保人
+                  <mt-switch v-model="unit.insured"></mt-switch>
+                </div>
+              </div>
 
-        <div class="input-wrap">
-          <div class="title2">被保人饮酒情况</div>
-          <div class="half">
-            喝酒
-            <input class="input" v-model="username">年
-          </div>
-          <div class="half">
-            喝酒
-            <input class="input" v-model="username">两
-          </div>
-        </div>
-
-        <div class="number-line">3</div>
-
-        <div>
-          <p>是否曾经或正在使用任何成瘾药物，如镇静安眠剂、迷幻药、吸食有机溶剂或毒品。</p>
-          <div class="switch-wrap">
-            <div class="half">
-              投保人
-              <mt-switch v-model="value"></mt-switch>
+              <template v-if="item.index === 11 && unique === 0"></template>
             </div>
-            <div class="half">
-              被保人
-              <mt-switch v-model="value"></mt-switch>
+          </template>
+
+          <template v-if="item.index === 1">
+            <div v-for="(unit, unique) in item.answers" :key="'b' + unique">
+              <div class="input-wrap">
+                <div class="title2">投保人</div>
+                <div class="half">
+                  身高
+                  <input class="input" v-model="unit.applicantContent.height">厘米
+                </div>
+                <div class="half">
+                  体重
+                  <input class="input" v-model="unit.applicantContent.weight">公斤
+                </div>
+              </div>
+
+              <div class="input-wrap">
+                <div class="title2">被保人</div>
+                <div class="half">
+                  身高
+                  <input class="input" v-model="unit.insuredContent.height">厘米
+                </div>
+                <div class="half">
+                  体重
+                  <input class="input" v-model="unit.insuredContent.weight">公斤
+                </div>
+              </div>
             </div>
-          </div>
+          </template>
+
+          <template v-if="item.index === 2">
+            <div v-for="(unit, unique) in item.answers" :key="'c' + unique">
+              <div class="input-wrap">
+                <div class="title2">投保人吸烟情况</div>
+                <div class="half">
+                  吸烟
+                  <input class="input" v-model="unit.applicantContent.smokeYear">年
+                </div>
+                <div class="half">
+                  每天
+                  <input class="input" v-model="unit.applicantContent.smokeNumEveryDay">支
+                </div>
+                <div class="half">
+                  若已戒烟，戒烟
+                  <input class="input" v-model="unit.applicantContent.stopSmoke">年
+                </div>
+                <div class="half">
+                  原因
+                  <input class="input" v-model="unit.applicantContent.stopReason">
+                </div>
+              </div>
+
+              <div class="input-wrap">
+                <div class="title2">被保人吸烟情况</div>
+                <div class="half">
+                  吸烟
+                  <input class="input" v-model="unit.insuredContent.smokeYear">年
+                </div>
+                <div class="half">
+                  每天
+                  <input class="input" v-model="unit.insuredContent.smokeNumEveryDay">支
+                </div>
+                <div class="half">
+                  若已戒烟，戒烟
+                  <input class="input" v-model="unit.insuredContent.stopSmoke">年
+                </div>
+                <div class="half">
+                  原因
+                  <input class="input" v-model="unit.insuredContent.stopReason">
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <template v-if="item.index === 3">
+            <div v-for="(unit, unique) in item.answers" :key="unique">
+              <div class="input-wrap">
+                <div class="title2">投保人情况</div>
+                <div class="half">
+                  喝酒
+                  <input class="input" v-model="unit.applicantContent.drinkYear">年
+                </div>
+                <div class="half">
+                  每天
+                  <input class="input" v-model="unit.applicantContent.drinkNumEveryTime">两
+                </div>
+                <div class="half">
+                  若已戒酒，戒酒
+                  <input class="input" v-model="unit.applicantContent.stopDrink">年
+                </div>
+                <div class="half">
+                  原因
+                  <input class="input" v-model="unit.applicantContent.stopReason">
+                </div>
+              </div>
+
+              <div class="input-wrap">
+                <div class="title2">被保人饮酒情况</div>
+                <div class="half">
+                  喝酒
+                  <input class="input" v-model="unit.insuredContent.drinkYear">年
+                </div>
+                <div class="half">
+                  每天
+                  <input class="input" v-model="unit.insuredContent.drinkNumEveryTime">两
+                </div>
+                <div class="half">
+                  若已戒酒，戒酒
+                  <input class="input" v-model="unit.insuredContent.stopDrink">年
+                </div>
+                <div class="half">
+                  原因
+                  <input class="input" v-model="unit.insuredContent.stopReason">
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <template v-if="item.index === 6">
+            <div class="input-wrap">
+              <div class="title2">说明情况</div>
+              <input class="input" v-model="item.applicantInput">
+            </div>
+            <div class="input-wrap">
+              <div class="title2">说明情况</div>
+              <input class="input" v-model="item.insuredInput">
+            </div>
+          </template>
+
+          <!-- <template v-if="item.index === 7">
+            <div style="margin: 18px 0; font-weight: 600;">{{healthTell[index].question}}</div>
+            <div v-for="(unit, unique) in item.answers" :key="'d' + unique">
+              <p>{{`（${unique + 1}）` + healthTell[index].children[unique].question}}</p>
+              <div class="switch-wrap">
+                <div class="half">
+                  投保人
+                  <mt-switch v-model="unit.applicant"></mt-switch>
+                </div>
+                <div class="half">
+                  被保人
+                  <mt-switch v-model="unit.insured"></mt-switch>
+                </div>
+              </div>
+            </div>
+          </template>-->
+
+          <!-- <template v-if="item.index === 11">
+            <div style="margin: 18px 0; font-weight: 600;">{{healthTell[index].question}}</div>
+            <div v-for="(unit, unique) in item.answers" :key="'d' + unique">
+              <p>{{`（${unique + 1}）` + healthTell[index].children[unit.index]}}</p>
+              <div class="switch-wrap">
+                <div class="half">
+                  投保人
+                  <mt-switch v-model="unit.applicant"></mt-switch>
+                </div>
+                <div class="half">
+                  被保人
+                  <mt-switch v-model="unit.insured"></mt-switch>
+                </div>
+              </div>
+            </div>
+          </template>-->
+
+          <template v-if="item.index === 12">
+            <!-- <div style="margin: 18px 0; font-weight: 600;">{{healthTell[index].question}}</div> -->
+            <div v-for="(unit, unique) in item.answers" :key="'d' + unique">
+              <div class="input-wrap" v-if="unit.index === 1">
+                <div class="title2">被保人</div>
+                <div class="half">
+                  出生时孕周
+                  <input class="input" v-model="unit.insuredContent.childWeek">周
+                </div>
+                <div class="half">
+                  身高
+                  <input class="input" v-model="unit.insuredContent.weight">厘米
+                </div>
+                <div class="half">
+                  体重
+                  <input class="input" v-model="unit.insuredContent.weight">公斤
+                </div>
+                <div class="half">
+                  出生时留院
+                  <input class="input" v-model="unit.insuredContent.childWeek">天
+                  如超过7天，请详细说明；
+                </div>
+              </div>
+              <p
+                v-if="unit.index === 2"
+              >{{`（${unique + 1}）` + healthTell[index].children[unique].question}}</p>
+              <div class="switch-wrap" v-if="unit.index === 2">
+                <div class="half">
+                  投保人
+                  <mt-switch v-model="unit.applicant"></mt-switch>
+                </div>
+                <div class="half">
+                  被保人
+                  <mt-switch v-model="unit.insured"></mt-switch>
+                </div>
+              </div>
+            </div>
+          </template>
         </div>
       </div>
     </div>
 
+    <!-- 财务和其他告知 -->
     <div class="container">
       <div class="title">
         <b>财务和其他告知</b>
@@ -75,39 +243,86 @@
         <span class="button">查看提示</span>
       </div>
 
-      <div class="number-line">2</div>
+      <div v-for="(item, index) in otherTell" :key="'e' + index">
+        <div class="number-line">{{index + 1}}</div>
+        <p>{{listQuestionInformFinancing[item.index].question}}</p>
 
-      <div>
-        <p>您是否持有有效机动车驾驶执照？</p>
-        <div class="switch-wrap">
-          <div class="half">
-            投保人
-            <mt-switch v-model="value"></mt-switch>
-          </div>
-          <div class="half">
-            被保人
-            <mt-switch v-model="value"></mt-switch>
-          </div>
-        </div>
-
-        <div class="number-line">3</div>
-
-        <div>
-          <p>您是否已已购买或正在向保其他保险公司申请购买（指提交投保申请但保险公司还未正式签单）人身保险合同？若“是”，请详细描述：保险公司名称、险种名称、保险金额及日期。</p>
-          <div class="switch-wrap">
+        <template v-if="!([1].includes(item.index))">
+          <div class="switch-wrap" v-for="(unit, unique) in item.answers" :key="'e' + unique">
             <div class="half">
               投保人
-              <mt-switch v-model="value"></mt-switch>
+              <mt-switch v-model="item.applicant"></mt-switch>
             </div>
             <div class="half">
               被保人
-              <mt-switch v-model="value"></mt-switch>
+              <mt-switch v-model="item.insured"></mt-switch>
             </div>
           </div>
+        </template>
+
+        <div v-for="(unit, unique) in item.answers" :key="'e' + unique">
+
+          <div class="input-wrap" v-if="item.index === 1">
+            <div class="title2">每年固定收入情况</div>
+            <div class="half">
+              被保险人
+              <input class="input" v-model="unit.insuredContent.income">万元
+            </div>
+            <div class="half">
+              来源
+              <input class="input" v-model="unit.insuredContent.incomeFrom">
+            </div>
+            <div class="half">
+              投保人
+              <input class="input" v-model="unit.applicantContent.income">万元
+            </div>
+            <div class="half">
+              来源
+              <input class="input" v-model="unit.applicantContent.incomeFrom">
+            </div>
+          </div>
+
+          <div class="input-wrap" v-else-if="item.index === 2">
+            被保险人驾驶执照类型
+            <input class="input" v-model="unit.driverLicense">
+          </div>
+
+          <div class="input-wrap" v-else-if="item.index === 3">
+            具体类型
+            <input class="input" v-model="unit.medicalInsurance">
+          </div>
+
+          <template v-if="item.index === 6">
+              <div class="input-wrap">
+                <div class="title2">投保人</div>
+                <div class="half">
+                  项目
+                  <input class="input" v-model="unit.applicantContent.project">
+                </div>
+                <div class="half">
+                  频次
+                  <input class="input" v-model="unit.applicantContent.frequency">
+                </div>
+              </div>
+
+              <div class="input-wrap">
+                <div class="title2">被保人</div>
+                <div class="half">
+                  项目
+                  <input class="input" v-model="unit.insuredContent.project">
+                </div>
+                <div class="half">
+                  频次
+                  <input class="input" v-model="unit.insuredContent.frequency">
+                </div>
+              </div>
+          </template>
+
         </div>
       </div>
     </div>
 
+    <!-- 代理人告知 -->
     <div class="container" style="padding-bottom: .2rem;">
       <div class="title">
         <b>代理人告知</b>
@@ -168,31 +383,619 @@
 </template>
 
 <script>
-import { getBeneficiaryDetail } from "@/api/beneficiary";
+import { getInformDetail } from "@/api/inform";
 export default {
   components: {},
+  filters: {
+    swi(val) {
+      const arr = [false, true];
+      return arr[val];
+    }
+  },
   props: {},
   data() {
     return {
       value: false,
       value1: "",
-      username: "",
-      text: '',
-      form: {}
+      text: "",
+      form: {},
+      healthTell: [
+        {
+          index: 1,
+          question: "",
+          answers: [
+            {
+              applicant: false,
+              insured: false,
+              applicantContent: {
+                height: 0,
+                weight: 0
+              },
+              insuredContent: {
+                height: 0,
+                weight: 0
+              }
+            }
+          ]
+        },
+        {
+          index: 2,
+          question: "您是否目前或曾经有吸烟习惯？若“是”请填写下列内容：",
+          answers: [
+            {
+              applicantContent: {
+                smokeNumEveryDay: 10,
+                smokeYear: 7,
+                stopSmoke: 10,
+                stopReason: "无"
+              },
+              insured: 1,
+              applicant: 1,
+              insuredContent: {
+                stopSmoke: 10,
+                smokeNumEveryDay: 10,
+                smokeYear: 7,
+                stopReason: "无"
+              }
+            }
+          ]
+        },
+        {
+          question:
+            "您是否目前或曾经有饮白酒、洋酒等烈性酒的习惯？若“是”请填写下列内容：",
+          answers: [
+            {
+              insured: 1,
+              insuredContent: {
+                drinkYear: 10,
+                stopReason: "无",
+                stopDrink: 7,
+                drinkNumEveryTime: 2
+              },
+              applicant: 1,
+              applicantContent: {
+                drinkYear: 10,
+                stopReason: "无",
+                stopDrink: 7,
+                drinkNumEveryTime: 2
+              }
+            }
+          ],
+          index: 3
+        },
+        {
+          index: 4,
+          question:
+            "您在过去6个月内是否曾有过下列症状：反复头痛、眩晕、晕厥、咯血、胸痛、呼吸困难、呕血、黄疸、便血、听力下降、耳鸣、复视、视力明显下降、原因不明的皮肤或粘膜或齿龈出血、原因不明的发热、体重下降（3个月内超过5公斤）、原因不明的肌肉萎缩、身体的其他感觉异常或活动障碍等",
+          answers: [
+            {
+              insured: 0,
+              applicant: 0
+            }
+          ]
+        },
+        {
+          index: 5,
+          question:
+            "您在过去两年内是否做过血压、血液化验、心电图、X光、B超、超声心动图、CT、核磁共振、内窥镜及活体组织检查？若是，请在“健康告知说明栏”中注明检查原因、检查时间与检查结果",
+          answers: [
+            {
+              insured: 0,
+              applicant: 0
+            }
+          ]
+        },
+        {
+          index: 6,
+          question:
+            "您过去五年内是否曾住院诊疗？若有，请写明原因、时间、治疗结果及医院名称",
+          answers: [
+            {
+              insured: 0,
+              applicant: 0
+            }
+          ],
+          applicantInput: "",
+          insuredInput: ""
+        },
+        {
+          index: 7,
+          question: "您是否目前或曾经患有，或被怀疑患有下列疾病？",
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 2,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 3,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 4,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 5,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 6,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 7,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 8,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 9,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 10,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 11,
+              applicant: 1
+            }
+          ],
+          children: [
+            {
+              question:
+                "哮喘、慢性支气管炎、支气管扩张、肺气肿、肺结核、肺纤维化等呼吸系统疾病",
+              applicant: false,
+              insured: false
+            },
+            {
+              question:
+                "脑出血、脑梗塞、短暂性脑缺血、脑血管瘤、多发性硬化、重症肌无力、帕金森氏综合症、癫痫、精神分裂症、抑郁症等神经系统及精神疾病",
+              applicant: false,
+              insured: false
+            },
+            {
+              question:
+                "高血压、冠心病、风湿性心脏病、心脏瓣膜病、先天性心脏病、心肌病、主动脉瘤、心律失常等心血管疾病",
+              applicant: false,
+              insured: false
+            },
+            {
+              question:
+                "肝炎、肝炎病毒携带、肝硬化、消化道溃疡/出血/穿孔、结肠炎、胰腺炎等消化系统疾病",
+              applicant: false,
+              insured: false
+            },
+            {
+              question:
+                "血尿、蛋白尿、肾炎、肾病综合症、肾衰竭、肾囊肿、膀胱疾病、前列腺疾病等泌尿生殖系统疾病",
+              applicant: false,
+              insured: false
+            },
+            {
+              question:
+                "糖尿病、痛风、甲状腺疾病、脑垂体疾病、肾上腺疾病、白血病、血友病、再生障碍性贫血、紫癜等内分泌、代谢及血液系统疾病",
+              applicant: false,
+              insured: false
+            },
+            {
+              question:
+                "类风湿性关节炎、风湿病、强直性脊柱炎、白塞氏病、系统性红斑狼疮、肌肉营养不良症、免疫缺陷病（艾滋病或艾滋病病毒携带）等骨骼、肌肉、结缔组织疾病",
+              applicant: false,
+              insured: false
+            },
+            {
+              question:
+                "中耳炎、白内障、青光眼、视神经或视网膜病变等眼、耳、鼻、喉或口腔疾病",
+              applicant: false,
+              insured: false
+            },
+            {
+              question:
+                "恶性肿瘤、尚未证实为良性或恶性的肿瘤、息肉、肿块、囊肿、赘生物",
+              applicant: false,
+              insured: false
+            },
+            {
+              question:
+                "先天性疾病、遗传性疾病、脑外伤后遗症、内脏损伤、急/慢性中毒或职业病等",
+              applicant: false,
+              insured: false
+            },
+            {
+              question: "以上未提及的疾病或症状",
+              applicant: false,
+              insured: false
+            }
+          ]
+        },
+
+        {
+          index: 8,
+          question:
+            "身体残疾情况：您是否智能障碍？是否失明、聋哑、跛行、小儿麻痹后遗症？是否有脊柱、胸廓、四肢、五官、手指、足趾畸形或功能障碍？",
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 1
+            }
+          ]
+        },
+        {
+          index: 9,
+          question:
+            "您是否使用过任何成瘾药物，如镇静安眠剂、迷幻药、吸食有机溶剂或毒品？",
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 1
+            }
+          ]
+        },
+        {
+          index: 10,
+          question:
+            "您的父母、子女、兄弟姐妹中，是否有人患有癌症、糖尿病、多囊肝、多囊肾、血友病、精神疾病及其他遗传性疾病？",
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 1
+            }
+          ]
+        },
+        {
+          index: 11,
+          question: "女性告知（≥14周岁填写）",
+          children: [
+            {
+              index: "1",
+              question: "您现在是否怀孕"
+            },
+            {
+              index: "2",
+              question:
+                "是否患有或曾经患有阴道不规则出血、子宫肌瘤、子宫内膜异位症、卵巢囊肿、乳腺包块或肿块等女性疾病？"
+            },
+            {
+              index: "3",
+              question: "是否被建议做宫颈涂片、乳房超声、X光、活检等？"
+            }
+          ],
+          answers: [
+            {
+              insured: 0,
+              insuredPregnant: 5,
+              index: 1,
+              applicant: 1,
+              applicantPregnant: 4
+            },
+            {
+              insured: 0,
+              index: 2,
+              applicant: 1
+            },
+            {
+              insured: 0,
+              index: 3,
+              applicant: 1
+            }
+          ]
+        },
+        {
+          index: 12,
+          question: "两周岁以下儿童（含两周岁）告知：",
+          children: [
+            {
+              index: "1",
+              question: ""
+            },
+            {
+              index: "2",
+              question:
+                "是否多胎、早产、难产、先天性疾病、遗传性疾病或畸形、体重不增或增长缓慢？"
+            }
+          ],
+          answers: [
+            {
+              index: 1,
+              insuredContent: {
+                childWeek: "8",
+                childHeight: "50",
+                childWeight: "25",
+                stayHospital: "1"
+              }
+            },
+            {
+              index: 2,
+              insured: 0
+            }
+          ]
+        }
+      ],
+      listQuestionHealthTell: Object.freeze({
+        1: {
+          question: ""
+        },
+        2: {
+          question: "您是否目前或曾经有吸烟习惯？若“是”请填写下列内容："
+        },
+        3: {
+          question:
+            "您是否目前或曾经有饮白酒、洋酒等烈性酒的习惯？若“是”请填写下列内容："
+        },
+        4: {
+          question:
+            "您在过去6个月内是否曾有过下列症状：反复头痛、眩晕、晕厥、咯血、胸痛、呼吸困难、呕血、黄疸、便血、听力下降、耳鸣、复视、视力明显下降、原因不明的皮肤或粘膜或齿龈出血、原因不明的发热、体重下降（3个月内超过5公斤）、原因不明的肌肉萎缩、身体的其他感觉异常或活动障碍等"
+        },
+        5: {
+          question:
+            "您在过去两年内是否做过血压、血液化验、心电图、X光、B超、超声心动图、CT、核磁共振、内窥镜及活体组织检查？若是，请在“健康告知说明栏”中注明检查原因、检查时间与检查结果"
+        },
+        6: {
+          question:
+            "您过去五年内是否曾住院诊疗？若有，请写明原因、时间、治疗结果及医院名称"
+        },
+        7: {
+          question: "您是否目前或曾经患有，或被怀疑患有下列疾病？",
+          children: {
+            1: {
+              question:
+                "哮喘、慢性支气管炎、支气管扩张、肺气肿、肺结核、肺纤维化等呼吸系统疾病"
+            },
+            2: {
+              question:
+                "脑出血、脑梗塞、短暂性脑缺血、脑血管瘤、多发性硬化、重症肌无力、帕金森氏综合症、癫痫、精神分裂症、抑郁症等神经系统及精神疾病"
+            },
+            3: {
+              question:
+                "高血压、冠心病、风湿性心脏病、心脏瓣膜病、先天性心脏病、心肌病、主动脉瘤、心律失常等心血管疾病"
+            },
+            4: {
+              question:
+                "高血压、冠心病、风湿性心脏病、心脏瓣膜病、先天性心脏病、心肌病、主动脉瘤、心律失常等心血管疾病"
+            },
+            5: {
+              question:
+                "血尿、蛋白尿、肾炎、肾病综合症、肾衰竭、肾囊肿、膀胱疾病、前列腺疾病等泌尿生殖系统疾病"
+            },
+            6: {
+              question:
+                "糖尿病、痛风、甲状腺疾病、脑垂体疾病、肾上腺疾病、白血病、血友病、再生障碍性贫血、紫癜等内分泌、代谢及血液系统疾病"
+            },
+            7: {
+              question:
+                "类风湿性关节炎、风湿病、强直性脊柱炎、白塞氏病、系统性红斑狼疮、肌肉营养不良症、免疫缺陷病（艾滋病或艾滋病病毒携带）等骨骼、肌肉、结缔组织疾病"
+            },
+            8: {
+              question:
+                "中耳炎、白内障、青光眼、视神经或视网膜病变等眼、耳、鼻、喉或口腔疾病"
+            },
+            9: {
+              question:
+                "恶性肿瘤、尚未证实为良性或恶性的肿瘤、息肉、肿块、囊肿、赘生物"
+            },
+            10: {
+              question:
+                "先天性疾病、遗传性疾病、脑外伤后遗症、内脏损伤、急/慢性中毒或职业病等"
+            },
+            11: {
+              question: "以上未提及的疾病或症状"
+            }
+          }
+        },
+        8: {
+          question:
+            "身体残疾情况：您是否智能障碍？是否失明、聋哑、跛行、小儿麻痹后遗症？是否有脊柱、胸廓、四肢、五官、手指、足趾畸形或功能障碍？"
+        },
+        9: {
+          question:
+            "您是否使用过任何成瘾药物，如镇静安眠剂、迷幻药、吸食有机溶剂或毒品？"
+        },
+        10: {
+          question:
+            "您的父母、子女、兄弟姐妹中，是否有人患有癌症、糖尿病、多囊肝、多囊肾、血友病、精神疾病及其他遗传性疾病？"
+        },
+        11: {
+          question: "女性告知（≥14周岁填写）",
+          children: {
+            1: {
+              question: "您现在是否怀孕"
+            },
+            2: {
+              question:
+                "是否患有或曾经患有阴道不规则出血、子宫肌瘤、子宫内膜异位症、卵巢囊肿、乳腺包块或肿块等女性疾病？"
+            },
+            3: {
+              question: "是否被建议做宫颈涂片、乳房超声、X光、活检等？"
+            }
+          }
+        },
+        12: {
+          question: "两周岁以下儿童（含两周岁）告知：",
+          children: {
+            1: {
+              question: ""
+            },
+            2: {
+              question:
+                "是否多胎、早产、难产、先天性疾病、遗传性疾病或畸形、体重不增或增长缓慢？"
+            }
+          }
+        }
+      }),
+      listQuestionInformFinancing: Object.freeze({
+        1: {
+          question: "每年固定收入为？"
+        },
+        2: {
+          question: "您是否持有有效机动车驾驶执照？若有，驾驶执照类型为："
+        },
+        3: {
+          question:
+            "您是否拥有公费医疗、社会医疗保险或其他费用补偿型医疗保险？若有，具体类型为："
+        },
+        4: {
+          question:
+            "您是否已购买或正在向其他保险公司申请购买（指提交投保申请但保险公司还未正式签单）人身保险合同？若“是”，请详细描述：保险公司名称、险种名称、保险金额及日期。"
+        },
+        5: {
+          question:
+            "您在过去投保人身保险时，或在申请保全复效时，是否被拒保、延期、加费、或对条款做特别约定，或申请过理赔？若“是”，请详细描述保险公司名称、险种名称、索赔金额、日期、原因及结果。"
+        },
+        6: {
+          question:
+            "您是否有参加飞行、潜水、跳伞、武术、拳击、赛车、特技表演、赛马等危险运动的爱好？若有，请说明（被保险人）项目：频次（投保人）项目：频次"
+        },
+        7: {
+          question:
+            "您是否计划1年以内前往其他国家或地区？若有，请在“财务和其他告知说明栏”说明计划前往的国家或地区及时间。"
+        },
+        8: {
+          question: "您是否负债超过200万元（自用房屋及车辆贷款除外）？"
+        }
+      }),
+      otherTell: [
+        {
+          answers: [
+            {
+              applicantContent: {
+                income: 15,
+                incomeFrom: "工资,房屋出租"
+              },
+              insuredContent: {
+                income: 15,
+                incomeFrom: "工资,房屋出租"
+              }
+            }
+          ],
+          index: 1
+        },
+        {
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              driverLicense: "C1",
+              applicant: 1
+            }
+          ],
+          index: 2
+        },
+        {
+          answers: [
+            {
+              insured: 0,
+              medicalInsurance: "哈哈类型",
+              index: 1,
+              applicant: 1
+            }
+          ],
+          index: 3
+        },
+        {
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 1
+            }
+          ],
+          index: 4
+        },
+        {
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 1
+            }
+          ],
+          index: 5
+        },
+        {
+          answers: [
+            {
+              applicantContent: {
+                project: "赛车",
+                frequency: 1
+              },
+              insured: 0,
+              index: 1,
+              applicant: 1,
+              insuredContent: {
+                project: "赛车",
+                frequency: 1
+              }
+            }
+          ],
+          index: 6
+        },
+        {
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 1
+            }
+          ],
+          index: 7
+        },
+        {
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 1
+            }
+          ],
+          index: 8
+        }
+      ]
     };
   },
   computed: {},
   watch: {},
   created() {},
   mounted() {
-    let policyId =  this.$route.query.policyId || '2266434895041527813',
-    this.getData(policyId);
+    let query = {
+      id: this.$route.query.id || "2266434895041527813",
+      token:
+        this.$route.query.token ||
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDI0OTQxOSwiaWF0IjoxNTYwMjQ1ODE5LCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.T0CzXV3Ep0uxd6VEdG8MO4pm1Fhj_ENDq1cVrC5yBu4"
+    };
+    this.getData(query);
   },
   methods: {
-    getData(policyId) {
-      getBeneficiaryDetail(policyId).then(res => {
-        console.log(res)
-        this.form = res
+    getData(query) {
+      getInformDetail(query).then(res => {
+        // console.log(res);
+        res.tellInfo = JSON.parse(res.tellInfo);
+        this.healthTell = res.tellInfo.healthTell
+        this.otherTell = res.tellInfo.otherTell
+        res.healthSpecialExplain = JSON.parse(res.healthSpecialExplain);
+        res.otherSpecialExplain = JSON.parse(res.otherSpecialExplain);
+        this.form = res;
+        console.log(this.form);
       });
     }
   }
@@ -249,21 +1052,26 @@ export default {
     width: 50%;
     padding: 0 5%;
     vertical-align: top;
+    line-height: 24px;
   }
+
   .input-wrap {
-    height: 1.7rem;
     background-color: #f1f3f5;
     border-radius: 10px;
-    padding: 0 0.3rem 0.3rem;
+    padding: 0.3rem;
     margin-bottom: 0.2rem;
+    > .half:nth-child(n + 4) {
+      padding-top: 0.2rem;
+    }
     .title2 {
-      padding: 0.3rem 0 0.5rem;
+      padding-bottom: 0.5rem;
     }
   }
   .input {
     width: 1rem;
     margin: 0 0.2rem;
     border-bottom: 1px solid #ddd;
+    text-align: center;
   }
 }
 .mint-switch {
@@ -297,7 +1105,6 @@ input[type="textarea"] {
   width: 100%;
   background: #fff;
   text-indent: 1em;
-  
 }
 
 input[type="checkbox"] + label::before {

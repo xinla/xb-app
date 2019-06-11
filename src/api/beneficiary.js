@@ -9,7 +9,7 @@ const controller = config.controllers.beneficiary
  */
 export const getBeneficiaryDetail = (data) => {
   return axios.request({
-    url: `/getPolicyRight/${data.policyId}/${data.insuredCurrentAge}/${data.insuredMaxAge}/${data.insuredCountAge}`,
+    url: `/getPolicyRight/${data.id}/${data.insuredCurrentAge}/${data.insuredMaxAge}/${data.insuredCountAge}`,
     method: 'GET',
     headers: {
       auth_token: data.token
@@ -18,13 +18,30 @@ export const getBeneficiaryDetail = (data) => {
 }
 
 /**
+ * 获取被保人年龄区间
+ * @param {*} param0 
+ */
+export const getInsuredAgeRange = ({id, token}) => {
+  return axios.request({
+    url: `/insuredAgeRange/${id}`,
+    method: 'get',
+    headers: {
+      auth_token: token
+    }
+  })
+}
+
+/**
  * 保单id查询受益人信息
  * @param {*} 投保单id 
  */
-export const getBeneficiaryMemmberDetail = (id) => {
+export const getBeneficiaryMemmberDetail = (data) => {
   return axios.request({
     url: controller + `/${id}`,
-    method: 'get'
+    method: 'get',
+    headers: {
+      auth_token: data.token
+    }
   })
 }
 
@@ -37,5 +54,8 @@ export const saveBeneficiary = (data) => {
     url: controller + `/saveOrUpdatePolicyBeneficiary`,
     method: 'post',
     data,
+    headers: {
+      auth_token: data.token
+    }
   })
 }
