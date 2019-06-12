@@ -5,330 +5,922 @@
         <b>健康告知</b>
         <!-- <span class="button">查看全部</span>
         <span class="button">查看提示</span>-->
+        <svg
+          class="icon icon_zhankai fr"
+          :class="{rotate: showIndex === 1}"
+          aria-hidden="true"
+          @click="slide(1)"
+        >
+          <use xlink:href="#icon_zhankai"></use>
+        </svg>
       </div>
 
-      <div>
-        <div v-for="(item, index) in healthTell" :key="index">
-          <div class="number-line">{{index + 1}}</div>
-          <p v-if="item.index != 7">{{listQuestionHealthTell[item.index].question}}</p>
+      <transition name="slide-down">
+        <div v-show="showIndex === 1">
+          <div v-for="(item, index) in healthTell" :key="index">
+            <div class="number-line">{{index + 1}}</div>
+            <p v-if="item.index != 7">{{listQuestionHealthTell[item.index].question}}</p>
 
-          <template v-if="!([1,12].includes(item.index))">
             <div v-for="(unit, unique) in item.answers" :key="'a' + unique">
-              <p
-                v-if="healthTell[index].children"
-              >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
-              <div class="switch-wrap">
-                <div class="half">
-                  投保人
-                  <mt-switch v-model="unit.applicant"></mt-switch>
-                </div>
-                <div class="half">
-                  被保人
-                  <mt-switch v-model="unit.insured"></mt-switch>
-                </div>
-              </div>
+              <template v-if="!([1,12].includes(item.index))">
+                <p
+                  v-if="healthTell[index].children"
+                >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
 
-              <template v-if="item.index === 11 && unique === 0"></template>
+                <div class="switch-wrap">
+                  <div class="half">
+                    投保人
+                    <mt-switch v-model="unit.applicant"></mt-switch>
+                  </div>
+                  <div class="half">
+                    被保人
+                    <mt-switch v-model="unit.insured"></mt-switch>
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 1">
+                <div class="input-wrap">
+                  <div class="title2">投保人</div>
+                  <div class="half">
+                    身高
+                    <input class="input" v-model="unit.applicantContent.height">厘米
+                  </div>
+                  <div class="half">
+                    体重
+                    <input class="input" v-model="unit.applicantContent.weight">公斤
+                  </div>
+                </div>
+
+                <div class="input-wrap">
+                  <div class="title2">被保人</div>
+                  <div class="half">
+                    身高
+                    <input class="input" v-model="unit.insuredContent.height">厘米
+                  </div>
+                  <div class="half">
+                    体重
+                    <input class="input" v-model="unit.insuredContent.weight">公斤
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 2">
+                <div class="input-wrap" v-show="unit.applicant">
+                  <div class="title2">投保人吸烟情况</div>
+                  <div class="half">
+                    吸烟
+                    <input class="input" v-model="unit.applicantContent.smokeYear">年
+                  </div>
+                  <div class="half">
+                    每天
+                    <input class="input" v-model="unit.applicantContent.smokeNumEveryDay">支
+                  </div>
+                  <div class="half">
+                    若已戒烟，戒烟
+                    <input class="input" v-model="unit.applicantContent.stopSmoke">年
+                  </div>
+                  <div class="half">
+                    原因
+                    <input class="input" v-model="unit.applicantContent.stopReason">
+                  </div>
+                </div>
+
+                <div class="input-wrap" v-show="unit.insured">
+                  <div class="title2">被保人吸烟情况</div>
+                  <div class="half">
+                    吸烟
+                    <input class="input" v-model="unit.insuredContent.smokeYear">年
+                  </div>
+                  <div class="half">
+                    每天
+                    <input class="input" v-model="unit.insuredContent.smokeNumEveryDay">支
+                  </div>
+                  <div class="half">
+                    若已戒烟，戒烟
+                    <input class="input" v-model="unit.insuredContent.stopSmoke">年
+                  </div>
+                  <div class="half">
+                    原因
+                    <input class="input" v-model="unit.insuredContent.stopReason">
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 3">
+                <div class="input-wrap" v-show="unit.applicant">
+                  <div class="title2">投保人情况</div>
+                  <div class="half">
+                    喝酒
+                    <input class="input" v-model="unit.applicantContent.drinkYear">年
+                  </div>
+                  <div class="half">
+                    每天
+                    <input class="input" v-model="unit.applicantContent.drinkNumEveryTime">两
+                  </div>
+                  <div class="half">
+                    若已戒酒，戒酒
+                    <input class="input" v-model="unit.applicantContent.stopDrink">年
+                  </div>
+                  <div class="half">
+                    原因
+                    <input class="input" v-model="unit.applicantContent.stopReason">
+                  </div>
+                </div>
+
+                <div class="input-wrap" v-show="unit.insured">
+                  <div class="title2">被保人饮酒情况</div>
+                  <div class="half">
+                    喝酒
+                    <input class="input" v-model="unit.insuredContent.drinkYear">年
+                  </div>
+                  <div class="half">
+                    每天
+                    <input class="input" v-model="unit.insuredContent.drinkNumEveryTime">两
+                  </div>
+                  <div class="half">
+                    若已戒酒，戒酒
+                    <input class="input" v-model="unit.insuredContent.stopDrink">年
+                  </div>
+                  <div class="half">
+                    原因
+                    <input class="input" v-model="unit.insuredContent.stopReason">
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 4">
+                <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
+                  <div v-if="vItem.index === 4">
+                    <div v-show="unit.applicant">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.applicant"
+                        :key="vUnique"
+                      >
+                        <div class="title2">投保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>疾病名称</span>
+                            <input class="input" v-model="vUnit.diseaseName">
+                          </li>
+                          <li>
+                            <span>发病时间</span>
+                            <input class="input" v-model="vUnit.diseaseTime">
+                          </li>
+                          <li>
+                            <span>治疗方法</span>
+                            <input class="input" v-model="vUnit.therapies">
+                          </li>
+                          <li>
+                            <span>治疗医院</span>
+                            <input class="input" v-model="vUnit.hospital">
+                          </li>
+                          <li>
+                            <span>最后治疗时间</span>
+                            <input class="input" v-model="vUnit.lastTherapyTime">
+                          </li>
+                          <li>
+                            <span>现在情况</span>
+                            <input class="input" v-model="vUnit.currentState">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div v-show="unit.insured">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.insured"
+                        :key="vUnique"
+                      >
+                        <div class="title2">被保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>疾病名称</span>
+                            <input class="input" v-model="vUnit.diseaseName">
+                          </li>
+                          <li>
+                            <span>发病时间</span>
+                            <input class="input" v-model="vUnit.diseaseTime">
+                          </li>
+                          <li>
+                            <span>治疗方法</span>
+                            <input class="input" v-model="vUnit.therapies">
+                          </li>
+                          <li>
+                            <span>治疗医院</span>
+                            <input class="input" v-model="vUnit.hospital">
+                          </li>
+                          <li>
+                            <span>最后治疗时间</span>
+                            <input class="input" v-model="vUnit.lastTherapyTime">
+                          </li>
+                          <li>
+                            <span>现在情况</span>
+                            <input class="input" v-model="vUnit.currentState">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 5">
+                <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
+                  <div v-if="vItem.index === 5">
+                    <div v-show="unit.applicant">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.applicant"
+                        :key="vUnique"
+                      >
+                        <div class="title2">投保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>疾病名称</span>
+                            <input class="input" v-model="vUnit.diseaseName">
+                          </li>
+                          <li>
+                            <span>发病时间</span>
+                            <input class="input" v-model="vUnit.diseaseTime">
+                          </li>
+                          <li>
+                            <span>治疗方法</span>
+                            <input class="input" v-model="vUnit.therapies">
+                          </li>
+                          <li>
+                            <span>治疗医院</span>
+                            <input class="input" v-model="vUnit.hospital">
+                          </li>
+                          <li>
+                            <span>最后治疗时间</span>
+                            <input class="input" v-model="vUnit.lastTherapyTime">
+                          </li>
+                          <li>
+                            <span>现在情况</span>
+                            <input class="input" v-model="vUnit.currentState">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div v-show="unit.insured">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.insured"
+                        :key="vUnique"
+                      >
+                        <div class="title2">被保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>疾病名称</span>
+                            <input class="input" v-model="vUnit.diseaseName">
+                          </li>
+                          <li>
+                            <span>发病时间</span>
+                            <input class="input" v-model="vUnit.diseaseTime">
+                          </li>
+                          <li>
+                            <span>治疗方法</span>
+                            <input class="input" v-model="vUnit.therapies">
+                          </li>
+                          <li>
+                            <span>治疗医院</span>
+                            <input class="input" v-model="vUnit.hospital">
+                          </li>
+                          <li>
+                            <span>最后治疗时间</span>
+                            <input class="input" v-model="vUnit.lastTherapyTime">
+                          </li>
+                          <li>
+                            <span>现在情况</span>
+                            <input class="input" v-model="vUnit.currentState">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 6">
+                <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
+                  <div v-if="vItem.index === 6">
+                    <div v-show="unit.applicant">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.applicant"
+                        :key="vUnique"
+                      >
+                        <div class="title2">投保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>疾病名称</span>
+                            <input class="input" v-model="vUnit.diseaseName">
+                          </li>
+                          <li>
+                            <span>发病时间</span>
+                            <input class="input" v-model="vUnit.diseaseTime">
+                          </li>
+                          <li>
+                            <span>治疗方法</span>
+                            <input class="input" v-model="vUnit.therapies">
+                          </li>
+                          <li>
+                            <span>治疗医院</span>
+                            <input class="input" v-model="vUnit.hospital">
+                          </li>
+                          <li>
+                            <span>最后治疗时间</span>
+                            <input class="input" v-model="vUnit.lastTherapyTime">
+                          </li>
+                          <li>
+                            <span>现在情况</span>
+                            <input class="input" v-model="vUnit.currentState">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div v-show="unit.insured">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.insured"
+                        :key="vUnique"
+                      >
+                        <div class="title2">被保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>疾病名称</span>
+                            <input class="input" v-model="vUnit.diseaseName">
+                          </li>
+                          <li>
+                            <span>发病时间</span>
+                            <input class="input" v-model="vUnit.diseaseTime">
+                          </li>
+                          <li>
+                            <span>治疗方法</span>
+                            <input class="input" v-model="vUnit.therapies">
+                          </li>
+                          <li>
+                            <span>治疗医院</span>
+                            <input class="input" v-model="vUnit.hospital">
+                          </li>
+                          <li>
+                            <span>最后治疗时间</span>
+                            <input class="input" v-model="vUnit.lastTherapyTime">
+                          </li>
+                          <li>
+                            <span>现在情况</span>
+                            <input class="input" v-model="vUnit.currentState">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <!-- <template v-if="item.index === 6">
+                  <div class="input-wrap">
+                    <div class="title2">说明情况</div>
+                    <input class="input" v-model="item.applicantInput">
+                  </div>
+                  <div class="input-wrap">
+                    <div class="title2">说明情况</div>
+                    <input class="input" v-model="item.insuredInput">
+                  </div>
+              </template>-->
+
+              <template v-if="item.index === 11 && unique === 0">
+                <div class="input-wrap" v-show="unit.applicant">
+                  <div>
+                    投保人已怀孕
+                    <input class="input" v-model="unit.applicantContent.applicantPregnant">周
+                  </div>
+                </div>
+                <div class="input-wrap" v-show="unit.insured">
+                  <div>
+                    被保人已怀孕
+                    <input class="input" v-model="unit.insuredContent.insuredPregnant">周
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 12">
+                <div class="input-wrap" v-if="unit.index === 1">
+                  <div class="title2">被保人</div>
+                  <div>
+                    出生时孕周
+                    <input class="input" v-model="unit.insuredContent.childWeek">周
+                    身高
+                    <input
+                      class="input"
+                      v-model="unit.insuredContent.childHeight"
+                    >厘米
+                    体重
+                    <input
+                      class="input"
+                      v-model="unit.insuredContent.childWeight"
+                    >公斤
+                    出生时留院
+                    <input
+                      class="input"
+                      v-model="unit.insuredContent.stayHospital"
+                    >天
+                  </div>
+                  <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
+                    <div v-if="vItem.index === 12">
+                      <div v-show="unit.insuredContent.stayHospital > 7">
+                        <div class="form" v-for="(vUnit, vUnique) in vItem.insured" :key="vUnique">
+                          <div class="title2">超过7天，请详细说明：</div>
+                          <ul>
+                            <li>
+                              <span>序号</span>
+                              <input class="input" v-model="vUnit.index">
+                            </li>
+                            <li>
+                              <span>说明对象</span>
+                              <input class="input" v-model="vUnit.explainObject">
+                            </li>
+                            <li>
+                              <span>疾病名称</span>
+                              <input class="input" v-model="vUnit.diseaseName">
+                            </li>
+                            <li>
+                              <span>发病时间</span>
+                              <input class="input" v-model="vUnit.diseaseTime">
+                            </li>
+                            <li>
+                              <span>治疗方法</span>
+                              <input class="input" v-model="vUnit.therapies">
+                            </li>
+                            <li>
+                              <span>治疗医院</span>
+                              <input class="input" v-model="vUnit.hospital">
+                            </li>
+                            <li>
+                              <span>最后治疗时间</span>
+                              <input class="input" v-model="vUnit.lastTherapyTime">
+                            </li>
+                            <li>
+                              <span>现在情况</span>
+                              <input class="input" v-model="vUnit.currentState">
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p
+                  v-if="unit.index === 2"
+                >{{`（${unique + 1}）` + healthTell[index].children[unique].question}}</p>
+                <div class="switch-wrap" v-if="unit.index === 2">
+                  <div class="half fr">
+                    被保人
+                    <mt-switch v-model="unit.insured"></mt-switch>
+                  </div>
+                </div>
+              </template>
             </div>
-          </template>
 
-          <template v-if="item.index === 1">
-            <div v-for="(unit, unique) in item.answers" :key="'b' + unique">
-              <div class="input-wrap">
-                <div class="title2">投保人</div>
-                <div class="half">
-                  身高
-                  <input class="input" v-model="unit.applicantContent.height">厘米
-                </div>
-                <div class="half">
-                  体重
-                  <input class="input" v-model="unit.applicantContent.weight">公斤
+            <!-- <template v-if="item.index === 7">
+              <div style="margin: 18px 0; font-weight: 600;">{{healthTell[index].question}}</div>
+              <div v-for="(unit, unique) in item.answers" :key="'d' + unique">
+                <p>{{`（${unique + 1}）` + healthTell[index].children[unique].question}}</p>
+                <div class="switch-wrap">
+                  <div class="half">
+                    投保人
+                    <mt-switch v-model="unit.applicant"></mt-switch>
+                  </div>
+                  <div class="half">
+                    被保人
+                    <mt-switch v-model="unit.insured"></mt-switch>
+                  </div>
                 </div>
               </div>
+            </template>-->
 
-              <div class="input-wrap">
-                <div class="title2">被保人</div>
-                <div class="half">
-                  身高
-                  <input class="input" v-model="unit.insuredContent.height">厘米
-                </div>
-                <div class="half">
-                  体重
-                  <input class="input" v-model="unit.insuredContent.weight">公斤
+            <!-- <template v-if="item.index === 11">
+              <div style="margin: 18px 0; font-weight: 600;">{{healthTell[index].question}}</div>
+              <div v-for="(unit, unique) in item.answers" :key="'d' + unique">
+                <p>{{`（${unique + 1}）` + healthTell[index].children[unit.index]}}</p>
+                <div class="switch-wrap">
+                  <div class="half">
+                    投保人
+                    <mt-switch v-model="unit.applicant"></mt-switch>
+                  </div>
+                  <div class="half">
+                    被保人
+                    <mt-switch v-model="unit.insured"></mt-switch>
+                  </div>
                 </div>
               </div>
-            </div>
-          </template>
-
-          <template v-if="item.index === 2">
-            <div v-for="(unit, unique) in item.answers" :key="'c' + unique">
-              <div class="input-wrap">
-                <div class="title2">投保人吸烟情况</div>
-                <div class="half">
-                  吸烟
-                  <input class="input" v-model="unit.applicantContent.smokeYear">年
-                </div>
-                <div class="half">
-                  每天
-                  <input class="input" v-model="unit.applicantContent.smokeNumEveryDay">支
-                </div>
-                <div class="half">
-                  若已戒烟，戒烟
-                  <input class="input" v-model="unit.applicantContent.stopSmoke">年
-                </div>
-                <div class="half">
-                  原因
-                  <input class="input" v-model="unit.applicantContent.stopReason">
-                </div>
-              </div>
-
-              <div class="input-wrap">
-                <div class="title2">被保人吸烟情况</div>
-                <div class="half">
-                  吸烟
-                  <input class="input" v-model="unit.insuredContent.smokeYear">年
-                </div>
-                <div class="half">
-                  每天
-                  <input class="input" v-model="unit.insuredContent.smokeNumEveryDay">支
-                </div>
-                <div class="half">
-                  若已戒烟，戒烟
-                  <input class="input" v-model="unit.insuredContent.stopSmoke">年
-                </div>
-                <div class="half">
-                  原因
-                  <input class="input" v-model="unit.insuredContent.stopReason">
-                </div>
-              </div>
-            </div>
-          </template>
-
-          <template v-if="item.index === 3">
-            <div v-for="(unit, unique) in item.answers" :key="unique">
-              <div class="input-wrap">
-                <div class="title2">投保人情况</div>
-                <div class="half">
-                  喝酒
-                  <input class="input" v-model="unit.applicantContent.drinkYear">年
-                </div>
-                <div class="half">
-                  每天
-                  <input class="input" v-model="unit.applicantContent.drinkNumEveryTime">两
-                </div>
-                <div class="half">
-                  若已戒酒，戒酒
-                  <input class="input" v-model="unit.applicantContent.stopDrink">年
-                </div>
-                <div class="half">
-                  原因
-                  <input class="input" v-model="unit.applicantContent.stopReason">
-                </div>
-              </div>
-
-              <div class="input-wrap">
-                <div class="title2">被保人饮酒情况</div>
-                <div class="half">
-                  喝酒
-                  <input class="input" v-model="unit.insuredContent.drinkYear">年
-                </div>
-                <div class="half">
-                  每天
-                  <input class="input" v-model="unit.insuredContent.drinkNumEveryTime">两
-                </div>
-                <div class="half">
-                  若已戒酒，戒酒
-                  <input class="input" v-model="unit.insuredContent.stopDrink">年
-                </div>
-                <div class="half">
-                  原因
-                  <input class="input" v-model="unit.insuredContent.stopReason">
-                </div>
-              </div>
-            </div>
-          </template>
-
-          <template v-if="item.index === 6">
-            <div class="input-wrap">
-              <div class="title2">说明情况</div>
-              <input class="input" v-model="item.applicantInput">
-            </div>
-            <div class="input-wrap">
-              <div class="title2">说明情况</div>
-              <input class="input" v-model="item.insuredInput">
-            </div>
-          </template>
-
-          <!-- <template v-if="item.index === 7">
-            <div style="margin: 18px 0; font-weight: 600;">{{healthTell[index].question}}</div>
-            <div v-for="(unit, unique) in item.answers" :key="'d' + unique">
-              <p>{{`（${unique + 1}）` + healthTell[index].children[unique].question}}</p>
-              <div class="switch-wrap">
-                <div class="half">
-                  投保人
-                  <mt-switch v-model="unit.applicant"></mt-switch>
-                </div>
-                <div class="half">
-                  被保人
-                  <mt-switch v-model="unit.insured"></mt-switch>
-                </div>
-              </div>
-            </div>
-          </template>-->
-
-          <!-- <template v-if="item.index === 11">
-            <div style="margin: 18px 0; font-weight: 600;">{{healthTell[index].question}}</div>
-            <div v-for="(unit, unique) in item.answers" :key="'d' + unique">
-              <p>{{`（${unique + 1}）` + healthTell[index].children[unit.index]}}</p>
-              <div class="switch-wrap">
-                <div class="half">
-                  投保人
-                  <mt-switch v-model="unit.applicant"></mt-switch>
-                </div>
-                <div class="half">
-                  被保人
-                  <mt-switch v-model="unit.insured"></mt-switch>
-                </div>
-              </div>
-            </div>
-          </template>-->
-
-          <template v-if="item.index === 12">
-            <!-- <div style="margin: 18px 0; font-weight: 600;">{{healthTell[index].question}}</div> -->
-            <div v-for="(unit, unique) in item.answers" :key="'d' + unique">
-              <div class="input-wrap" v-if="unit.index === 1">
-                <div class="title2">被保人</div>
-                <div class="half">
-                  出生时孕周
-                  <input class="input" v-model="unit.insuredContent.childWeek">周
-                </div>
-                <div class="half">
-                  身高
-                  <input class="input" v-model="unit.insuredContent.weight">厘米
-                </div>
-                <div class="half">
-                  体重
-                  <input class="input" v-model="unit.insuredContent.weight">公斤
-                </div>
-                <div class="half">
-                  出生时留院
-                  <input class="input" v-model="unit.insuredContent.childWeek">天
-                  如超过7天，请详细说明；
-                </div>
-              </div>
-              <p
-                v-if="unit.index === 2"
-              >{{`（${unique + 1}）` + healthTell[index].children[unique].question}}</p>
-              <div class="switch-wrap" v-if="unit.index === 2">
-                <div class="half">
-                  投保人
-                  <mt-switch v-model="unit.applicant"></mt-switch>
-                </div>
-                <div class="half">
-                  被保人
-                  <mt-switch v-model="unit.insured"></mt-switch>
-                </div>
-              </div>
-            </div>
-          </template>
+            </template>-->
+          </div>
         </div>
-      </div>
+      </transition>
     </div>
 
     <!-- 财务和其他告知 -->
     <div class="container">
       <div class="title">
         <b>财务和其他告知</b>
-        <span class="button">查看全部</span>
-        <span class="button">查看提示</span>
+        <!-- <span class="button">查看全部</span>
+        <span class="button">查看提示</span>-->
+        <svg
+          class="icon icon_zhankai fr"
+          :class="{rotate: showIndex === 2}"
+          aria-hidden="true"
+          @click="slide(2)"
+        >
+          <use xlink:href="#icon_zhankai"></use>
+        </svg>
       </div>
 
-      <div v-for="(item, index) in otherTell" :key="'e' + index">
-        <div class="number-line">{{index + 1}}</div>
-        <p>{{listQuestionInformFinancing[item.index].question}}</p>
+      <transition name="slide-down">
+        <div v-show="showIndex === 2">
+          <div v-for="(item, index) in otherTell" :key="'e' + index">
+            <div class="number-line">{{index + 1}}</div>
+            <p>{{listQuestionInformFinancing[item.index].question}}</p>
 
-        <template v-if="!([1].includes(item.index))">
-          <div class="switch-wrap" v-for="(unit, unique) in item.answers" :key="'e' + unique">
-            <div class="half">
-              投保人
-              <mt-switch v-model="item.applicant"></mt-switch>
-            </div>
-            <div class="half">
-              被保人
-              <mt-switch v-model="item.insured"></mt-switch>
+            <div v-for="(unit, unique) in item.answers" :key="'e' + unique">
+              <template v-if="!([1].includes(item.index))">
+                <div class="switch-wrap">
+                  <div class="half">
+                    投保人
+                    <mt-switch v-model="unit.applicant"></mt-switch>
+                  </div>
+                  <div class="half">
+                    被保人
+                    <mt-switch v-model="unit.insured"></mt-switch>
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 1">
+                <div class="input-wrap">
+                  <div class="title2">投保人</div>
+                  <div>
+                    固定收入
+                    <input class="input" v-model="unit.applicantContent.income">万元
+                  </div>
+                  <div>
+                    来源
+                    <input class="input input-width" v-model="unit.applicantContent.incomeFrom">
+                  </div>
+                </div>
+                <div class="input-wrap">
+                  <div class="title2">被保险人</div>
+                  <div>
+                    固定收入
+                    <input class="input" v-model="unit.insuredContent.income">万元
+                  </div>
+                  <div>
+                    来源
+                    <input class="input input-width" v-model="unit.insuredContent.incomeFrom">
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 2">
+                <div class="input-wrap" v-show="unit.applicant">
+                  投保人
+                  <input class="input" v-model="unit.applicantContent.applicantDriverLicense">
+                </div>
+
+                <div class="input-wrap" v-show="unit.insured">
+                  被保人
+                  <input class="input" v-model="unit.insuredContent.insuredDriverLicense">
+                </div>
+              </template>
+
+              <template v-if="item.index === 3">
+                <div class="input-wrap" v-show="unit.applicant">
+                  投保人
+                  <input class="input" v-model="unit.applicantContent.applicantMedicalInsurance">
+                </div>
+
+                <div class="input-wrap" v-show="unit.insured">
+                  被保人
+                  <input class="input" v-model="unit.insuredContent.insuredMedicalInsurance">
+                </div>
+              </template>
+
+              <template v-if="item.index === 4">
+                <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
+                  <div v-if="vItem.index === 4">
+                    <div v-show="unit.applicant">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.applicant"
+                        :key="vUnique"
+                      >
+                        <div class="title2">投保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>说明内容</span>
+                            <input class="input" v-model="vUnit.explainContent">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div v-show="unit.insured">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.insured"
+                        :key="vUnique"
+                      >
+                        <div class="title2">被保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>说明内容</span>
+                            <input class="input" v-model="vUnit.explainContent">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 5">
+                <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
+                  <div v-if="vItem.index === 5">
+                    <div v-show="unit.applicant">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.applicant"
+                        :key="vUnique"
+                      >
+                        <div class="title2">投保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>说明内容</span>
+                            <input class="input" v-model="vUnit.explainContent">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div v-show="unit.insured">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.insured"
+                        :key="vUnique"
+                      >
+                        <div class="title2">被保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>说明内容</span>
+                            <input class="input" v-model="vUnit.explainContent">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 6">
+                <div class="input-wrap">
+                  <div class="title2">投保人</div>
+                  <div class="half">
+                    项目
+                    <input class="input" v-model="unit.applicantContent.project">
+                  </div>
+                  <div class="half">
+                    频次
+                    <input class="input" v-model="unit.applicantContent.frequency">
+                  </div>
+                </div>
+
+                <div class="input-wrap">
+                  <div class="title2">被保人</div>
+                  <div class="half">
+                    项目
+                    <input class="input" v-model="unit.insuredContent.project">
+                  </div>
+                  <div class="half">
+                    频次
+                    <input class="input" v-model="unit.insuredContent.frequency">
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 7">
+                <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
+                  <div v-if="vItem.index === 7">
+                    <div v-show="unit.applicant">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.applicant"
+                        :key="vUnique"
+                      >
+                        <div class="title2">投保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>说明内容</span>
+                            <input class="input" v-model="vUnit.explainContent">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div v-show="unit.insured">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.insured"
+                        :key="vUnique"
+                      >
+                        <div class="title2">被保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>说明内容</span>
+                            <input class="input" v-model="vUnit.explainContent">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <template v-if="item.index === 8">
+                <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
+                  <div v-if="vItem.index === 8">
+                    <div v-show="unit.applicant">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.applicant"
+                        :key="vUnique"
+                      >
+                        <div class="title2">投保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>说明内容</span>
+                            <input class="input" v-model="vUnit.explainContent">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div v-show="unit.insured">
+                      <div
+                        class="form"
+                        v-for="(vUnit, vUnique) in vItem.insured"
+                        :key="vUnique"
+                      >
+                        <div class="title2">被保人</div>
+                        <ul>
+                          <li>
+                            <span>序号</span>
+                            <input class="input" v-model="vUnit.index">
+                          </li>
+                          <li>
+                            <span>说明对象</span>
+                            <input class="input" v-model="vUnit.explainObject">
+                          </li>
+                          <li>
+                            <span>说明内容</span>
+                            <input class="input" v-model="vUnit.explainContent">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
             </div>
           </div>
-        </template>
-
-        <div v-for="(unit, unique) in item.answers" :key="'e' + unique">
-
-          <div class="input-wrap" v-if="item.index === 1">
-            <div class="title2">每年固定收入情况</div>
-            <div class="half">
-              被保险人
-              <input class="input" v-model="unit.insuredContent.income">万元
-            </div>
-            <div class="half">
-              来源
-              <input class="input" v-model="unit.insuredContent.incomeFrom">
-            </div>
-            <div class="half">
-              投保人
-              <input class="input" v-model="unit.applicantContent.income">万元
-            </div>
-            <div class="half">
-              来源
-              <input class="input" v-model="unit.applicantContent.incomeFrom">
-            </div>
-          </div>
-
-          <div class="input-wrap" v-else-if="item.index === 2">
-            被保险人驾驶执照类型
-            <input class="input" v-model="unit.driverLicense">
-          </div>
-
-          <div class="input-wrap" v-else-if="item.index === 3">
-            具体类型
-            <input class="input" v-model="unit.medicalInsurance">
-          </div>
-
-          <template v-if="item.index === 6">
-              <div class="input-wrap">
-                <div class="title2">投保人</div>
-                <div class="half">
-                  项目
-                  <input class="input" v-model="unit.applicantContent.project">
-                </div>
-                <div class="half">
-                  频次
-                  <input class="input" v-model="unit.applicantContent.frequency">
-                </div>
-              </div>
-
-              <div class="input-wrap">
-                <div class="title2">被保人</div>
-                <div class="half">
-                  项目
-                  <input class="input" v-model="unit.insuredContent.project">
-                </div>
-                <div class="half">
-                  频次
-                  <input class="input" v-model="unit.insuredContent.frequency">
-                </div>
-              </div>
-          </template>
-
         </div>
-      </div>
+      </transition>
     </div>
 
     <!-- 代理人告知 -->
     <div class="container" style="padding-bottom: .2rem;">
       <div class="title">
         <b>代理人告知</b>
+        <svg
+          class="icon icon_zhankai fr"
+          :class="{rotate: showIndex === 3}"
+          aria-hidden="true"
+          @click="slide(3)"
+        >
+          <use xlink:href="#icon_zhankai"></use>
+        </svg>
       </div>
 
-      <div>
+      <div v-show="showIndex === 3">
         <p>您是投/被保险人本人或投/被保险人的父母、配偶、子女、兄弟姐妹吗？若“是”请选择：</p>
         <div class="switch-wrap">
           <div class="half"></div>
@@ -494,9 +1086,7 @@ export default {
               insured: 0,
               applicant: 0
             }
-          ],
-          applicantInput: "",
-          insuredInput: ""
+          ]
         },
         {
           index: 7,
@@ -684,10 +1274,14 @@ export default {
           answers: [
             {
               insured: 0,
-              insuredPregnant: 5,
+              insuredContent: {
+                insuredPregnant: 5
+              },
               index: 1,
               applicant: 1,
-              applicantPregnant: 4
+              applicantContent: {
+                applicantPregnant: 4
+              }
             },
             {
               insured: 0,
@@ -895,7 +1489,12 @@ export default {
             {
               insured: 0,
               index: 1,
-              driverLicense: "C1",
+              applicantContent: {
+                applicantDriverLicense: "C1"
+              },
+              insuredContent: {
+                insuredDriverLicense: "C1"
+              },
               applicant: 1
             }
           ],
@@ -905,7 +1504,12 @@ export default {
           answers: [
             {
               insured: 0,
-              medicalInsurance: "哈哈类型",
+              applicantContent: {
+                applicantDriverLicense: "C1"
+              },
+              insuredContent: {
+                insuredDriverLicense: "C1"
+              },
               index: 1,
               applicant: 1
             }
@@ -970,7 +1574,149 @@ export default {
           ],
           index: 8
         }
-      ]
+      ],
+      healthSpecialExplain: [
+        {
+          index: 4,
+          applicant: [
+            {
+              index: 1,
+              explainObject: "投保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ],
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ]
+        },
+        {
+          index: 5,
+          applicant: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ],
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ]
+        },
+        {
+          index: 12,
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ]
+        }
+      ],
+      otherSpecialExplain: [
+        {
+          index: 4,
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              explainContent: "长城人寿康健人生50万1998年"
+            }
+          ],
+          applicant: [
+            {
+              index: 1,
+              explainObject: "投保人",
+              explainContent: "长城人寿康健人生50万1998年"
+            }
+          ]
+        },
+        {
+          index: 5,
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              explainContent: "长城人寿康健人生50万1998年原因结果"
+            }
+          ],
+          applicant: [
+            {
+              index: 1,
+              explainObject: "投保人",
+              explainContent: "长城人寿康健人生50万1998年原因结果"
+            }
+          ]
+        },
+        {
+          index: 7,
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              explainContent: "美国计划2018年果"
+            }
+          ],
+          applicant: [
+            {
+              index: 1,
+              explainObject: "投保人",
+              explainContent: "美国计划2018年"
+            }
+          ]
+        },
+        {
+          index: 8,
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              explainContent: "承包土地负债300万"
+            }
+          ],
+          applicant: [
+            {
+              index: 1,
+              explainObject: "投保人",
+              explainContent: "承包土地负债300万"
+            }
+          ]
+        }
+      ],
+      showIndex: 1
     };
   },
   computed: {},
@@ -981,7 +1727,7 @@ export default {
       id: this.$route.query.id || "2266434895041527813",
       token:
         this.$route.query.token ||
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDI0OTQxOSwiaWF0IjoxNTYwMjQ1ODE5LCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.T0CzXV3Ep0uxd6VEdG8MO4pm1Fhj_ENDq1cVrC5yBu4"
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDMwOTEyMywiaWF0IjoxNTYwMzA1NTIzLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.ZifX4lz2ONlABg3LoNEURhICOmBW9lnfPCB8RdqMMIY"
     };
     this.getData(query);
   },
@@ -990,13 +1736,20 @@ export default {
       getInformDetail(query).then(res => {
         // console.log(res);
         res.tellInfo = JSON.parse(res.tellInfo);
-        this.healthTell = res.tellInfo.healthTell
-        this.otherTell = res.tellInfo.otherTell
-        res.healthSpecialExplain = JSON.parse(res.healthSpecialExplain);
-        res.otherSpecialExplain = JSON.parse(res.otherSpecialExplain);
+        this.healthTell = res.tellInfo.healthTell;
+        this.otherTell = res.tellInfo.otherTell;
+        this.healthSpecialExplain = res.healthSpecialExplain;
+        this.otherSpecialExplain = res.otherSpecialExplain;
         this.form = res;
         console.log(this.form);
       });
+    },
+    slide(index) {
+      if (this.showIndex === index) {
+        this.showIndex = 0;
+      } else {
+        this.showIndex = index;
+      }
     }
   }
 };
@@ -1046,25 +1799,29 @@ export default {
   .switch-wrap {
     margin: 0.4rem 0;
     text-align: center;
+    overflow: hidden;
   }
   .half {
     display: inline-block;
     width: 50%;
     padding: 0 5%;
     vertical-align: top;
-    line-height: 24px;
   }
-
+  // .switch-wrap .half:nth-child(2n), .input-wrap .half:nth-child(2n + 1) {
+  //   float: right;
+  // }
   .input-wrap {
     background-color: #f1f3f5;
     border-radius: 10px;
     padding: 0.3rem;
     margin-bottom: 0.2rem;
+    overflow: hidden;
+    line-height: 24px;
     > .half:nth-child(n + 4) {
       padding-top: 0.2rem;
     }
     .title2 {
-      padding-bottom: 0.5rem;
+      padding-bottom: 0.3rem;
     }
   }
   .input {
@@ -1073,6 +1830,9 @@ export default {
     border-bottom: 1px solid #ddd;
     text-align: center;
   }
+      .input-width{
+      width: auto;
+    }
 }
 .mint-switch {
   display: inline-block;
@@ -1129,4 +1889,39 @@ input[type="checkbox"]:checked + label .icon {
 .blue {
   color: #6582ff;
 }
+
+.slide-down-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-down-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-down-enter, .slide-down-leave-to
+/* .slide-down-leave-active for below version 2.1.8 */ {
+  transform: translateY(10px);
+  opacity: 0;
+}
+.icon_zhankai {
+  transition: all 0.3s ease;
+}
+.rotate {
+  transform: rotate(-180deg);
+}
+.form {
+  background: #fff;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  overflow: hidden;
+      line-height: 24px;
+    border: 1px solid #ddd;
+  .input{
+    width: 50%;
+    float: right;
+  }
+  .title2{
+    font-weight: 600;
+  }
+}
+
 </style>
