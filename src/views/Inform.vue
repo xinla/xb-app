@@ -19,12 +19,12 @@
         <div v-show="showIndex === 1">
           <div v-for="(item, index) in healthTell" :key="index">
             <div class="number-line">{{index + 1}}</div>
-            <p v-if="item.index != 7">{{listQuestionHealthTell[item.index].question}}</p>
+            <p>{{listQuestionHealthTell[item.index].question}}</p>
 
             <div v-for="(unit, unique) in item.answers" :key="'a' + unique">
               <template v-if="!([1,12].includes(item.index))">
                 <p
-                  v-if="healthTell[index].children"
+                  v-if="listQuestionHealthTell[item.index].children"
                 >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
 
                 <div class="switch-wrap">
@@ -446,13 +446,13 @@
                 <div class="input-wrap" v-show="unit.applicant">
                   <div>
                     投保人已怀孕
-                    <input class="input" v-model="unit.applicantContent.applicantPregnant">周
+                    <input class="input" v-model="unit.applicantContent.pregnant">周
                   </div>
                 </div>
                 <div class="input-wrap" v-show="unit.insured">
                   <div>
                     被保人已怀孕
-                    <input class="input" v-model="unit.insuredContent.insuredPregnant">周
+                    <input class="input" v-model="unit.insuredContent.pregnant">周
                   </div>
                 </div>
               </template>
@@ -526,7 +526,7 @@
 
                 <p
                   v-if="unit.index === 2"
-                >{{`（${unique + 1}）` + healthTell[index].children[unique].question}}</p>
+                >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
                 <div class="switch-wrap" v-if="unit.index === 2">
                   <div class="half fr">
                     被保人
@@ -921,35 +921,41 @@
       </div>
 
       <div v-show="showIndex === 3">
-        <p>您是投/被保险人本人或投/被保险人的父母、配偶、子女、兄弟姐妹吗？若“是”请选择：</p>
-        <div class="switch-wrap">
-          <div class="half"></div>
-          <div class="half" style="padding-left: 20%;">
-            <mt-switch v-model="value"></mt-switch>
+        <div v-for="(item, index) in agentTell" :key="index">
+          <div v-for="(unit, unique) in item.answers" :key="unique">
+            <p>您是投/被保险人本人或投/被保险人的父母、配偶、子女、兄弟姐妹吗？若“是”请选择：</p>
+            <div class="switch-wrap">
+              <div class="half"></div>
+              <div class="half" style="padding-left: 20%;">
+                <mt-switch v-model="unit.agent"></mt-switch>
+              </div>
+            </div>
+
+            <div v-show="unit.agent" class="input-wrap" style="line-height: .8rem; height: auto;">
+              <div class="half" style="padding: 0;">
+                <input type="radio" id="0" value="本人" v-model="unit.agentContent.relation">
+                <label for="0">本人</label>
+                <br>
+                <input type="radio" id="1" value="子女" v-model="unit.agentContent.relation">
+                <label for="1">子女</label>
+                <br>
+                <input type="radio" id="2" value="其他" v-model="unit.agentContent.relation">
+                <label for="2">其他</label>
+                <br>
+              </div>
+              <div class="half" style="padding: 0;">
+                <input type="radio" id="3" value="父母" v-model="unit.agentContent.relation">
+                <label for="3">父母</label>
+                <br>
+                <input type="radio" id="4" value="配偶" v-model="unit.agentContent.relation">
+                <label for="4">配偶</label>
+              </div>
+              <input v-if="unit.agentContent.relation === '其他'" type="textarea" v-model="relation" placeholder="请填写你们之间的关系">
+            </div>
+
           </div>
         </div>
 
-        <div class="input-wrap" style="line-height: .8rem; height: auto;">
-          <div class="half" style="padding: 0;">
-            <input type="radio" id="0" value="0" v-model="value1">
-            <label for="0">本人</label>
-            <br>
-            <input type="radio" id="1" value="1" v-model="value1">
-            <label for="1">子女</label>
-            <br>
-            <input type="radio" id="2" value="2" v-model="value1">
-            <label for="2">其他</label>
-            <br>
-          </div>
-          <div class="half" style="padding: 0;">
-            <input type="radio" id="3" value="3" v-model="value1">
-            <label for="3">父母</label>
-            <br>
-            <input type="radio" id="4" value="4" v-model="value1">
-            <label for="4">配偶</label>
-          </div>
-          <input v-if="value1 == 2" type="textarea" v-model="text" placeholder="请填写你们之间的关系">
-        </div>
       </div>
     </div>
 
@@ -961,7 +967,7 @@
       <p>本人声明针对上述健康告知/财务告知的回答属实，并以此作为保险合同的组成部分，如有隐瞒或告知不实，足以影响贵公司承保决定的，所签发的保险合同将视为无效，贵公司有权解除合同。对于合同解除前发生的任何事故，贵公司不承担任何责任。</p>
 
       <div class="ac" style="margin: .5rem 0;">
-        <input type="checkbox" id="checkbox" v-model="value">
+        <input type="checkbox" id="checkbox" v-model="isAgree">
         <label for="checkbox">
           <svg class="icon icon_selected_r" aria-hidden="true">
             <use xlink:href="#icon_selected_r"></use>
@@ -975,7 +981,7 @@
 </template>
 
 <script>
-import { getInformDetail } from "@/api/inform";
+import { getInformDetail, saveInform } from "@/api/inform";
 export default {
   components: {},
   filters: {
@@ -984,348 +990,11 @@ export default {
       return arr[val];
     }
   },
-  props: {},
   data() {
     return {
-      value: false,
-      value1: "",
-      text: "",
-      form: {},
-      healthTell: [
-        {
-          index: 1,
-          question: "",
-          answers: [
-            {
-              applicant: false,
-              insured: false,
-              applicantContent: {
-                height: 0,
-                weight: 0
-              },
-              insuredContent: {
-                height: 0,
-                weight: 0
-              }
-            }
-          ]
-        },
-        {
-          index: 2,
-          question: "您是否目前或曾经有吸烟习惯？若“是”请填写下列内容：",
-          answers: [
-            {
-              applicantContent: {
-                smokeNumEveryDay: 10,
-                smokeYear: 7,
-                stopSmoke: 10,
-                stopReason: "无"
-              },
-              insured: 1,
-              applicant: 1,
-              insuredContent: {
-                stopSmoke: 10,
-                smokeNumEveryDay: 10,
-                smokeYear: 7,
-                stopReason: "无"
-              }
-            }
-          ]
-        },
-        {
-          question:
-            "您是否目前或曾经有饮白酒、洋酒等烈性酒的习惯？若“是”请填写下列内容：",
-          answers: [
-            {
-              insured: 1,
-              insuredContent: {
-                drinkYear: 10,
-                stopReason: "无",
-                stopDrink: 7,
-                drinkNumEveryTime: 2
-              },
-              applicant: 1,
-              applicantContent: {
-                drinkYear: 10,
-                stopReason: "无",
-                stopDrink: 7,
-                drinkNumEveryTime: 2
-              }
-            }
-          ],
-          index: 3
-        },
-        {
-          index: 4,
-          question:
-            "您在过去6个月内是否曾有过下列症状：反复头痛、眩晕、晕厥、咯血、胸痛、呼吸困难、呕血、黄疸、便血、听力下降、耳鸣、复视、视力明显下降、原因不明的皮肤或粘膜或齿龈出血、原因不明的发热、体重下降（3个月内超过5公斤）、原因不明的肌肉萎缩、身体的其他感觉异常或活动障碍等",
-          answers: [
-            {
-              insured: 0,
-              applicant: 0
-            }
-          ]
-        },
-        {
-          index: 5,
-          question:
-            "您在过去两年内是否做过血压、血液化验、心电图、X光、B超、超声心动图、CT、核磁共振、内窥镜及活体组织检查？若是，请在“健康告知说明栏”中注明检查原因、检查时间与检查结果",
-          answers: [
-            {
-              insured: 0,
-              applicant: 0
-            }
-          ]
-        },
-        {
-          index: 6,
-          question:
-            "您过去五年内是否曾住院诊疗？若有，请写明原因、时间、治疗结果及医院名称",
-          answers: [
-            {
-              insured: 0,
-              applicant: 0
-            }
-          ]
-        },
-        {
-          index: 7,
-          question: "您是否目前或曾经患有，或被怀疑患有下列疾病？",
-          answers: [
-            {
-              insured: 0,
-              index: 1,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 2,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 3,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 4,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 5,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 6,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 7,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 8,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 9,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 10,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 11,
-              applicant: 1
-            }
-          ],
-          children: [
-            {
-              question:
-                "哮喘、慢性支气管炎、支气管扩张、肺气肿、肺结核、肺纤维化等呼吸系统疾病",
-              applicant: false,
-              insured: false
-            },
-            {
-              question:
-                "脑出血、脑梗塞、短暂性脑缺血、脑血管瘤、多发性硬化、重症肌无力、帕金森氏综合症、癫痫、精神分裂症、抑郁症等神经系统及精神疾病",
-              applicant: false,
-              insured: false
-            },
-            {
-              question:
-                "高血压、冠心病、风湿性心脏病、心脏瓣膜病、先天性心脏病、心肌病、主动脉瘤、心律失常等心血管疾病",
-              applicant: false,
-              insured: false
-            },
-            {
-              question:
-                "肝炎、肝炎病毒携带、肝硬化、消化道溃疡/出血/穿孔、结肠炎、胰腺炎等消化系统疾病",
-              applicant: false,
-              insured: false
-            },
-            {
-              question:
-                "血尿、蛋白尿、肾炎、肾病综合症、肾衰竭、肾囊肿、膀胱疾病、前列腺疾病等泌尿生殖系统疾病",
-              applicant: false,
-              insured: false
-            },
-            {
-              question:
-                "糖尿病、痛风、甲状腺疾病、脑垂体疾病、肾上腺疾病、白血病、血友病、再生障碍性贫血、紫癜等内分泌、代谢及血液系统疾病",
-              applicant: false,
-              insured: false
-            },
-            {
-              question:
-                "类风湿性关节炎、风湿病、强直性脊柱炎、白塞氏病、系统性红斑狼疮、肌肉营养不良症、免疫缺陷病（艾滋病或艾滋病病毒携带）等骨骼、肌肉、结缔组织疾病",
-              applicant: false,
-              insured: false
-            },
-            {
-              question:
-                "中耳炎、白内障、青光眼、视神经或视网膜病变等眼、耳、鼻、喉或口腔疾病",
-              applicant: false,
-              insured: false
-            },
-            {
-              question:
-                "恶性肿瘤、尚未证实为良性或恶性的肿瘤、息肉、肿块、囊肿、赘生物",
-              applicant: false,
-              insured: false
-            },
-            {
-              question:
-                "先天性疾病、遗传性疾病、脑外伤后遗症、内脏损伤、急/慢性中毒或职业病等",
-              applicant: false,
-              insured: false
-            },
-            {
-              question: "以上未提及的疾病或症状",
-              applicant: false,
-              insured: false
-            }
-          ]
-        },
-
-        {
-          index: 8,
-          question:
-            "身体残疾情况：您是否智能障碍？是否失明、聋哑、跛行、小儿麻痹后遗症？是否有脊柱、胸廓、四肢、五官、手指、足趾畸形或功能障碍？",
-          answers: [
-            {
-              insured: 0,
-              index: 1,
-              applicant: 1
-            }
-          ]
-        },
-        {
-          index: 9,
-          question:
-            "您是否使用过任何成瘾药物，如镇静安眠剂、迷幻药、吸食有机溶剂或毒品？",
-          answers: [
-            {
-              insured: 0,
-              index: 1,
-              applicant: 1
-            }
-          ]
-        },
-        {
-          index: 10,
-          question:
-            "您的父母、子女、兄弟姐妹中，是否有人患有癌症、糖尿病、多囊肝、多囊肾、血友病、精神疾病及其他遗传性疾病？",
-          answers: [
-            {
-              insured: 0,
-              index: 1,
-              applicant: 1
-            }
-          ]
-        },
-        {
-          index: 11,
-          question: "女性告知（≥14周岁填写）",
-          children: [
-            {
-              index: "1",
-              question: "您现在是否怀孕"
-            },
-            {
-              index: "2",
-              question:
-                "是否患有或曾经患有阴道不规则出血、子宫肌瘤、子宫内膜异位症、卵巢囊肿、乳腺包块或肿块等女性疾病？"
-            },
-            {
-              index: "3",
-              question: "是否被建议做宫颈涂片、乳房超声、X光、活检等？"
-            }
-          ],
-          answers: [
-            {
-              insured: 0,
-              insuredContent: {
-                insuredPregnant: 5
-              },
-              index: 1,
-              applicant: 1,
-              applicantContent: {
-                applicantPregnant: 4
-              }
-            },
-            {
-              insured: 0,
-              index: 2,
-              applicant: 1
-            },
-            {
-              insured: 0,
-              index: 3,
-              applicant: 1
-            }
-          ]
-        },
-        {
-          index: 12,
-          question: "两周岁以下儿童（含两周岁）告知：",
-          children: [
-            {
-              index: "1",
-              question: ""
-            },
-            {
-              index: "2",
-              question:
-                "是否多胎、早产、难产、先天性疾病、遗传性疾病或畸形、体重不增或增长缓慢？"
-            }
-          ],
-          answers: [
-            {
-              index: 1,
-              insuredContent: {
-                childWeek: "8",
-                childHeight: "50",
-                childWeight: "25",
-                stayHospital: "1"
-              }
-            },
-            {
-              index: 2,
-              insured: 0
-            }
-          ]
-        }
-      ],
+      isAgree: false,
+      relation: '',
+      
       listQuestionHealthTell: Object.freeze({
         1: {
           question: ""
@@ -1468,17 +1137,246 @@ export default {
           question: "您是否负债超过200万元（自用房屋及车辆贷款除外）？"
         }
       }),
+      healthTell: [
+        {
+          index: 1,
+          answers: [
+            {
+              index: 1,
+              applicant: 0,
+              insured: 0,
+              applicantContent: {
+                height: 0,
+                weight: 0
+              },
+              insuredContent: {
+                height: 0,
+                weight: 0
+              }
+            }
+          ]
+        },
+        {
+          index: 2,
+          answers: [
+            {
+              index: 1,
+              applicantContent: {
+                smokeNumEveryDay: 0,
+                smokeYear: 0,
+                stopSmoke: 0,
+                stopReason: "无"
+              },
+              insured: 0,
+              applicant: 0,
+              insuredContent: {
+                stopSmoke: 0,
+                smokeNumEveryDay: 0,
+                smokeYear: 0,
+                stopReason: "无"
+              }
+            }
+          ]
+        },
+        {
+          answers: [
+            {
+              index: 1,
+              insured: 0,
+              insuredContent: {
+                drinkYear: 0,
+                stopReason: "无",
+                stopDrink: 0,
+                drinkNumEveryTime: 0
+              },
+              applicant: 1,
+              applicantContent: {
+                drinkYear: 0,
+                stopReason: "无",
+                stopDrink: 0,
+                drinkNumEveryTime: 0
+              }
+            }
+          ],
+          index: 3
+        },
+        {
+          index: 4,
+          answers: [
+            {
+              index: 1,
+              insured: 0,
+              applicant: 0
+            }
+          ]
+        },
+        {
+          index: 5,
+          answers: [
+            {
+              index: 1,
+              insured: 0,
+              applicant: 0
+            }
+          ]
+        },
+        {
+          index: 6,
+          answers: [
+            {
+              index: 1,
+              insured: 0,
+              applicant: 0
+            }
+          ]
+        },
+        {
+          index: 7,
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 2,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 3,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 4,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 5,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 6,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 7,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 8,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 9,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 10,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 11,
+              applicant: 0
+            }
+          ],
+        },
+
+        {
+          index: 8,
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 0
+            }
+          ]
+        },
+        {
+          index: 9,
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 0
+            }
+          ]
+        },
+        {
+          index: 10,
+          answers: [
+            {
+              insured: 0,
+              index: 1,
+              applicant: 0
+            }
+          ]
+        },
+        {
+          index: 11,
+          answers: [
+            {
+              insured: 0,
+              insuredContent: {
+                pregnant: 0
+              },
+              index: 1,
+              applicant: 1,
+              applicantContent: {
+                pregnant: 0
+              }
+            },
+            {
+              insured: 0,
+              index: 2,
+              applicant: 0
+            },
+            {
+              insured: 0,
+              index: 3,
+              applicant: 0
+            }
+          ]
+        },
+        {
+          index: 12,
+          answers: [
+            {
+              index: 1,
+              insuredContent: {
+                childWeek: 0,
+                childHeight: 0,
+                childWeight: 0,
+                stayHospital: 0
+              }
+            },
+            {
+              index: 2,
+              insured: 0
+            }
+          ]
+        }
+      ],
       otherTell: [
         {
           answers: [
             {
               applicantContent: {
-                income: 15,
-                incomeFrom: "工资,房屋出租"
+                income: 0,
+                incomeFrom: ""
               },
               insuredContent: {
-                income: 15,
-                incomeFrom: "工资,房屋出租"
+                income: 0,
+                incomeFrom: ""
               }
             }
           ],
@@ -1490,12 +1388,12 @@ export default {
               insured: 0,
               index: 1,
               applicantContent: {
-                applicantDriverLicense: "C1"
+                applicantDriverLicense: ""
               },
               insuredContent: {
-                insuredDriverLicense: "C1"
+                insuredDriverLicense: ""
               },
-              applicant: 1
+              applicant: 0
             }
           ],
           index: 2
@@ -1505,13 +1403,13 @@ export default {
             {
               insured: 0,
               applicantContent: {
-                applicantDriverLicense: "C1"
+                applicantMedicalInsurance: ""
               },
               insuredContent: {
-                insuredDriverLicense: "C1"
+                insuredMedicalInsurance: ""
               },
               index: 1,
-              applicant: 1
+              applicant: 0
             }
           ],
           index: 3
@@ -1521,7 +1419,7 @@ export default {
             {
               insured: 0,
               index: 1,
-              applicant: 1
+              applicant: 0
             }
           ],
           index: 4
@@ -1531,7 +1429,7 @@ export default {
             {
               insured: 0,
               index: 1,
-              applicant: 1
+              applicant: 0
             }
           ],
           index: 5
@@ -1540,15 +1438,15 @@ export default {
           answers: [
             {
               applicantContent: {
-                project: "赛车",
-                frequency: 1
+                project: "",
+                frequency: 0
               },
               insured: 0,
               index: 1,
-              applicant: 1,
+              applicant: 0,
               insuredContent: {
-                project: "赛车",
-                frequency: 1
+                project: "",
+                frequency: 0
               }
             }
           ],
@@ -1559,7 +1457,7 @@ export default {
             {
               insured: 0,
               index: 1,
-              applicant: 1
+              applicant: 0
             }
           ],
           index: 7
@@ -1569,7 +1467,7 @@ export default {
             {
               insured: 0,
               index: 1,
-              applicant: 1
+              applicant: 0
             }
           ],
           index: 8
@@ -1716,32 +1614,48 @@ export default {
           ]
         }
       ],
-      showIndex: 1
+      agentTell: [
+        {
+          index: 1,
+          answers: [
+            {
+              index: 1,
+              agent: 1,
+              agentContent: {
+                relation: "父母"
+              }
+            }
+          ]
+        }
+      ],
+      showIndex: 1,
+      token: this.$route.query.token ||
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDQxODU1MiwiaWF0IjoxNTYwNDE0OTUyLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.lECD0okmkcfVtf6qAbC9KzAeIng6IjQ-QBhDIaa8Q7Q"
     };
   },
-  computed: {},
-  watch: {},
-  created() {},
   mounted() {
     let query = {
       id: this.$route.query.id || "2266434895041527813",
-      token:
-        this.$route.query.token ||
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDMwOTEyMywiaWF0IjoxNTYwMzA1NTIzLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.ZifX4lz2ONlABg3LoNEURhICOmBW9lnfPCB8RdqMMIY"
+      token: this.token
     };
     this.getData(query);
+  },
+  beforeRouteLeave (to, from , next) {
+    this.submit().then(res => {
+      next()
+    })
   },
   methods: {
     getData(query) {
       getInformDetail(query).then(res => {
-        // console.log(res);
+        console.log(res);
         res.tellInfo = JSON.parse(res.tellInfo);
         this.healthTell = res.tellInfo.healthTell;
         this.otherTell = res.tellInfo.otherTell;
-        this.healthSpecialExplain = res.healthSpecialExplain;
-        this.otherSpecialExplain = res.otherSpecialExplain;
-        this.form = res;
-        console.log(this.form);
+        // this.healthSpecialExplain = JSON.parse(res.healthSpecialExplain);
+        // this.otherSpecialExplain = JSON.parse(res.otherSpecialExplain);
+        // this.agentTell = JSON.parse(res.agentTell);
+        // console.log(this.form);
       });
     },
     slide(index) {
@@ -1750,8 +1664,21 @@ export default {
       } else {
         this.showIndex = index;
       }
+    },
+    submit() {
+      if (agentTell[0].answers[0].agentContent.relation === '其他') {
+        agentTell[0].answers[0].agentContent.relation = this.relation
+      }
+      let data = {
+        tellInfo: JSON.stringify(this.healthTell) + JSON.stringify(this.otherTell),
+        healthSpecialExplain: JSON.stringify(this.healthSpecialExplain),
+        otherSpecialExplain: JSON.stringify(this.otherSpecialExplain),
+        agentTell: JSON.stringify(this.agentTell),
+      }
+      console.log(data)
+      return saveInform(data, this.token)
     }
-  }
+  },
 };
 </script>
 <style lang="less" scoped>

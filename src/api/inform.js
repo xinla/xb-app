@@ -21,7 +21,7 @@ export const getInformDetail = ({id, token}) => {
  * 新增或者修改保单告知项
  * @param {*} data 
  */
-export const saveInform = ({data, token}) => {
+export const saveInform = (data, token) => {
   return axios.request({
     url: controller + `/saveOrUpdateTellInfo`,
     method: 'post',
