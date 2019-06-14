@@ -638,84 +638,30 @@
               <template v-if="item.index === 2">
                 <div class="input-wrap" v-show="unit.applicant">
                   投保人
-                  <input class="input" v-model="unit.applicantContent.applicantDriverLicense">
+                  <input class="input" v-model="unit.applicantContent.driverLicense">
                 </div>
 
                 <div class="input-wrap" v-show="unit.insured">
                   被保人
-                  <input class="input" v-model="unit.insuredContent.insuredDriverLicense">
+                  <input class="input" v-model="unit.insuredContent.driverLicense">
                 </div>
               </template>
 
               <template v-if="item.index === 3">
                 <div class="input-wrap" v-show="unit.applicant">
                   投保人
-                  <input class="input" v-model="unit.applicantContent.applicantMedicalInsurance">
+                  <input class="input" v-model="unit.applicantContent.medicalInsurance">
                 </div>
 
                 <div class="input-wrap" v-show="unit.insured">
                   被保人
-                  <input class="input" v-model="unit.insuredContent.insuredMedicalInsurance">
+                  <input class="input" v-model="unit.insuredContent.medicalInsurance">
                 </div>
               </template>
 
-              <template v-if="item.index === 4">
+              <template v-if="[4, 5, 7, 8].includes(item.index)">
                 <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
-                  <div v-if="vItem.index === 4">
-                    <div v-show="unit.applicant">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.applicant"
-                        :key="vUnique"
-                      >
-                        <div class="title2">投保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>说明内容</span>
-                            <input class="input" v-model="vUnit.explainContent">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div v-show="unit.insured">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.insured"
-                        :key="vUnique"
-                      >
-                        <div class="title2">被保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>说明内容</span>
-                            <input class="input" v-model="vUnit.explainContent">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
-
-              <template v-if="item.index === 5">
-                <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
-                  <div v-if="vItem.index === 5">
+                  <div v-if="vItem.index === item.index">
                     <div v-show="unit.applicant">
                       <div
                         class="form"
@@ -768,7 +714,7 @@
               </template>
 
               <template v-if="item.index === 6">
-                <div class="input-wrap">
+                <div class="input-wrap" v-show="unit.applicant">
                   <div class="title2">投保人</div>
                   <div class="half">
                     项目
@@ -780,7 +726,7 @@
                   </div>
                 </div>
 
-                <div class="input-wrap">
+                <div class="input-wrap" v-show="unit.insured">
                   <div class="title2">被保人</div>
                   <div class="half">
                     项目
@@ -793,113 +739,6 @@
                 </div>
               </template>
 
-              <template v-if="item.index === 7">
-                <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
-                  <div v-if="vItem.index === 7">
-                    <div v-show="unit.applicant">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.applicant"
-                        :key="vUnique"
-                      >
-                        <div class="title2">投保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>说明内容</span>
-                            <input class="input" v-model="vUnit.explainContent">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div v-show="unit.insured">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.insured"
-                        :key="vUnique"
-                      >
-                        <div class="title2">被保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>说明内容</span>
-                            <input class="input" v-model="vUnit.explainContent">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
-
-              <template v-if="item.index === 8">
-                <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
-                  <div v-if="vItem.index === 8">
-                    <div v-show="unit.applicant">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.applicant"
-                        :key="vUnique"
-                      >
-                        <div class="title2">投保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>说明内容</span>
-                            <input class="input" v-model="vUnit.explainContent">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div v-show="unit.insured">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.insured"
-                        :key="vUnique"
-                      >
-                        <div class="title2">被保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>说明内容</span>
-                            <input class="input" v-model="vUnit.explainContent">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
             </div>
           </div>
         </div>
@@ -977,11 +816,16 @@
         <span class="blue">《投保人声明》</span>
       </div>
     </div>
+
+    <div @click="submit">提交</div>
   </div>
 </template>
 
 <script>
-import { getInformDetail, saveInform } from "@/api/inform";
+import { getInformDetail, saveInform, getIsSelf, getIsImmunity } from "@/api/inform";
+
+const relationList = ['本人', '子女', '父母', '配偶', '其他']
+
 export default {
   components: {},
   filters: {
@@ -994,7 +838,8 @@ export default {
     return {
       isAgree: false,
       relation: '',
-      
+      isSelf: false,
+      isImmunity: false,
       listQuestionHealthTell: Object.freeze({
         1: {
           question: ""
@@ -1189,7 +1034,7 @@ export default {
                 stopDrink: 0,
                 drinkNumEveryTime: 0
               },
-              applicant: 1,
+              applicant: 0,
               applicantContent: {
                 drinkYear: 0,
                 stopReason: "无",
@@ -1629,13 +1474,17 @@ export default {
         }
       ],
       showIndex: 1,
+      policyId: '',
+      id: '',
       token: this.$route.query.token ||
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDQxODU1MiwiaWF0IjoxNTYwNDE0OTUyLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.lECD0okmkcfVtf6qAbC9KzAeIng6IjQ-QBhDIaa8Q7Q"
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDUxOTc0OCwiaWF0IjoxNTYwNTE2MTQ4LCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.b-TOXqcISOSaiRWxfaA7fDLlh5IWTBa9Scz1kQfBMiM"
+
     };
   },
   mounted() {
+    this.policyId = this.$route.query.id || "2278898684143861761" // 2266434895041527813
     let query = {
-      id: this.$route.query.id || "2266434895041527813",
+      id: this.policyId,
       token: this.token
     };
     this.getData(query);
@@ -1648,15 +1497,29 @@ export default {
   methods: {
     getData(query) {
       getInformDetail(query).then(res => {
+        // debugger
         console.log(res);
-        res.tellInfo = JSON.parse(res.tellInfo);
-        this.healthTell = res.tellInfo.healthTell;
-        this.otherTell = res.tellInfo.otherTell;
-        // this.healthSpecialExplain = JSON.parse(res.healthSpecialExplain);
-        // this.otherSpecialExplain = JSON.parse(res.otherSpecialExplain);
-        // this.agentTell = JSON.parse(res.agentTell);
-        // console.log(this.form);
+        this.id = res.id
+        let tellInfo = JSON.parse(res.tellInfo);
+        this.healthTell = tellInfo.healthTell;
+        this.otherTell = tellInfo.otherTell;
+        this.agentTell = tellInfo.agentTell
+        if (!relationList.includes(this.agentTell[0].answers[0].agentContent.relation)) {
+          this.relation = this.agentTell[0].answers[0].agentContent.relation
+          this.agentTell[0].answers[0].agentContent.relation = '其他'
+        }
+        this.healthSpecialExplain = JSON.parse(res.healthSpecialExplain);
+        this.otherSpecialExplain = JSON.parse(res.otherSpecialExplain);
+        // console.log(res.agentTell);
       });
+      getIsSelf(query).then(res => {
+        console.log(res)
+        this.isSelf = res
+      })
+      getIsImmunity(query).then(res => {
+        this.isImmunity = res
+        console.log(JSON.stringify(res))
+      })
     },
     slide(index) {
       if (this.showIndex === index) {
@@ -1666,17 +1529,27 @@ export default {
       }
     },
     submit() {
-      if (agentTell[0].answers[0].agentContent.relation === '其他') {
-        agentTell[0].answers[0].agentContent.relation = this.relation
+      if (!this.isAgree) {
+        this.Toast('请先同意《投保人声明》');
+        return
       }
+      if (this.agentTell[0].answers[0].agentContent.relation === '其他') {
+        this.agentTell[0].answers[0].agentContent.relation = this.relation
+      }
+
       let data = {
-        tellInfo: JSON.stringify(this.healthTell) + JSON.stringify(this.otherTell),
+        policyId: this.policyId,
+        id: this.id,
+        tellInfo: JSON.stringify({
+          healthTell: this.healthTell,
+          otherTell: this.otherTell,
+          agentTell: this.agentTell
+        }),
         healthSpecialExplain: JSON.stringify(this.healthSpecialExplain),
         otherSpecialExplain: JSON.stringify(this.otherSpecialExplain),
-        agentTell: JSON.stringify(this.agentTell),
       }
       console.log(data)
-      return saveInform(data, this.token)
+      saveInform(data, this.token)
     }
   },
 };
@@ -1797,8 +1670,8 @@ input[type="textarea"] {
 input[type="checkbox"] + label::before {
   content: "";
   display: inline-block;
-  width: 0.24rem;
-  height: 0.24rem;
+  width: 10px;
+  height: 10px;
   border-radius: 4px;
   border: 2px solid #ddd;
   vertical-align: sub;

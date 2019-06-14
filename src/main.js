@@ -16,7 +16,7 @@ import store from './store'
 import Tool from './libs/tools'
 Vue.use(Tool);
 
-import { TabContainer, TabContainerItem, Cell, Navbar, TabItem, Range, Switch } from 'mint-ui';
+import { TabContainer, TabContainerItem, Cell, Navbar, TabItem, Range, Switch, Toast } from 'mint-ui';
 
 Vue.component(Switch.name, Switch);
 Vue.component(Range.name, Range);
@@ -25,6 +25,7 @@ Vue.component(TabItem.name, TabItem);
 Vue.component(Cell.name, Cell);
 Vue.component(TabContainer.name, TabContainer);
 Vue.component(TabContainerItem.name, TabContainerItem);
+Vue.prototype.Toast = Toast
 
 Vue.config.productionTip = false
 

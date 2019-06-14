@@ -68,7 +68,7 @@ export default {
   mounted() {
     let query = {
       id: this.$route.query.id || '2266402544886480903',
-      token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDE1MDczOCwiaWF0IjoxNTYwMTQ3MTM4LCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.J0Mcx9__QX9TG2Ljyy7eGQuOBtBuIS1tQ7qdrB1Ttt4'
+      token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMSIsImV4cCI6MTU2MDUwNDU2NCwiaWF0IjoxNTYwNTAwOTY0LCJ1c2VySWQiOjIyNjU2NDI5NDkzMTAxNTI3MDZ9.wVYg3NrG0ffh8orGCc8aTjAPOp8ybDERIMI8znE9wAI'
     }
     this.getData(query)
     

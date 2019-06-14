@@ -56,7 +56,7 @@ class HttpRequest {
       const { data, status } = res
       // code 0:成功，-1/其它:错误
       if (status === 200 && data.code === 0) {
-        return data.result || data.data
+        return JSON.stringify(data.result) ? data.result :  data.data
       } else {
         addErrorLog(res)
         return Promise.reject(res)
