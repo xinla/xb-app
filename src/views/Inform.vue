@@ -28,11 +28,11 @@
                 >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
 
                 <div class="switch-wrap">
-                  <div class="half">
+                  <div class="half" v-if="!isSelf">
                     投保人
                     <mt-switch v-model="unit.applicant"></mt-switch>
                   </div>
-                  <div class="half">
+                  <div class="half fr">
                     被保人
                     <mt-switch v-model="unit.insured"></mt-switch>
                   </div>
@@ -40,7 +40,7 @@
               </template>
 
               <template v-if="item.index === 1">
-                <div class="input-wrap">
+                <div class="input-wrap" v-if="!isSelf">
                   <div class="title2">投保人</div>
                   <div class="half">
                     身高
@@ -66,7 +66,7 @@
               </template>
 
               <template v-if="item.index === 2">
-                <div class="input-wrap" v-show="unit.applicant">
+                <div class="input-wrap" v-show="unit.applicant && !isSelf">
                   <div class="title2">投保人吸烟情况</div>
                   <div class="half">
                     吸烟
@@ -108,7 +108,7 @@
               </template>
 
               <template v-if="item.index === 3">
-                <div class="input-wrap" v-show="unit.applicant">
+                <div class="input-wrap" v-show="unit.applicant && !isSelf">
                   <div class="title2">投保人情况</div>
                   <div class="half">
                     喝酒
@@ -149,15 +149,17 @@
                 </div>
               </template>
 
-              <template v-if="item.index === 4">
+<!-- 健康告知说明栏 -->
+              <template v-if="[4, 5, 6, 7, 8, 9, 10, 11].includes(item.index)">
                 <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
-                  <div v-if="vItem.index === 4">
-                    <div v-show="unit.applicant">
+                  <div v-if="vItem.index === item.index">
+                    <div v-show="unit.applicant && isImmunity && !isSelf">
                       <div
                         class="form"
                         v-for="(vUnit, vUnique) in vItem.applicant"
                         :key="vUnique"
                       >
+                      <div v-if="vUnit.index === unit.index">
                         <div class="title2">投保人</div>
                         <ul>
                           <li>
@@ -194,14 +196,15 @@
                           </li>
                         </ul>
                       </div>
+                      </div>
                     </div>
 
                     <div v-show="unit.insured">
                       <div
-                        class="form"
                         v-for="(vUnit, vUnique) in vItem.insured"
                         :key="vUnique"
                       >
+                      <div class="form" v-if="vUnit.index === unit.index">
                         <div class="title2">被保人</div>
                         <ul>
                           <li>
@@ -238,193 +241,6 @@
                           </li>
                         </ul>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
-
-              <template v-if="item.index === 5">
-                <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
-                  <div v-if="vItem.index === 5">
-                    <div v-show="unit.applicant">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.applicant"
-                        :key="vUnique"
-                      >
-                        <div class="title2">投保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>疾病名称</span>
-                            <input class="input" v-model="vUnit.diseaseName">
-                          </li>
-                          <li>
-                            <span>发病时间</span>
-                            <input class="input" v-model="vUnit.diseaseTime">
-                          </li>
-                          <li>
-                            <span>治疗方法</span>
-                            <input class="input" v-model="vUnit.therapies">
-                          </li>
-                          <li>
-                            <span>治疗医院</span>
-                            <input class="input" v-model="vUnit.hospital">
-                          </li>
-                          <li>
-                            <span>最后治疗时间</span>
-                            <input class="input" v-model="vUnit.lastTherapyTime">
-                          </li>
-                          <li>
-                            <span>现在情况</span>
-                            <input class="input" v-model="vUnit.currentState">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div v-show="unit.insured">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.insured"
-                        :key="vUnique"
-                      >
-                        <div class="title2">被保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>疾病名称</span>
-                            <input class="input" v-model="vUnit.diseaseName">
-                          </li>
-                          <li>
-                            <span>发病时间</span>
-                            <input class="input" v-model="vUnit.diseaseTime">
-                          </li>
-                          <li>
-                            <span>治疗方法</span>
-                            <input class="input" v-model="vUnit.therapies">
-                          </li>
-                          <li>
-                            <span>治疗医院</span>
-                            <input class="input" v-model="vUnit.hospital">
-                          </li>
-                          <li>
-                            <span>最后治疗时间</span>
-                            <input class="input" v-model="vUnit.lastTherapyTime">
-                          </li>
-                          <li>
-                            <span>现在情况</span>
-                            <input class="input" v-model="vUnit.currentState">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
-
-              <template v-if="item.index === 6">
-                <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
-                  <div v-if="vItem.index === 6">
-                    <div v-show="unit.applicant">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.applicant"
-                        :key="vUnique"
-                      >
-                        <div class="title2">投保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>疾病名称</span>
-                            <input class="input" v-model="vUnit.diseaseName">
-                          </li>
-                          <li>
-                            <span>发病时间</span>
-                            <input class="input" v-model="vUnit.diseaseTime">
-                          </li>
-                          <li>
-                            <span>治疗方法</span>
-                            <input class="input" v-model="vUnit.therapies">
-                          </li>
-                          <li>
-                            <span>治疗医院</span>
-                            <input class="input" v-model="vUnit.hospital">
-                          </li>
-                          <li>
-                            <span>最后治疗时间</span>
-                            <input class="input" v-model="vUnit.lastTherapyTime">
-                          </li>
-                          <li>
-                            <span>现在情况</span>
-                            <input class="input" v-model="vUnit.currentState">
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div v-show="unit.insured">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.insured"
-                        :key="vUnique"
-                      >
-                        <div class="title2">被保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>疾病名称</span>
-                            <input class="input" v-model="vUnit.diseaseName">
-                          </li>
-                          <li>
-                            <span>发病时间</span>
-                            <input class="input" v-model="vUnit.diseaseTime">
-                          </li>
-                          <li>
-                            <span>治疗方法</span>
-                            <input class="input" v-model="vUnit.therapies">
-                          </li>
-                          <li>
-                            <span>治疗医院</span>
-                            <input class="input" v-model="vUnit.hospital">
-                          </li>
-                          <li>
-                            <span>最后治疗时间</span>
-                            <input class="input" v-model="vUnit.lastTherapyTime">
-                          </li>
-                          <li>
-                            <span>现在情况</span>
-                            <input class="input" v-model="vUnit.currentState">
-                          </li>
-                        </ul>
                       </div>
                     </div>
                   </div>
@@ -443,7 +259,7 @@
               </template>-->
 
               <template v-if="item.index === 11 && unique === 0">
-                <div class="input-wrap" v-show="unit.applicant">
+                <div class="input-wrap" v-show="unit.applicant && !isSelf">
                   <div>
                     投保人已怀孕
                     <input class="input" v-model="unit.applicantContent.pregnant">周
@@ -479,6 +295,7 @@
                       v-model="unit.insuredContent.stayHospital"
                     >天
                   </div>
+                  <!-- 健康告知说明栏 -->
                   <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
                     <div v-if="vItem.index === 12">
                       <div v-show="unit.insuredContent.stayHospital > 7">
@@ -536,39 +353,6 @@
               </template>
             </div>
 
-            <!-- <template v-if="item.index === 7">
-              <div style="margin: 18px 0; font-weight: 600;">{{healthTell[index].question}}</div>
-              <div v-for="(unit, unique) in item.answers" :key="'d' + unique">
-                <p>{{`（${unique + 1}）` + healthTell[index].children[unique].question}}</p>
-                <div class="switch-wrap">
-                  <div class="half">
-                    投保人
-                    <mt-switch v-model="unit.applicant"></mt-switch>
-                  </div>
-                  <div class="half">
-                    被保人
-                    <mt-switch v-model="unit.insured"></mt-switch>
-                  </div>
-                </div>
-              </div>
-            </template>-->
-
-            <!-- <template v-if="item.index === 11">
-              <div style="margin: 18px 0; font-weight: 600;">{{healthTell[index].question}}</div>
-              <div v-for="(unit, unique) in item.answers" :key="'d' + unique">
-                <p>{{`（${unique + 1}）` + healthTell[index].children[unit.index]}}</p>
-                <div class="switch-wrap">
-                  <div class="half">
-                    投保人
-                    <mt-switch v-model="unit.applicant"></mt-switch>
-                  </div>
-                  <div class="half">
-                    被保人
-                    <mt-switch v-model="unit.insured"></mt-switch>
-                  </div>
-                </div>
-              </div>
-            </template>-->
           </div>
         </div>
       </transition>
@@ -593,153 +377,153 @@
       <transition name="slide-down">
         <div v-show="showIndex === 2">
           <div v-for="(item, index) in otherTell" :key="'e' + index">
-            <div class="number-line">{{index + 1}}</div>
-            <p>{{listQuestionInformFinancing[item.index].question}}</p>
+              <div class="number-line">{{index + 1}}</div>
+              <p>{{listQuestionInformFinancing[item.index].question}}</p>
 
-            <div v-for="(unit, unique) in item.answers" :key="'e' + unique">
-              <template v-if="!([1].includes(item.index))">
-                <div class="switch-wrap">
-                  <div class="half">
+              <div v-for="(unit, unique) in item.answers" :key="'e' + unique">
+                <template v-if="!([1].includes(item.index))">
+                  <div class="switch-wrap">
+                    <div class="half" v-if="isImmunity && !isSelf">
+                      投保人
+                      <mt-switch v-model="unit.applicant"></mt-switch>
+                    </div>
+                    <div class="half fr">
+                      被保人
+                      <mt-switch v-model="unit.insured"></mt-switch>
+                    </div>
+                  </div>
+                </template>
+
+                <template v-if="item.index === 1">
+                  <div class="input-wrap" v-if="!isSelf">
+                    <div class="title2">投保人</div>
+                    <div>
+                      固定收入
+                      <input class="input" v-model="unit.applicantContent.income">万元
+                    </div>
+                    <div>
+                      来源
+                      <input class="input input-width" v-model="unit.applicantContent.incomeFrom">
+                    </div>
+                  </div>
+                  <div class="input-wrap">
+                    <div class="title2">被保险人</div>
+                    <div>
+                      固定收入
+                      <input class="input" v-model="unit.insuredContent.income">万元
+                    </div>
+                    <div>
+                      来源
+                      <input class="input input-width" v-model="unit.insuredContent.incomeFrom">
+                    </div>
+                  </div>
+                </template>
+
+                <template v-if="item.index === 2">
+                  <div class="input-wrap" v-show="unit.applicant">
                     投保人
-                    <mt-switch v-model="unit.applicant"></mt-switch>
+                    <input class="input" v-model="unit.applicantContent.driverLicense">
                   </div>
-                  <div class="half">
+
+                  <div class="input-wrap" v-show="unit.insured">
                     被保人
-                    <mt-switch v-model="unit.insured"></mt-switch>
+                    <input class="input" v-model="unit.insuredContent.driverLicense">
                   </div>
-                </div>
-              </template>
+                </template>
 
-              <template v-if="item.index === 1">
-                <div class="input-wrap">
-                  <div class="title2">投保人</div>
-                  <div>
-                    固定收入
-                    <input class="input" v-model="unit.applicantContent.income">万元
+                <template v-if="item.index === 3">
+                  <div class="input-wrap" v-show="unit.applicant">
+                    投保人
+                    <input class="input" v-model="unit.applicantContent.medicalInsurance">
                   </div>
-                  <div>
-                    来源
-                    <input class="input input-width" v-model="unit.applicantContent.incomeFrom">
+
+                  <div class="input-wrap" v-show="unit.insured">
+                    被保人
+                    <input class="input" v-model="unit.insuredContent.medicalInsurance">
                   </div>
-                </div>
-                <div class="input-wrap">
-                  <div class="title2">被保险人</div>
-                  <div>
-                    固定收入
-                    <input class="input" v-model="unit.insuredContent.income">万元
-                  </div>
-                  <div>
-                    来源
-                    <input class="input input-width" v-model="unit.insuredContent.incomeFrom">
-                  </div>
-                </div>
-              </template>
+                </template>
 
-              <template v-if="item.index === 2">
-                <div class="input-wrap" v-show="unit.applicant">
-                  投保人
-                  <input class="input" v-model="unit.applicantContent.driverLicense">
-                </div>
-
-                <div class="input-wrap" v-show="unit.insured">
-                  被保人
-                  <input class="input" v-model="unit.insuredContent.driverLicense">
-                </div>
-              </template>
-
-              <template v-if="item.index === 3">
-                <div class="input-wrap" v-show="unit.applicant">
-                  投保人
-                  <input class="input" v-model="unit.applicantContent.medicalInsurance">
-                </div>
-
-                <div class="input-wrap" v-show="unit.insured">
-                  被保人
-                  <input class="input" v-model="unit.insuredContent.medicalInsurance">
-                </div>
-              </template>
-
-              <template v-if="[4, 5, 7, 8].includes(item.index)">
-                <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
-                  <div v-if="vItem.index === item.index">
-                    <div v-show="unit.applicant">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.applicant"
-                        :key="vUnique"
-                      >
-                        <div class="title2">投保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>说明内容</span>
-                            <input class="input" v-model="vUnit.explainContent">
-                          </li>
-                        </ul>
+                <template v-if="[4, 5, 7, 8].includes(item.index)">
+                  <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
+                    <div v-if="vItem.index === item.index">
+                      <div v-show="unit.applicant">
+                        <div
+                          class="form"
+                          v-for="(vUnit, vUnique) in vItem.applicant"
+                          :key="vUnique"
+                        >
+                          <div class="title2">投保人</div>
+                          <ul>
+                            <li>
+                              <span>序号</span>
+                              <input class="input" v-model="vUnit.index">
+                            </li>
+                            <li>
+                              <span>说明对象</span>
+                              <input class="input" v-model="vUnit.explainObject">
+                            </li>
+                            <li>
+                              <span>说明内容</span>
+                              <input class="input" v-model="vUnit.explainContent">
+                            </li>
+                          </ul>
+                        </div>
                       </div>
-                    </div>
 
-                    <div v-show="unit.insured">
-                      <div
-                        class="form"
-                        v-for="(vUnit, vUnique) in vItem.insured"
-                        :key="vUnique"
-                      >
-                        <div class="title2">被保人</div>
-                        <ul>
-                          <li>
-                            <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
-                          </li>
-                          <li>
-                            <span>说明对象</span>
-                            <input class="input" v-model="vUnit.explainObject">
-                          </li>
-                          <li>
-                            <span>说明内容</span>
-                            <input class="input" v-model="vUnit.explainContent">
-                          </li>
-                        </ul>
+                      <div v-show="unit.insured">
+                        <div
+                          class="form"
+                          v-for="(vUnit, vUnique) in vItem.insured"
+                          :key="vUnique"
+                        >
+                          <div class="title2">被保人</div>
+                          <ul>
+                            <li>
+                              <span>序号</span>
+                              <input class="input" v-model="vUnit.index">
+                            </li>
+                            <li>
+                              <span>说明对象</span>
+                              <input class="input" v-model="vUnit.explainObject">
+                            </li>
+                            <li>
+                              <span>说明内容</span>
+                              <input class="input" v-model="vUnit.explainContent">
+                            </li>
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </template>
+                </template>
 
-              <template v-if="item.index === 6">
-                <div class="input-wrap" v-show="unit.applicant">
-                  <div class="title2">投保人</div>
-                  <div class="half">
-                    项目
-                    <input class="input" v-model="unit.applicantContent.project">
+                <template v-if="item.index === 6">
+                  <div class="input-wrap" v-show="unit.applicant">
+                    <div class="title2">投保人</div>
+                    <div class="half">
+                      项目
+                      <input class="input" v-model="unit.applicantContent.project">
+                    </div>
+                    <div class="half">
+                      频次
+                      <input class="input" v-model="unit.applicantContent.frequency">
+                    </div>
                   </div>
-                  <div class="half">
-                    频次
-                    <input class="input" v-model="unit.applicantContent.frequency">
-                  </div>
-                </div>
 
-                <div class="input-wrap" v-show="unit.insured">
-                  <div class="title2">被保人</div>
-                  <div class="half">
-                    项目
-                    <input class="input" v-model="unit.insuredContent.project">
+                  <div class="input-wrap" v-show="unit.insured">
+                    <div class="title2">被保人</div>
+                    <div class="half">
+                      项目
+                      <input class="input" v-model="unit.insuredContent.project">
+                    </div>
+                    <div class="half">
+                      频次
+                      <input class="input" v-model="unit.insuredContent.frequency">
+                    </div>
                   </div>
-                  <div class="half">
-                    频次
-                    <input class="input" v-model="unit.insuredContent.frequency">
-                  </div>
-                </div>
-              </template>
+                </template>
 
-            </div>
+              </div>
           </div>
         </div>
       </transition>
@@ -817,7 +601,7 @@
       </div>
     </div>
 
-    <div @click="submit">提交</div>
+    <div @click="handleSubmit">提交</div>
   </div>
 </template>
 
@@ -953,7 +737,7 @@ export default {
       }),
       listQuestionInformFinancing: Object.freeze({
         1: {
-          question: "每年固定收入为？"
+          question: "每年固定收入为？ 收入来源：①工资 ②房屋出租 ③投资收益 ④个体经营 ⑤农业收入 ⑥其他："
         },
         2: {
           question: "您是否持有有效机动车驾驶执照？若有，驾驶执照类型为："
@@ -1233,10 +1017,10 @@ export default {
               insured: 0,
               index: 1,
               applicantContent: {
-                applicantDriverLicense: ""
+                driverLicense: ""
               },
               insuredContent: {
-                insuredDriverLicense: ""
+                driverLicense: ""
               },
               applicant: 0
             }
@@ -1248,10 +1032,10 @@ export default {
             {
               insured: 0,
               applicantContent: {
-                applicantMedicalInsurance: ""
+                medicalInsurance: ""
               },
               insuredContent: {
-                insuredMedicalInsurance: ""
+                medicalInsurance: ""
               },
               index: 1,
               applicant: 0
@@ -1374,6 +1158,388 @@ export default {
           ]
         },
         {
+          index: 6,
+          applicant: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ],
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ]
+        },
+        {
+          index: 7,
+          applicant: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 2,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 3,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 4,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 5,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 6,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 7,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 8,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 9,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 10,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+          ],
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 2,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 3,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 4,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 5,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 6,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 7,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 8,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 9,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 10,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+          ],
+        },
+        {
+          index: 8,
+          applicant: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ],
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ]
+        },
+        {
+          index: 9,
+          applicant: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ],
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ]
+        },
+        {
+          index: 10,
+          applicant: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ],
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            }
+          ]
+        },
+        {
+          index: 11,
+          applicant: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 2,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 3,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+          ],
+          insured: [
+            {
+              index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 2,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 3,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+          ]
+        },
+        {
           index: 12,
           insured: [
             {
@@ -1477,7 +1643,7 @@ export default {
       policyId: '',
       id: '',
       token: this.$route.query.token ||
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDUxOTc0OCwiaWF0IjoxNTYwNTE2MTQ4LCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.b-TOXqcISOSaiRWxfaA7fDLlh5IWTBa9Scz1kQfBMiM"
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDU5MzAyOCwiaWF0IjoxNTYwNTg5NDI4LCJ1c2VySWQiOjIyNjU3ODYwNTI0ODY2MjczMjh9.kcnENXdEXhAvp291yFxKbPiPikzQSLRsN2_CdAtJUBQ"
 
     };
   },
@@ -1488,6 +1654,8 @@ export default {
       token: this.token
     };
     this.getData(query);
+    // 留给Android
+    Window.VueSubmit = this.submit
   },
   beforeRouteLeave (to, from , next) {
     this.submit().then(res => {
@@ -1537,6 +1705,36 @@ export default {
         this.agentTell[0].answers[0].agentContent.relation = this.relation
       }
 
+      if (this.isSelf) {
+        // 同人下，投保人和被保人复制 
+        for (let iterator of this.healthTell) {
+          // 第12项只有被保人，无需复制
+          if (iterator.index !== 12) {
+            for (const item of iterator.answers) {
+              item.insured != undefined && (item.applicant = item.insured)
+              item.insuredContent != undefined && (item.applicantContent = item.insuredContent)
+            }
+          }
+        }
+
+        for (let iterator of this.otherTell) {
+          for (const item of iterator.answers) {
+            item.insured != undefined && (item.applicant = item.insured)
+            item.insuredContent != undefined && (item.applicantContent = item.insuredContent)
+          }
+        }
+
+        for (let iterator of this.healthSpecialExplain) {
+          if (iterator.index !== 12) {
+            iterator.insured != undefined && (iterator.applicant = iterator.insured)
+          }
+        }
+
+        for (let iterator of this.otherSpecialExplain) {
+          iterator.insured != undefined && (iterator.applicant = iterator.insured)
+        }
+      }
+
       let data = {
         policyId: this.policyId,
         id: this.id,
@@ -1548,8 +1746,12 @@ export default {
         healthSpecialExplain: JSON.stringify(this.healthSpecialExplain),
         otherSpecialExplain: JSON.stringify(this.otherSpecialExplain),
       }
-      console.log(data)
+      console.log(this.healthTell)
       saveInform(data, this.token)
+    },
+    handleSubmit() {
+      console.log(Window.VueSubmit)
+      // Window.VueSubmit()
     }
   },
 };

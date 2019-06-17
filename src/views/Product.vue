@@ -3,9 +3,17 @@
     <img :src="product.webBanner" class="banner">
 
     <div class="tab-wrap">
-      <div class="tab-title" v-for="(item, index) in product.insurableInterest" :key="index">{{item.scheduleName}}</div>
+      <div
+        class="tab-title"
+        v-for="(item, index) in product.insurableInterest"
+        :key="index"
+      >{{item.scheduleName}}</div>
       <mt-tab-container v-model="tabActive" swipeable>
-        <mt-tab-container-item v-for="(item, index) in product.insurableInterest" :key="index" :id="index" >
+        <mt-tab-container-item
+          v-for="(item, index) in product.insurableInterest"
+          :key="index"
+          :id="index"
+        >
           <ul class="tab1">
             <li v-for="(unit, unique) in item.content" :key="unique">
               <span>{{unit.title}}</span>
@@ -17,22 +25,26 @@
     </div>
 
     <ul ref="tab2-title-wrap" class="tab2-title-wrap">
-      <li :class="{current: active === '1'}" @click="active = '1'">保险详情
+      <li :class="{current: active === '1'}" @click="active = '1'">
+        保险详情
         <div class="line" v-show="active === '1'"></div>
       </li>
-      <li :class="{current: active === '2'}" @click="active = '2'">费率表
+      <li :class="{current: active === '2'}" @click="active = '2'">
+        费率表
         <div class="line" v-show="active === '2'"></div>
       </li>
-      <li :class="{current: active === '3'}" @click="active = '3'">投保规则
+      <li :class="{current: active === '3'}" @click="active = '3'">
+        投保规则
         <div class="line" v-show="active === '3'"></div>
       </li>
-      <li :class="{current: active === '4'}" @click="active = '4'">产品条款
+      <li :class="{current: active === '4'}" @click="active = '4'">
+        产品条款
         <div class="line" v-show="active === '4'"></div>
       </li>
     </ul>
     <mt-tab-container v-model="active" swipeable>
       <mt-tab-container-item id="1">
-        <img :src="product.descPicture" alt="">
+        <img :src="product.descPicture" alt>
         <!-- </ul> -->
       </mt-tab-container-item>
       <mt-tab-container-item id="2">874989654sfawef wr</mt-tab-container-item>
@@ -44,7 +56,7 @@
             <embed :src="item.url" type="application/pdf" :key="index">
                 <p>This browser does not support PDFs. Please download the PDF to view it: <a :href="item.url">Download PDF</a>.</p>
             </embed>
-        </object> -->
+        </object>-->
         <img v-for="(item, index) in product.attachment.productCourse" :src="item.url" :key="index">
       </mt-tab-container-item>
     </mt-tab-container>
@@ -52,7 +64,11 @@
 </template>
 
 <script>
-import { getProductDetail } from "@/api/product";
+import {
+  getProductDetail,
+  getProductRateParams,
+  getProductRateDetail
+} from "@/api/product";
 
 export default {
   data() {
@@ -61,34 +77,50 @@ export default {
       active: "1",
       offsetTop: 0,
       product: {
-        attachment:{}
+        attachment: {}
+      },
+      query: {
+        page: 1,
+        size: 10
       }
     };
   },
   mounted() {
     let query = {
-      id: this.$route.query.id || '2266402544886480903',
-      token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMSIsImV4cCI6MTU2MDUwNDU2NCwiaWF0IjoxNTYwNTAwOTY0LCJ1c2VySWQiOjIyNjU2NDI5NDkzMTAxNTI3MDZ9.wVYg3NrG0ffh8orGCc8aTjAPOp8ybDERIMI8znE9wAI'
-    }
-    this.getData(query)
-    
-    this.offsetTop = this.$refs['tab2-title-wrap'].offsetTop
+      id: this.$route.query.id || "2266402544886480903",
+      token:
+        this.$route.query.token ||
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMSIsImV4cCI6MTU2MDU5NjE0MywiaWF0IjoxNTYwNTkyNTQzLCJ1c2VySWQiOjIyNjU2NDI5NDkzMTAxNTI3MDZ9.8xKG6AblbnKu0YOrKOvExV98eCS9TJI9kKxH3aEEpGA"
+    };
+    this.getData(query);
+
+    this.offsetTop = this.$refs["tab2-title-wrap"].offsetTop;
   },
   methods: {
     getData(query) {
-      getProductDetail(query).then(res =>{
-        res.insurableInterest = JSON.parse(res.insurableInterest) || []
-        res.attachment.productCourse = JSON.parse(res.attachment.productCourse) || []
-        this.product = res
-        console.log(res)
-      })
+      getProductDetail(query).then(res => {
+        res.insurableInterest = JSON.parse(res.insurableInterest) || [];
+        res.attachment.productCourse =
+          JSON.parse(res.attachment.productCourse) || [];
+        this.product = res;
+        console.log(res);
+      });
+      getProductRateParams(query.id).then(res => {
+        console.log(res);
+        this.query
+      });
+    },
+    getRate() {
+      getProductRateDetail(query).then(res => {
+        console.log(res);
+      });
     },
     scroll($event) {
       // console.log(this.$refs['tab2-title-wrap'].offsetTop)
       if ($event.target.scrollTop >= this.offsetTop) {
-        this.$refs['tab2-title-wrap'].style.position = 'fixed'
+        this.$refs["tab2-title-wrap"].style.position = "fixed";
       } else {
-        this.$refs['tab2-title-wrap'].style.position = 'relative'
+        this.$refs["tab2-title-wrap"].style.position = "relative";
       }
     }
   }
@@ -96,7 +128,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.main{
+.main {
   overflow: scroll;
 }
 .banner {
@@ -115,7 +147,7 @@ export default {
   border-radius: 10px 10px 0px 0px;
 }
 .tab-wrap {
-  padding: .3rem .3rem 0;
+  padding: 0.3rem 0.3rem 0;
   border-bottom: 10px solid #f1f3f5;
 }
 .tab1 {
@@ -126,29 +158,29 @@ export default {
     color: #444;
   }
 }
-.tab2-title-wrap{
+.tab2-title-wrap {
   display: flex;
   justify-content: space-around;
-  background: #fff;   
+  background: #fff;
   border-bottom: solid 1px #f1f3f5;
   line-height: 0.8rem;
   color: #a6abb7;
   z-index: 1;
   width: 100%;
   top: 0;
-  .current{
+  .current {
     color: #444;
   }
-  .line{
-    width: .4rem;
+  .line {
+    width: 0.4rem;
     height: 6px;
     background-color: #6582ff;
     border-radius: 3px;
     margin: 0 auto;
   }
 }
-.insurance-text{
-  margin: .2rem;
+.insurance-text {
+  margin: 0.2rem;
 }
 </style>
 
