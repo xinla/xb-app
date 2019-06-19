@@ -50,7 +50,7 @@
       </mt-tab-container-item>
       <!-- 费率表 -->
       <mt-tab-container-item id="2">
-        <div>
+        <div v-if="listRates.length">
           <div class="args-wrap">
             <mt-cell title="保险金额" v-if="listParams.insuredAmounts.length">
               <select class="select" v-model="query.amountInsured">
@@ -106,22 +106,38 @@
                 <option v-for="item in listParams.renewalFlags" :value="item" :key="item">{{item}}</option>
               </select>
             </mt-cell>
+            <mt-button type="primary" size="small" style="width: 100%;" @click.native="search()">查询</mt-button>
           </div>
 
-          <div class="rate-page" v-infinite-scroll="loadMore" :infinite-scroll-disabled="loadingRate" infinite-scroll-distance="10">
-            <table>
+          <div class="rate-page-wrap">
+            <table class="table-header">
               <tr>
-                <th v-for="(item, index) of columns" :key="index">
-                  {{item.title}}
-                </th>
-              </tr>
-              <tr v-for="(item, index) of listRates" :key="index">
-                <td v-for="(unit, unique) of columns" :key="unique">
-                  {{item[unit.key]}}
-                  </td>
+                <th v-for="(item, index) of columns" :key="index">{{item.title}}</th>
               </tr>
             </table>
+            <div
+              class="rate-page"
+              v-infinite-scroll="loadMore"
+              :infinite-scroll-disabled="loadingRate"
+              infinite-scroll-distance="10"
+            >
+              <table>
+                <thead style="visibility: collapse;">
+                  <tr>
+                    <th v-for="(item, index) of columns" :key="index">{{item.title}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) of listRates" :key="index">
+                    <td v-for="(unit, unique) of columns" :key="unique">{{item[unit.key]}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
+        </div>
+        <div class="ac" v-else>
+          查无结果
         </div>
       </mt-tab-container-item>
       <!-- 投保规则 -->
@@ -135,7 +151,12 @@
                 <p>This browser does not support PDFs. Please download the PDF to view it: <a :href="item.url">Download PDF</a>.</p>
             </embed>
         </object>-->
-        <img v-for="(item, index) in product.attachment.policyWordingImages" class="policy-wording-images" :src="item" :key="index">
+        <img
+          v-for="(item, index) in product.attachment.policyWordingImages"
+          class="policy-wording-images"
+          :src="item"
+          :key="index"
+        >
       </mt-tab-container-item>
     </mt-tab-container>
   </div>
@@ -180,61 +201,61 @@ export default {
       loadingRate: false,
       columns: [
         {
-          title: '性别',
-          key: 'sex'
+          title: "性别",
+          key: "sex"
         },
         {
-          title: '年龄',
-          key: 'age'
+          title: "年龄",
+          key: "age"
         },
         {
-          title: '保险期间',
-          key: 'policyPeriod'
+          title: "保险期间",
+          key: "policyPeriod"
         },
         {
-          title: '交费期间',
-          key: 'paymentPeriod'
+          title: "交费期间",
+          key: "paymentPeriod"
         },
         {
-          title: '社保',
-          key: 'socialInsuranceFlag'
+          title: "社保",
+          key: "socialInsuranceFlag"
         },
         {
-          title: '首续保',
-          key: 'renewalFlag'
+          title: "首续保",
+          key: "renewalFlag"
         },
         {
-          title: '保险金额',
-          key: 'occupationalRiskGrade'
+          title: "保险金额",
+          key: "occupationalRiskGrade"
         },
         {
-          title: '保险金额',
-          key: 'occupationalRiskGrade'
+          title: "保险金额",
+          key: "occupationalRiskGrade"
         },
         {
-          title: '投保档次',
-          key: 'applicationGrade'
+          title: "投保档次",
+          key: "applicationGrade"
         },
         {
-          title: '保险金额',
-          key: 'amountInsured'
+          title: "保险金额",
+          key: "amountInsured"
         },
         {
-          title: '费率',
-          key: 'rate'
+          title: "费率",
+          key: "rate"
         },
         {
-          title: '费率单位',
-          key: 'rateUnit'
+          title: "费率单位",
+          key: "rateUnit"
         },
         {
-          title: '计算单位',
-          key: 'countMethod'
+          title: "计算单位",
+          key: "countMethod"
         },
         {
-          title: '缴费方式',
-          key: 'paymentMethod'
-        },
+          title: "缴费方式",
+          key: "paymentMethod"
+        }
       ],
       listRates: []
     };
@@ -257,20 +278,22 @@ export default {
         res.attachment.productCourse =
           JSON.parse(res.attachment.productCourse) || [];
         this.product = res;
-        this.product.attachment.policyWordingImages = this.product.attachment.policyWordingImages.split(',')
-        console.log('ProductDetail: ', res);
+        this.product.attachment.policyWordingImages = this.product.attachment.policyWordingImages.split(
+          ","
+        );
+        console.log("ProductDetail: ", res);
       });
       getProductRateParams(query.id)
         .then(res => {
-          console.log('ProductRateParams: ', res);
+          console.log("ProductRateParams: ", res);
           this.listParams = res;
-          this.query.amountInsured = res.insuredAmounts[0] || '';
-          this.query.applicationGrade = res.applicationGrades[0] || '';
-          this.query.policyPeriod = res.policyPeriods[0] || '';
-          this.query.paymentPeriod = res.paymentPeriods[0] || '';
-          this.query.socialInsuranceFlags = res.socialInsuranceFlag[0] || '';
-          this.query.sex = JSON.stringify(res.sexs[0]) ?  res.sexs[0] : '';
-          this.query.renewalFlags = res.renewalFlags[0] || '';
+          this.query.amountInsured = res.insuredAmounts[0] || "";
+          this.query.applicationGrade = res.applicationGrades[0] || "";
+          this.query.policyPeriod = res.policyPeriods[0] || "";
+          this.query.paymentPeriod = res.paymentPeriods[0] || "";
+          this.query.socialInsuranceFlags = res.socialInsuranceFlag[0] || "";
+          this.query.sex = JSON.stringify(res.sexs[0]) ? res.sexs[0] : "";
+          this.query.renewalFlags = res.renewalFlags[0] || "";
         })
         .then(() => {
           this.getRate();
@@ -278,8 +301,8 @@ export default {
     },
     getRate() {
       getProductRateDetail(this.query).then(res => {
-        this.listRates = this.listRates.concat(res.list)
-        !res.list.length && (this.loadingRate = true)
+        this.listRates = this.listRates.concat(res.list);
+        !res.list.length && (this.loadingRate = true);
         // console.log('ProductRateDetail: ', res);
       });
     },
@@ -292,8 +315,13 @@ export default {
       }
     },
     loadMore() {
-      this.query.page++
-      this.getRate()
+      this.query.page++;
+      this.getRate();
+    },
+    search() {
+      this.query.page = 1;
+      this.listRates = [];
+      this.getRate();
     }
   }
 };
@@ -360,31 +388,38 @@ export default {
   padding: 3px 5px;
   border-radius: 8px;
   color: #888;
-  font-size: .12rem;
+  font-size: 0.12rem;
 }
 option {
   color: #888;
   padding: 0 3px;
 }
-.rate-page{
-  height: 250px;
+.rate-page-wrap {
   overflow-x: auto;
 }
+.rate-page {
+  width: 800px;
+  height: 250px;
+  overflow-y: auto;
+}
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    width: 800px;
-    text-align: center;
-    line-height: .5rem;
-    margin-top: 5px;
-    // border: 1px solid #ddd;
+  width: 800px;
+  text-align: center;
+  line-height: 0.5rem;
+  // border: 1px solid #ddd;
 }
-th, td {
-    border: 1px solid #ddd;
-    // border-right: 1px solid #ddd;
+th,
+td {
+  border: 1px solid #ddd;
+  // border-right: 1px solid #ddd;
 }
-.policy-wording-images{
-  margin: .1rem 0;
+.policy-wording-images {
+  margin: 0.1rem 0;
+}
+.table-header {
+  position: relative;
+  top: 26px;
+  background: #fff;
 }
 </style>
 

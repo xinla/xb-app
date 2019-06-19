@@ -292,11 +292,11 @@ export default {
   data() {
     return {
       query: {
-        id: '',
+        id: this.$route.query.id || '2266434895041527813',
         insuredCurrentAge: 0,
         insuredMaxAge: 0,
         insuredCountAge: undefined,
-        token: '',
+        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU1OTM4MDQ1MywiaWF0IjoxNTU5Mzc2ODUzLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.tOcwghVeSUi62W4u9XNx0dAaduI7vOgIjLanuRCFTx4',
       },
       age: undefined,
       result: {},
@@ -313,12 +313,7 @@ export default {
       }, 500)
     }
   },
-  created() {},
   mounted() {
-    this.query = {
-      id: this.$route.query.id || '2266434895041527813',
-      token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU1OTM4MDQ1MywiaWF0IjoxNTU5Mzc2ODUzLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.tOcwghVeSUi62W4u9XNx0dAaduI7vOgIjLanuRCFTx4'
-    }
     this.init();
   },
   methods: {

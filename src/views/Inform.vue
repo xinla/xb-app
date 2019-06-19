@@ -772,8 +772,8 @@ export default {
           answers: [
             {
               index: 1,
-              applicant: 0,
-              insured: 0,
+              applicant: 1,
+              insured: 1,
               applicantContent: {
                 height: 0,
                 weight: 0
@@ -999,6 +999,8 @@ export default {
         {
           answers: [
             {
+              insured: 1,
+              index: 1,
               applicantContent: {
                 income: 0,
                 incomeFrom: ""
@@ -1006,7 +1008,8 @@ export default {
               insuredContent: {
                 income: 0,
                 incomeFrom: ""
-              }
+              },
+              applicant: 1
             }
           ],
           index: 1
@@ -1640,7 +1643,7 @@ export default {
         }
       ],
       showIndex: 1,
-      policyId: '',
+      policyId: this.$route.query.id || "2278898684143861761",
       id: '',
       token: this.$route.query.token ||
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU2MDU5MzAyOCwiaWF0IjoxNTYwNTg5NDI4LCJ1c2VySWQiOjIyNjU3ODYwNTI0ODY2MjczMjh9.kcnENXdEXhAvp291yFxKbPiPikzQSLRsN2_CdAtJUBQ"
@@ -1648,11 +1651,12 @@ export default {
     };
   },
   mounted() {
-    this.policyId = this.$route.query.id || "2278898684143861761" // 2266434895041527813
     let query = {
       id: this.policyId,
       token: this.token
     };
+    // console.log(query)
+    // return
     this.getData(query);
     // 留给Android
     Window.VueSubmit = this.submit
@@ -1751,7 +1755,7 @@ export default {
     },
     handleSubmit() {
       console.log(Window.VueSubmit)
-      // Window.VueSubmit()
+      Window.VueSubmit()
     }
   },
 };
