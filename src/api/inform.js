@@ -61,3 +61,17 @@ export const getIsImmunity = ({id, token}) => {
     }
   })
 }
+
+/**
+ * 保单id查询保险投保单
+ * @param {*} 投保单id 
+ */
+export const getApplicationDetail = ({id, token}) => {
+  return axios.request({
+    url: controller + `/book/${id}`,
+    method: 'get',
+    headers: {
+      auth_token: token
+    }
+  })
+}

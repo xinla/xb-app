@@ -27,6 +27,11 @@ export default new Router({
       path: '/inform',
       name: 'inform',
       component: () => import('./views/Inform.vue')
+    },
+    {
+      path: '/application',
+      name: 'application',
+      component: () => import('./views/Application.vue')
     }
   ]
 })
