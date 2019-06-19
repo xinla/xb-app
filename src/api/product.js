@@ -2,7 +2,7 @@ import axios from '@/libs/api.request'
 import config from '@/config'
 
 const controller = config.controllers.product
-const controller1 = 'http://192.168.1.150:8888/v1/product'
+const controller1 = 'http://192.168.1.32:8115/v1/product'
 const url = 'http://192.168.1.150:8888/api/base/v1/product/desc/h5'
 
 /**
@@ -40,9 +40,9 @@ export const getProductRateParams = (id) => {
  * 获取产品详情费率表的年龄和费率
  * @param {*} param0 
  */
-export const getProductRateDetail = ({data, page, size}) => {
+export const getProductRateDetail = (data) => {
   return axios.request({
-    url: controller1 + `/getRates/${page}${size}`,
+    url: controller1 + `/getRates/${data.page}/${data.size}`,
     method: 'post',
     data
   })
