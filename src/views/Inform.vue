@@ -155,11 +155,10 @@
                   <div v-if="vItem.index === item.index">
                     <div v-show="unit.applicant && isImmunity && !isSelf">
                       <div
-                        class="form"
                         v-for="(vUnit, vUnique) in vItem.applicant"
                         :key="vUnique"
                       >
-                      <div v-if="vUnit.index === unit.index">
+                      <div class="form" v-if="vUnit.index === unit.index">
                         <div class="title2">投保人</div>
                         <ul>
                           <li>
@@ -295,7 +294,7 @@
                       v-model="unit.insuredContent.stayHospital"
                     >天
                   </div>
-                  <!-- 健康告知说明栏 -->
+                  <!-- 第12项健康告知说明栏 -->
                   <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
                     <div v-if="vItem.index === 12">
                       <div v-show="unit.insuredContent.stayHospital > 7">
@@ -420,7 +419,7 @@
                 </template>
 
                 <template v-if="item.index === 2">
-                  <div class="input-wrap" v-show="unit.applicant">
+                  <div class="input-wrap" v-show="unit.applicant && !isSelf">
                     投保人
                     <input class="input" v-model="unit.applicantContent.driverLicense">
                   </div>
@@ -432,7 +431,7 @@
                 </template>
 
                 <template v-if="item.index === 3">
-                  <div class="input-wrap" v-show="unit.applicant">
+                  <div class="input-wrap" v-show="unit.applicant && isImmunity && !isSelf">
                     投保人
                     <input class="input" v-model="unit.applicantContent.medicalInsurance">
                   </div>
@@ -446,7 +445,7 @@
                 <template v-if="[4, 5, 7, 8].includes(item.index)">
                   <div v-for="(vItem, vIndex) in otherSpecialExplain" :key="vIndex">
                     <div v-if="vItem.index === item.index">
-                      <div v-show="unit.applicant">
+                      <div v-show="unit.applicant && isImmunity && !isSelf">
                         <div
                           class="form"
                           v-for="(vUnit, vUnique) in vItem.applicant"
@@ -498,7 +497,7 @@
                 </template>
 
                 <template v-if="item.index === 6">
-                  <div class="input-wrap" v-show="unit.applicant">
+                  <div class="input-wrap" v-show="unit.applicant && isImmunity && !isSelf">
                     <div class="title2">投保人</div>
                     <div class="half">
                       项目
