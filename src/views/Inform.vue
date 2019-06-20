@@ -429,7 +429,7 @@
                 </template>
 
                 <template v-if="item.index === 2">
-                  <div class="input-wrap" v-show="unit.applicant && !isSelf">
+                  <div class="input-wrap" v-show="unit.applicant && isImmunity && !isSelf">
                     投保人
                     <input class="input" v-model="unit.applicantContent.driverLicense">
                   </div>

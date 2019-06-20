@@ -397,16 +397,30 @@
                   v-model="unit.insuredContent.stayHospital"
                 ><span>天</span>
               </div>
-              <!-- 第12项健康告知说明栏 -->
-              <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
-                <div v-if="vItem.index === 12">
-                  <div v-show="unit.insuredContent.stayHospital > 7">
-                    <div class="form" v-for="(vUnit, vUnique) in vItem.insured" :key="vUnique">
-                      <div class="title2">超过7天，请详细说明：</div>
+            </div>
+
+            <p
+              v-if="unit.index === 2"
+            >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
+            <div class="switch-wrap" v-if="unit.index === 2">
+              <div class="half fr">
+                被保人
+                <img v-if="unit.insured" :src="checkBox2" />
+                <img v-else :src="checkBox1" />
+              </div>
+            </div>
+            
+            <!-- 第12项健康告知说明栏 -->
+            <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
+              <div v-if="vItem.index === 12">
+                <div>
+                  <div v-for="(vUnit, vUnique) in vItem.insured" :key="vUnique">
+                    <div class="form" v-if="(unit.index === 1 &&  vUnit.index === 1 &&  unit.insuredContent.stayHospital > 7) || (unit.index === 2 && vUnit.index === 2 && unit.insured)">
+                      <div class="title2" v-show="unit.index === 1">超过7天，请详细说明：</div>
                       <ul>
                         <li>
                           <span>序号</span>
-                          <input readonly class="input" v-model="vUnit.index">
+                          <input readonly class="input" v-model="vUnit.index" disabled="true">
                         </li>
                         <li>
                           <span>说明对象</span>
@@ -440,17 +454,6 @@
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <p
-              v-if="unit.index === 2"
-            >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
-            <div class="switch-wrap" v-if="unit.index === 2">
-              <div class="half fr">
-                被保人
-                <img v-if="unit.insured" :src="checkBox2" />
-                <img v-else :src="checkBox1" />
               </div>
             </div>
           </template>
@@ -816,58 +819,12 @@ export default {
     this.intData()
   },
   methods: {
-    changeCheck () {
-      console.log(11)
-      return false
-    },
     intData () {
       let tellInfo = this.data.tellInfo ? JSON.parse(this.data.tellInfo) : {};
       this.healthTell = tellInfo.healthTell || [];
       this.otherTell = tellInfo.otherTell || [];
       this.healthSpecialExplain = this.data.healthSpecialExplain ? JSON.parse(this.data.healthSpecialExplain) : [];
       this.otherSpecialExplain = this.data.otherSpecialExplain ? JSON.parse(this.data.otherSpecialExplain) : [];
-    },
-    submit() {
-
-      if (this.isSelf) {
-        // 同人下，投保人和被保人复制 
-        for (let iterator of this.healthTell) {
-          // 第12项只有被保人，无需复制
-          if (iterator.index !== 12) {
-            for (const item of iterator.answers) {
-              item.insured != undefined && (item.applicant = item.insured)
-              item.insuredContent != undefined && (item.applicantContent = item.insuredContent)
-            }
-          }
-        }
-
-        for (let iterator of this.otherTell) {
-          for (const item of iterator.answers) {
-            item.insured != undefined && (item.applicant = item.insured)
-            item.insuredContent != undefined && (item.applicantContent = item.insuredContent)
-          }
-        }
-
-        for (let iterator of this.healthSpecialExplain) {
-          if (iterator.index !== 12) {
-            iterator.insured != undefined && (iterator.applicant = iterator.insured)
-          }
-        }
-
-        for (let iterator of this.otherSpecialExplain) {
-          iterator.insured != undefined && (iterator.applicant = iterator.insured)
-        }
-      }
-
-      let data = {
-        tellInfo: JSON.stringify({
-          healthTell: this.healthTell,
-          otherTell: this.otherTell
-        }),
-        healthSpecialExplain: JSON.stringify(this.healthSpecialExplain),
-        otherSpecialExplain: JSON.stringify(this.otherSpecialExplain),
-      }
-      console.log(this.healthTell)
     }
   },
 };

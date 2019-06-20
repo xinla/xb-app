@@ -756,7 +756,7 @@ export default {
       signImg: require('@/assets/sign.png'),
       query: {
         id: this.$route.query.id || '2279434910064181252',
-        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMCIsImV4cCI6MTU2MTAyMzYyMiwiaWF0IjoxNTYxMDIwMDIyLCJ1c2VySWQiOjIyNTIxMTQxMjYyNzA2Mjc4NDV9.blrSWliWSdRQkS-yINLFD61rNN5K_ZgUMZKgQWqw82M'
+        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMCIsImV4cCI6MTU2MTAyNTc4MiwiaWF0IjoxNTYxMDIyMTgyLCJ1c2VySWQiOjIyNTIxMTQxMjYyNzA2Mjc4NDV9.PbbQ_wv1Qa5eSH_ptPVKyvbwlTCxYxWCS9v9ADv35is'
       },
       result: '',
       isSelf: false, // 投保人与被保人是否为同一人
@@ -822,11 +822,9 @@ export default {
       })
       getIsSelf(this.query).then(res => {
         this.isSelf = !!res
-        console.log(this.isSelf,1)
       })
       getIsImmunity(this.query).then(res => {
         this.isImmunity = !!res
-        console.log(this.isImmunity,2)
       })
     }
   }
