@@ -382,7 +382,7 @@
               <div v-for="(unit, unique) in item.answers" :key="'e' + unique">
                 <template v-if="!([1].includes(item.index))">
                   <div class="switch-wrap">
-                    <div class="half" v-if="isImmunity && !isSelf">
+                    <div class="half" v-if="!isSelf">
                       投保人
                       <mt-switch v-model="unit.applicant"></mt-switch>
                     </div>
