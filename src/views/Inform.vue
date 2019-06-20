@@ -14,7 +14,14 @@
           <use xlink:href="#icon_zhankai"></use>
         </svg>
       </div>
-
+      <!-- 
+        循环项说明
+        item：告知项数组一级元素对象
+        unit：item中answer的数组元素对象
+        vItem：告知项说明栏数组一级元素对象
+        vUnit：告知项说明栏中applicant或insured的数组元素对象
+        每项展示都经历了'告知项'和'告知项说明栏'两次循环
+       -->
       <transition name="slide-down">
         <div v-show="showIndex === 1">
           <div v-for="(item, index) in healthTell" :key="index">
@@ -149,6 +156,21 @@
                 </div>
               </template>
 
+              <template v-if="item.index === 11 && unique === 0">
+                <div class="input-wrap" v-show="unit.applicant && !isSelf">
+                  <div>
+                    投保人已怀孕
+                    <input class="input" v-model="unit.applicantContent.pregnant">周
+                  </div>
+                </div>
+                <div class="input-wrap" v-show="unit.insured">
+                  <div>
+                    被保人已怀孕
+                    <input class="input" v-model="unit.insuredContent.pregnant">周
+                  </div>
+                </div>
+              </template>
+
 <!-- 健康告知说明栏 -->
               <template v-if="[4, 5, 6, 7, 8, 9, 10, 11].includes(item.index)">
                 <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
@@ -163,7 +185,7 @@
                         <ul>
                           <li>
                             <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
+                            <input class="input" v-model="vUnit.index" disabled="true">
                           </li>
                           <li>
                             <span>说明对象</span>
@@ -208,7 +230,7 @@
                         <ul>
                           <li>
                             <span>序号</span>
-                            <input class="input" v-model="vUnit.index">
+                            <input class="input" v-model="vUnit.index" disabled="true">
                           </li>
                           <li>
                             <span>说明对象</span>
@@ -257,21 +279,6 @@
                   </div>
               </template>-->
 
-              <template v-if="item.index === 11 && unique === 0">
-                <div class="input-wrap" v-show="unit.applicant && !isSelf">
-                  <div>
-                    投保人已怀孕
-                    <input class="input" v-model="unit.applicantContent.pregnant">周
-                  </div>
-                </div>
-                <div class="input-wrap" v-show="unit.insured">
-                  <div>
-                    被保人已怀孕
-                    <input class="input" v-model="unit.insuredContent.pregnant">周
-                  </div>
-                </div>
-              </template>
-
               <template v-if="item.index === 12">
                 <div class="input-wrap" v-if="unit.index === 1">
                   <div class="title2">被保人</div>
@@ -294,50 +301,6 @@
                       v-model="unit.insuredContent.stayHospital"
                     >天
                   </div>
-                  <!-- 第12项健康告知说明栏 -->
-                  <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
-                    <div v-if="vItem.index === 12">
-                      <div v-show="unit.insuredContent.stayHospital > 7">
-                        <div class="form" v-for="(vUnit, vUnique) in vItem.insured" :key="vUnique">
-                          <div class="title2">超过7天，请详细说明：</div>
-                          <ul>
-                            <li>
-                              <span>序号</span>
-                              <input class="input" v-model="vUnit.index">
-                            </li>
-                            <li>
-                              <span>说明对象</span>
-                              <input class="input" v-model="vUnit.explainObject">
-                            </li>
-                            <li>
-                              <span>疾病名称</span>
-                              <input class="input" v-model="vUnit.diseaseName">
-                            </li>
-                            <li>
-                              <span>发病时间</span>
-                              <input class="input" v-model="vUnit.diseaseTime">
-                            </li>
-                            <li>
-                              <span>治疗方法</span>
-                              <input class="input" v-model="vUnit.therapies">
-                            </li>
-                            <li>
-                              <span>治疗医院</span>
-                              <input class="input" v-model="vUnit.hospital">
-                            </li>
-                            <li>
-                              <span>最后治疗时间</span>
-                              <input class="input" v-model="vUnit.lastTherapyTime">
-                            </li>
-                            <li>
-                              <span>现在情况</span>
-                              <input class="input" v-model="vUnit.currentState">
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
                 <p
@@ -349,6 +312,53 @@
                     <mt-switch v-model="unit.insured"></mt-switch>
                   </div>
                 </div>
+                
+                  <!-- 第12项健康告知说明栏 -->
+                  <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
+                    <div v-if="vItem.index === 12">
+                      <div>
+                        <div v-for="(vUnit, vUnique) in vItem.insured" :key="vUnique">
+                          <div class="form" v-if="(unit.index === 1 &&  vUnit.index === 1 &&  unit.insuredContent.stayHospital > 7) || (unit.index === 2 && vUnit.index === 2 && unit.insured)">
+                            <div class="title2" v-show="unit.index === 1">超过7天，请详细说明：</div>
+                            <ul>
+                              <li>
+                                <span>序号</span>
+                                <input class="input" v-model="vUnit.index" disabled="true">
+                              </li>
+                              <li>
+                                <span>说明对象</span>
+                                <input class="input" v-model="vUnit.explainObject">
+                              </li>
+                              <li>
+                                <span>疾病名称</span>
+                                <input class="input" v-model="vUnit.diseaseName">
+                              </li>
+                              <li>
+                                <span>发病时间</span>
+                                <input class="input" v-model="vUnit.diseaseTime">
+                              </li>
+                              <li>
+                                <span>治疗方法</span>
+                                <input class="input" v-model="vUnit.therapies">
+                              </li>
+                              <li>
+                                <span>治疗医院</span>
+                                <input class="input" v-model="vUnit.hospital">
+                              </li>
+                              <li>
+                                <span>最后治疗时间</span>
+                                <input class="input" v-model="vUnit.lastTherapyTime">
+                              </li>
+                              <li>
+                                <span>现在情况</span>
+                                <input class="input" v-model="vUnit.currentState">
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
               </template>
             </div>
 
@@ -455,7 +465,7 @@
                           <ul>
                             <li>
                               <span>序号</span>
-                              <input class="input" v-model="vUnit.index">
+                              <input class="input" v-model="vUnit.index" disabled="true">
                             </li>
                             <li>
                               <span>说明对象</span>
@@ -479,7 +489,7 @@
                           <ul>
                             <li>
                               <span>序号</span>
-                              <input class="input" v-model="vUnit.index">
+                              <input class="input" v-model="vUnit.index" disabled="true">
                             </li>
                             <li>
                               <span>说明对象</span>
@@ -980,16 +990,19 @@ export default {
           answers: [
             {
               index: 1,
+              insured: 0,
               insuredContent: {
                 childWeek: 0,
                 childHeight: 0,
                 childWeight: 0,
                 stayHospital: 0
-              }
+              },
+              applicant: 0
             },
             {
               index: 2,
-              insured: 0
+              insured: 0,
+              applicant: 0
             }
           ]
         }
@@ -1546,6 +1559,16 @@ export default {
           insured: [
             {
               index: 1,
+              explainObject: "被保人",
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
+            },
+            {
+              index: 2,
               explainObject: "被保人",
               diseaseName: "头疼",
               diseaseTime: "2019年6月1号",
