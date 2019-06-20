@@ -69,27 +69,6 @@
       }
     }
   }
-  .number-line {
-    position: relative;
-    width: 0.5rem;
-    height: 0.5rem;
-    border-radius: 50%;
-    box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.12);
-    line-height: 0.5rem;
-    text-align: center;
-    color: #6582ff;
-    margin: 0.3rem 0;
-    &:after {
-      position: absolute;
-      content: "";
-      width: 6rem;
-      height: 0;
-      display: inline-block;
-      border: 1px solid #f1f3f5;
-      top: 50%;
-      left: 0.8rem;
-    }
-  }
   .content {
     // display: none;
     padding: 0 0.3rem;
@@ -177,9 +156,6 @@
   }
   .blue {
     color: #6582ff;
-  }
-  .yellow {
-    color: #fcb33f;
   }
 }
 </style>
@@ -692,20 +668,8 @@
       </div>
     </div>
 
-    <!-- 健康告知 -->
-    <div class="container">
-      <div class="title title-boder">
-        <span>健康告知</span>
-      </div>
-      <div class="number-line">1</div>
-    </div>
-
-    <!-- 财务告知 -->
-    <div class="container">
-      <div class="title title-boder">
-        <span>财务告知</span>
-      </div>
-    </div>
+    <!-- 健康告知、财务告知 -->
+    <tell-info v-if="result.vitPolicyTellInfo" :data="result.vitPolicyTellInfo" :isSelf="isSelf" :isImmunity="isImmunity"/>
     
     <!-- 投保人、被保险人或法定监护人授权和声明 -->
     <div class="container">
@@ -735,7 +699,7 @@
       </div>
       <div class="sign">
         <div class="sign-box">
-          <img src="../assets/sign.png" />
+          <img :src="signImg" />
           <span>代理人签名</span>
         </div>
         <p class="font-small">签署日期：2019年6月1日</p>
@@ -749,7 +713,7 @@
       </div>
       <div class="sign">
         <div class="sign-box">
-          <img src="../assets/sign.png" />
+          <img :src="signImg" />
           <span>代理人签名</span>
         </div>
         <p class="font-small">签署日期：2019年6月1日</p>
@@ -769,7 +733,7 @@
       </div>
       <div class="sign" style="padding-top:0;">
         <div class="sign-box">
-          <img src="../assets/sign.png" />
+          <img :src="signImg" />
           <span>代理人签名</span>
         </div>
         <p class="font-small">签署日期：2019年6月1日</p>
@@ -779,18 +743,24 @@
 </template>
 
 <script>
-import { getApplicationDetail } from "@/api/inform";
+import { getApplicationDetail, getIsSelf, getIsImmunity } from "@/api/inform";
+import TellInfo from "@/views/TellInfo";
 import { runInThisContext } from 'vm';
 export default {
-  components: {},
+  components: {
+    TellInfo
+  },
   props: {},
   data() {
     return {
+      signImg: require('@/assets/sign.png'),
       query: {
         id: this.$route.query.id || '2279434910064181252',
-        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMCIsImV4cCI6MTU2MDkzNjgxNywiaWF0IjoxNTYwOTMzMjE3LCJ1c2VySWQiOjIyNTIxMTQxMjYyNzA2Mjc4NDV9.veJ1yKexLK07qGQYWUE5e8uo74daiSWbQt-6MxstuLE'
+        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMCIsImV4cCI6MTU2MTAyMzYyMiwiaWF0IjoxNTYxMDIwMDIyLCJ1c2VySWQiOjIyNTIxMTQxMjYyNzA2Mjc4NDV9.blrSWliWSdRQkS-yINLFD61rNN5K_ZgUMZKgQWqw82M'
       },
       result: '',
+      isSelf: false, // 投保人与被保人是否为同一人
+      isImmunity: true // 投保险种不涉及投保人保险费豁免责任时，投保人健康告知栏无需填写
     }
   },
   filters: {
@@ -849,7 +819,15 @@ export default {
     getApplicationDetailFn() {
       getApplicationDetail(this.query).then(res => {
         this.result = res
-      });
+      })
+      getIsSelf(this.query).then(res => {
+        this.isSelf = !!res
+        console.log(this.isSelf,1)
+      })
+      getIsImmunity(this.query).then(res => {
+        this.isImmunity = !!res
+        console.log(this.isImmunity,2)
+      })
     }
   }
 };
