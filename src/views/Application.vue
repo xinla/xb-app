@@ -30,7 +30,7 @@
     border-bottom: 1px solid #f1f3f5;
   }
   .text {
-    display: none;
+    // display: none;
     padding: .1rem 0 .3rem;
     font-size: .28rem;
     color: #101010;
@@ -44,7 +44,7 @@
     }
   }
   .info-list {
-    display: none;
+    // display: none;
     font-size: .28rem;
     &:last-child li:last-child {
       border-bottom: none;
@@ -70,7 +70,7 @@
     }
   }
   .content {
-    display: none;
+    // display: none;
     padding: 0 0.3rem;
     margin-bottom: 0.2rem;
     text-align: center;
