@@ -638,7 +638,6 @@
 </template>
 
 <script>
-import { getInformDetail, saveInform, getIsSelf, getIsImmunity } from "@/api/inform"
 export default {
   props: {
     data: {

@@ -75,3 +75,18 @@ export const getApplicationDetail = ({id, token}) => {
     }
   })
 }
+
+/**
+ * 获取投保单签名状态
+ * @param {*} 投保单id 
+ */
+export const getSignStatus = (data, token) => {
+  return axios.request({
+    url: config.controllers.sign + '/api/base/v1/sign/getSignStatus',
+    method: 'get',
+    params: data,
+    headers: {
+      auth_token: token
+    }
+  })
+}

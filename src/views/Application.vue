@@ -30,7 +30,7 @@
     border-bottom: 1px solid #f1f3f5;
   }
   .text {
-    // display: none;
+    display: none;
     padding: .1rem 0 .3rem;
     font-size: .28rem;
     color: #101010;
@@ -44,7 +44,7 @@
     }
   }
   .info-list {
-    // display: none;
+    display: none;
     font-size: .28rem;
     &:last-child li:last-child {
       border-bottom: none;
@@ -70,7 +70,7 @@
     }
   }
   .content {
-    // display: none;
+    display: none;
     padding: 0 0.3rem;
     margin-bottom: 0.2rem;
     text-align: center;
@@ -143,6 +143,10 @@
         height: .44rem;
         margin-bottom: .3rem;
       }
+      .black {
+        color:#444;
+        padding-right: .2rem;
+      }
     }
     p {
       text-align: right;
@@ -185,7 +189,7 @@
     </div>
 
     <!-- 投保人资料 -->
-    <div class="container">
+    <div class="container" v-if="result.applicant">
       <div class="title title-boder">
         <span>投保人资料</span>
       </div>
@@ -298,7 +302,7 @@
     </div>
 
     <!-- 被保人资料 -->
-    <div class="container">
+    <div class="container" v-if="result.insured">
       <div class="title title-boder">
         <span>被保人资料</span>
       </div>
@@ -411,7 +415,7 @@
     </div>
 
     <!-- 身故保险金受益人资料 -->
-    <div class="container">
+    <div class="container" v-if="result.dead && result.dead.lenght">
       <div class="title title-boder">
         <span>身故保险金受益人资料</span>
       </div>
@@ -485,7 +489,7 @@
     </div>
 
     <!-- 生存保险金受益人资料 -->
-    <div class="container">
+    <div class="container" v-if="result.survival && result.survival.lenght">
       <div class="title title-boder">
         <span>生存保险金受益人资料</span>
       </div>
@@ -559,7 +563,7 @@
     </div>
 
     <!-- 投保计划 -->
-    <div class="container">
+    <div class="container" v-if="result.vitPolicyRiskInfoVoList && result.vitPolicyRiskInfoVoList.lenght">
       <div class="title title-boder">
         <svg class="icon icon-title icon_toubaoplane" aria-hidden="true">
           <use xlink:href="#icon_toubaoplane"></use>
@@ -630,7 +634,7 @@
     </div>
 
     <!-- 账户信息 -->
-    <div class="container">
+    <div class="container" v-if="result.vitPolicyBookAccountVoList && result.vitPolicyBookAccountVoList.lenght">
       <div class="title title-boder">
         <span>账户信息</span>
       </div>
@@ -669,7 +673,7 @@
     </div>
 
     <!-- 健康告知、财务告知 -->
-    <tell-info v-if="result.vitPolicyTellInfo" :data="result.vitPolicyTellInfo" :isSelf="isSelf" :isImmunity="isImmunity"/>
+    <!-- <tell-info v-if="result.vitPolicyTellInfo" :data="result.vitPolicyTellInfo" :isSelf="isSelf" :isImmunity="isImmunity"/> -->
     
     <!-- 投保人、被保险人或法定监护人授权和声明 -->
     <div class="container">
@@ -698,11 +702,14 @@
         <span>投保人确认签名</span>
       </div>
       <div class="sign">
-        <div class="sign-box">
+        <div class="sign-box" @click="gotoSign(0)">
           <img :src="signImg" />
-          <span>代理人签名</span>
+          <p>
+            <span :class="{black: signStatus(applicantSignStatus)}">{{ applicantSignStatus | signStatusTxt('投保人') }}</span>
+            <span v-show="signStatus(applicantSignStatus)">重新签名</span>
+          </p>
         </div>
-        <p class="font-small">签署日期：2019年6月1日</p>
+        <p class="font-small">签署日期：{{ formatDate }}</p>
       </div>
     </div>
     
@@ -712,11 +719,14 @@
         <span>被保险人/法定监护人签名</span>
       </div>
       <div class="sign">
-        <div class="sign-box">
+        <div class="sign-box" @click="gotoSign(1)">
           <img :src="signImg" />
-          <span>代理人签名</span>
+          <p>
+            <span :class="{black: signStatus(insuredSignStatus)}">{{ insuredSignStatus | signStatusTxt('被保人') }}</span>
+            <span v-show="signStatus(insuredSignStatus)">重新签名</span>
+          </p>
         </div>
-        <p class="font-small">签署日期：2019年6月1日</p>
+        <p class="font-small">签署日期：{{ formatDate }}</p>
       </div>
     </div>
     
@@ -732,18 +742,21 @@
         <p class="format">3、上述各项均为本人真实的、最终的声明，本人保证不在任何时候任何场合做出与本声明相悖的证明，否则愿意承担一切法律责任。</p>
       </div>
       <div class="sign" style="padding-top:0;">
-        <div class="sign-box">
+        <div class="sign-box" @click="gotoSign(2)">
           <img :src="signImg" />
-          <span>代理人签名</span>
+          <p>
+            <span :class="{black: signStatus(agentSignStatus)}">{{ agentSignStatus | signStatusTxt('代理人') }}</span>
+            <span v-show="signStatus(agentSignStatus)">重新签名</span>
+          </p>
         </div>
-        <p class="font-small">签署日期：2019年6月1日</p>
+        <p class="font-small">签署日期：{{ formatDate }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getApplicationDetail, getIsSelf, getIsImmunity } from "@/api/inform";
+import { getApplicationDetail, getIsSelf, getIsImmunity, getSignStatus } from "@/api/inform";
 import TellInfo from "@/views/TellInfo";
 import { runInThisContext } from 'vm';
 export default {
@@ -756,11 +769,14 @@ export default {
       signImg: require('@/assets/sign.png'),
       query: {
         id: this.$route.query.id || '2279434910064181252',
-        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMCIsImV4cCI6MTU2MTAyNTc4MiwiaWF0IjoxNTYxMDIyMTgyLCJ1c2VySWQiOjIyNTIxMTQxMjYyNzA2Mjc4NDV9.PbbQ_wv1Qa5eSH_ptPVKyvbwlTCxYxWCS9v9ADv35is'
+        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMCIsImV4cCI6MTU2MTA5OTA3OSwiaWF0IjoxNTYxMDk1NDc5LCJ1c2VySWQiOjIyNTIxMTQxMjYyNzA2Mjc4NDV9.HKnmQkvBFV2E8lzXQ-XUTTLpHS4FEVKrjaAp777puuo'
       },
       result: '',
       isSelf: false, // 投保人与被保人是否为同一人
-      isImmunity: true // 投保险种不涉及投保人保险费豁免责任时，投保人健康告知栏无需填写
+      isImmunity: true, // 投保险种不涉及投保人保险费豁免责任时，投保人健康告知栏无需填写
+      applicantSignStatus: 1,
+      insuredSignStatus: 1,
+      agentSignStatus: 1
     }
   },
   filters: {
@@ -808,14 +824,30 @@ export default {
         })
       }
       return premiumTotal.toFixed(2)
+    },
+    signStatusTxt (val, name) {
+      return val === 2 ? '已签' : (val === 3 || val === 4) ? '签名失败' : name + '签名'
     }
   },
-  computed: {},
+  computed: {
+    formatDate () {
+      const d = new Date()
+      const year = d.getFullYear()
+      const month = d.getMonth() + 1
+      const date = d.getDate()
+      return (year + '年' + month + '月' + date + '日')
+    }
+  },
   created() {},
   mounted() {
     this.getApplicationDetailFn()
+    this.signCallBack()
+    window.signCallBack = this.signCallBack
   },
   methods: {
+    signStatus (val) {
+      return [2, 3, 4].findIndex(item => item === val) !== -1
+    },
     getApplicationDetailFn() {
       getApplicationDetail(this.query).then(res => {
         this.result = res
@@ -826,7 +858,24 @@ export default {
       getIsImmunity(this.query).then(res => {
         this.isImmunity = !!res
       })
-    }
+    },
+    gotoSign (type) {
+      // type:  0 投保人 1：被保人 2：代理人
+      console.log(type)
+    },
+    signCallBack () {
+      let param = {
+        policyId: this.query.id
+      }
+      getSignStatus(param, this.query.token).then(res => {
+        // status: 1：未签  2 签署完成  3：失败  4：拒签
+        res.map(item => {
+          this.applicantSignStatus = item.type === 0 ? item.status : this.applicantSignStatus
+          this.insuredSignStatus = item.type === 1 ? item.status : this.insuredSignStatus
+          this.agentSignStatus = item.type === 2 ? item.status : this.agentSignStatus
+        })
+      })
+    },
   }
 };
 </script>
