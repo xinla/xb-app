@@ -1,7 +1,8 @@
 import axios from '@/libs/api.request'
 import config from '@/config'
 
-const controller = config.controllers.beneficiary
+const controller1 = config.controllers.policy
+const controller = controller1 + '/' +config.controllers.beneficiary
 
 /**
  * 查看权益
@@ -9,7 +10,7 @@ const controller = config.controllers.beneficiary
  */
 export const getBeneficiaryDetail = (data) => {
   return axios.request({
-    url: `/getPolicyRight/${data.id}/${data.insuredCurrentAge}/${data.insuredMaxAge}/${data.insuredCountAge}`,
+    url: controller1 + `/getPolicyRight/${data.id}/${data.insuredCurrentAge}/${data.insuredMaxAge}/${data.insuredCountAge}`,
     method: 'GET',
     headers: {
       auth_token: data.token
@@ -23,7 +24,7 @@ export const getBeneficiaryDetail = (data) => {
  */
 export const getInsuredAgeRange = ({id, token}) => {
   return axios.request({
-    url: `/insuredAgeRange/${id}`,
+    url: controller1 + `/insuredAgeRange/${id}`,
     method: 'get',
     headers: {
       auth_token: token
@@ -51,7 +52,7 @@ export const getBeneficiaryMemmberDetail = (data) => {
  */
 export const saveBeneficiary = (data) => {
   return axios.request({
-    url: controller + `/saveOrUpdatePolicyBeneficiary`,
+    url: controller1 + `/saveOrUpdatePolicyBeneficiary`,
     method: 'post',
     data,
     headers: {
