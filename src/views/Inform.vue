@@ -600,7 +600,7 @@
       </div>
     </div>
 
-    <div @click="submit">提交</div>
+    <!-- <div @click="submit">提交</div> -->
   </div>
 </template>
 
@@ -1717,11 +1717,11 @@ export default {
         this.showIndex = index;
       }
     },
-    submit() {
-      // if (!this.isAgree) {
-      //   this.Toast("请先同意《投保人声明》");
-      //   return;
-      // }
+    submit(type) {
+      if (!this.isAgree) {
+        this.Toast("请先同意《投保人声明》");
+        return;
+      }
       if (this.agentTell[0].answers[0].agentContent.relation === "其他") {
         this.agentTell[0].answers[0].agentContent.relation = this.relation;
       }
@@ -1772,11 +1772,11 @@ export default {
         otherSpecialExplain: JSON.stringify(this.otherSpecialExplain)
       };
       // console.log(this.healthTell)
-      // return saveInform(data, this.token).then(res => {
-      //   return 'success'
-      // });
-      Promise.resolve().then(() =>{
-      })
+      saveInform(data, this.token).then(res => {
+        type === "IOS" ? window.webkit.messageHandlers.hello.submitSuccess().postMessage() : window.hello.submitSuccess()
+      }).catch(res => {
+        type === "IOS" ? window.webkit.messageHandlers.hello.submitFailed().postMessage() : window.hello.submitFailed()
+      });
       // return 'success'
     },
   }

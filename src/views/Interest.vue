@@ -296,6 +296,7 @@ export default {
         insuredCurrentAge: 0,
         insuredMaxAge: 0,
         insuredCountAge: undefined,
+        proposalId: this.$route.query.proposalId,
         token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU1OTM4MDQ1MywiaWF0IjoxNTU5Mzc2ODUzLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.tOcwghVeSUi62W4u9XNx0dAaduI7vOgIjLanuRCFTx4',
       },
       age: undefined,

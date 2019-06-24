@@ -12,6 +12,9 @@ export const getBeneficiaryDetail = (data) => {
   return axios.request({
     url: controller1 + `/getPolicyRight/${data.id}/${data.insuredCurrentAge}/${data.insuredMaxAge}/${data.insuredCountAge}`,
     method: 'GET',
+    params: {
+      proposalId: data.proposalId
+    },
     headers: {
       auth_token: data.token
     }
