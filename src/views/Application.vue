@@ -232,7 +232,7 @@
         </li>
         <li>
           <span class="label">所在地区</span>
-          <span class="desc">{{ result.applicant.homeProviceCountry | isNull }}</span>
+          <span class="desc">{{ result.applicant.homeProvice }}{{ result.applicant.homeCity }}{{ result.applicant.homeCounty }}{{ result.applicant.homeTownship }}</span>
         </li>
         <li>
           <span class="label">详细住址</span>
@@ -260,6 +260,10 @@
         </li>
         <li>
           <span class="label">所在地区</span>
+          <span class="desc">{{ result.applicant.organizationProvice }}{{ result.applicant.organizationCity }}{{ result.applicant.organizationCountry }}{{ result.applicant.organizationTownship }}</span>
+        </li>
+        <li>
+          <span class="label">详细地址</span>
           <span class="desc">{{ result.applicant.organizationAddress | isNull }}</span>
         </li>
         <li>
@@ -276,11 +280,11 @@
         </li>
         <li>
           <span class="label">年收入</span>
-          <span class="desc">{{ result.applicant.annualIncome | isNull }}</span>
+          <span class="desc">{{ result.applicant.annualIncome | addUnits('万元') }}</span>
         </li>
         <li>
           <span class="label">收入来源</span>
-          <span class="desc">{{ result.applicant.sourceIncome | isNull }}</span>
+          <span class="desc">{{ result.applicant.sourceIncomeName | isNull }}</span>
         </li>
         <li>
           <span class="label">有无社保</span>
@@ -288,15 +292,15 @@
         </li>
         <li>
           <span class="label">身高</span>
-          <span class="desc">{{ result.applicant.stature | isNull }}</span>
+          <span class="desc">{{ result.applicant.stature | addUnits('厘米') }}</span>
         </li>
         <li>
           <span class="label">体重</span>
-          <span class="desc">{{ result.applicant.avoirDupois | isNull }}</span>
+          <span class="desc">{{ result.applicant.avoirDupois | addUnits('公斤') }}</span>
         </li>
         <li>
           <span class="label">纳税身份声明</span>
-          <span class="desc">{{ result.applicant.taxResidency | isNull }}</span>
+          <span class="desc">{{ result.applicant.taxResidencyName | isNull }}</span>
         </li>
       </ul>
     </div>
@@ -307,6 +311,10 @@
         <span>被保人资料</span>
       </div>
       <ul class="info-list">
+        <li>
+          <span class="label">与投保人关系</span>
+          <span class="desc">{{ result.insured.relationName | isNull }}</span>
+        </li>
         <li>
           <span class="label">姓名</span>
           <span class="desc">{{ result.insured.fullName | isNull }}</span>
@@ -345,7 +353,7 @@
         </li>
         <li>
           <span class="label">所在地区</span>
-          <span class="desc">{{ result.insured.homeProviceCountry | isNull }}</span>
+          <span class="desc">{{ result.insured.homeProvice }}{{ result.insured.homeCity }}{{ result.insured.homeCounty }}{{ result.insured.homeTownship }}</span>
         </li>
         <li>
           <span class="label">详细住址</span>
@@ -373,6 +381,10 @@
         </li>
         <li>
           <span class="label">所在地区</span>
+          <span class="desc">{{ result.insured.organizationProvice }}{{ result.insured.organizationCity }}{{ result.insured.organizationCountry }}{{ result.insured.organizationTownship }}</span>
+        </li>
+        <li>
+          <span class="label">详细地址</span>
           <span class="desc">{{ result.insured.organizationAddress | isNull }}</span>
         </li>
         <li>
@@ -389,11 +401,11 @@
         </li>
         <li>
           <span class="label">年收入</span>
-          <span class="desc">{{ result.insured.annualIncome | isNull }}</span>
+          <span class="desc">{{ result.insured.annualIncome | addUnits('万元') }}</span>
         </li>
         <li>
           <span class="label">收入来源</span>
-          <span class="desc">{{ result.insured.sourceIncome | isNull }}</span>
+          <span class="desc">{{ result.insured.sourceIncomeName | isNull }}</span>
         </li>
         <li>
           <span class="label">有无社保</span>
@@ -401,30 +413,30 @@
         </li>
         <li>
           <span class="label">身高</span>
-          <span class="desc">{{ result.insured.stature | isNull }}</span>
+          <span class="desc">{{ result.insured.stature | addUnits('厘米') }}</span>
         </li>
         <li>
           <span class="label">体重</span>
-          <span class="desc">{{ result.insured.avoirDupois | isNull }}</span>
+          <span class="desc">{{ result.insured.avoirDupois | addUnits('公斤') }}</span>
         </li>
         <li>
           <span class="label">纳税身份声明</span>
-          <span class="desc">{{ result.insured.taxResidency | isNull }}</span>
+          <span class="desc">{{ result.insured.taxResidencyName | isNull }}</span>
         </li>
       </ul>
     </div>
 
     <!-- 身故保险金受益人资料 -->
-    <div class="container" v-if="result.dead && result.dead.lenght">
+    <div class="container" v-if="result.dead && result.dead.length">
       <div class="title title-boder">
         <span>身故保险金受益人资料</span>
       </div>
       <div class="info-list" v-for="(item, index) in result.dead" :key="item.id">
-        <div class="title small title-boder">{{ item.beneficiaryQuickfillFlag | beneficiaryQuickfillFlag(index) }}</div>
+        <div v-if="item.beneficiaryQuickfillFlag === 4" class="title small title-boder">{{ item.beneficiaryQuickfillFlag | beneficiaryQuickfillFlag(index) }}</div>
         <ul v-if="item.beneficiaryQuickfillFlag !== 2">
           <li>
             <span class="label">与被保人关系</span>
-            <span class="desc">{{ item.relationToMainInsuredName }}</span>
+            <span class="desc">{{ item.relationToMainInsuredName | isNull }}</span>
           </li>
           <li>
             <span class="label">姓名</span>
@@ -468,7 +480,7 @@
           </li>
           <li>
             <span class="label">受益比例</span>
-            <span class="desc">{{ item.percentage | isNull }}%</span>
+            <span class="desc">{{ item.percentage | percentage }}</span>
           </li>
         </ul>
         <ul v-else>
@@ -482,23 +494,23 @@
           </li>
           <li>
             <span class="label">受益比例</span>
-            <span class="desc">{{ item.percentage | isNull }}%</span>
+            <span class="desc">{{ item.percentage | percentage }}</span>
           </li>
         </ul>
       </div>
     </div>
 
     <!-- 生存保险金受益人资料 -->
-    <div class="container" v-if="result.survival && result.survival.lenght">
+    <div class="container" v-if="result.survival && result.survival.length">
       <div class="title title-boder">
         <span>生存保险金受益人资料</span>
       </div>
       <div class="info-list" v-for="(item, index) in result.survival" :key="item.id">
-        <div class="title small title-boder">{{ item.beneficiaryQuickfillFlag | beneficiaryQuickfillFlag(index) }}</div>
+        <div v-if="item.beneficiaryQuickfillFlag === 4" class="title small title-boder">{{ item.beneficiaryQuickfillFlag | beneficiaryQuickfillFlag(index) }}</div>
         <ul v-if="item.beneficiaryQuickfillFlag !== 2">
           <li>
             <span class="label">与被保人关系</span>
-            <span class="desc">{{ item.relationToMainInsuredName }}</span>
+            <span class="desc">{{ item.relationToMainInsuredName | isNull }}</span>
           </li>
           <li>
             <span class="label">姓名</span>
@@ -542,7 +554,7 @@
           </li>
           <li>
             <span class="label">受益比例</span>
-            <span class="desc">{{ item.percentage | isNull }}%</span>
+            <span class="desc">{{ item.percentage | percentage }}</span>
           </li>
         </ul>
         <ul v-else>
@@ -556,14 +568,14 @@
           </li>
           <li>
             <span class="label">受益比例</span>
-            <span class="desc">{{ item.percentage | isNull }}%</span>
+            <span class="desc">{{ item.percentage | percentage }}</span>
           </li>
         </ul>
       </div>
     </div>
 
     <!-- 投保计划 -->
-    <div class="container" v-if="result.vitPolicyRiskInfoVoList && result.vitPolicyRiskInfoVoList.lenght">
+    <div class="container" v-if="result.vitPolicyRiskInfoVoList && result.vitPolicyRiskInfoVoList.length">
       <div class="title title-boder">
         <svg class="icon icon-title icon_toubaoplane" aria-hidden="true">
           <use xlink:href="#icon_toubaoplane"></use>
@@ -584,7 +596,7 @@
           <div class="item-wrap">
             <div class="item">
               <p class="key">保障额度</p>
-              <p class="value">{{ item.guaranteeName | isNull }}</p>
+              <p class="value">{{ item.guaranteeName | addUnits('万元') }}</p>
             </div>
             <div class="item">
               <p class="key">保障期间</p>
@@ -634,7 +646,7 @@
     </div>
 
     <!-- 账户信息 -->
-    <div class="container" v-if="result.vitPolicyBookAccountVoList && result.vitPolicyBookAccountVoList.lenght">
+    <div class="container" v-if="result.vitPolicyBookAccountVoList && result.vitPolicyBookAccountVoList.length">
       <div class="title title-boder">
         <span>账户信息</span>
       </div>
@@ -646,7 +658,7 @@
           </li>
           <li>
             <span class="label">账户号</span>
-            <span class="desc">{{ item.bankAccount | isNull }}</span>
+            <span class="desc">{{ item.bankAccount | bankAccount }}</span>
           </li>
           <li>
             <span class="label">开户银行</span>
@@ -673,7 +685,7 @@
     </div>
 
     <!-- 健康告知、财务告知 -->
-    <!-- <tell-info v-if="result.vitPolicyTellInfo" :data="result.vitPolicyTellInfo" :isSelf="isSelf" :isImmunity="isImmunity"/> -->
+    <tell-info v-if="result.vitPolicyTellInfo" :data="result.vitPolicyTellInfo" :isSelf="isSelf" :isImmunity="isImmunity"/>
     
     <!-- 投保人、被保险人或法定监护人授权和声明 -->
     <div class="container">
@@ -697,7 +709,7 @@
     </div>
     
     <!-- 投保人确认签名 -->
-    <div class="container">
+    <div class="container" id="applicantSign">
       <div class="title title-boder">
         <span>投保人确认签名</span>
       </div>
@@ -714,7 +726,7 @@
     </div>
     
     <!-- 被保险人/法定监护人签名 -->
-    <div class="container">
+    <div class="container" id="insuredSign">
       <div class="title title-boder">
         <span>被保险人/法定监护人签名</span>
       </div>
@@ -731,7 +743,7 @@
     </div>
     
     <!-- 保险代理人签名 -->
-    <div class="container">
+    <div class="container" id="agentSign">
       <div class="title title-boder">
         <span>保险代理人签名</span>
       </div>
@@ -768,12 +780,14 @@ export default {
     return {
       signImg: require('@/assets/sign.png'),
       query: {
-        id: this.$route.query.id || '2279434910064181252',
-        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMCIsImV4cCI6MTU2MTA5OTA3OSwiaWF0IjoxNTYxMDk1NDc5LCJ1c2VySWQiOjIyNTIxMTQxMjYyNzA2Mjc4NDV9.HKnmQkvBFV2E8lzXQ-XUTTLpHS4FEVKrjaAp777puuo'
+        id: this.$route.query.id || '2286739249334059016',
+        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImNvbXBhbnkiOiJ7XCJhY3R1YWxBbm5pdmVyc2FyeVwiOjE1NTc3NjMyMDAwMDAsXCJidXNpbmVzc1R5cGVcIjowLFwiY2l0eUlkXCI6XCIzNDAxMDBcIixcImNvbWFwbnlUeXBlXCI6dHJ1ZSxcImNvbXBhbnlDb250ZW50XCI6XCI8cD7lronlv4Pkv53pmanlj6_pnaDvvIzlronlhajvvIzmlL7lv4Mu44CC44CC44CC44CCPC9wPlwiLFwiY29tcGFueUZvclNob3J0XCI6XCLlronlv4NcIixcImNvbXBhbnlTbG9nYW5cIjpcIuihjOS4muesrOS4gFwiLFwiY29tcGF5QWNjb3VudFR5cGVcIjowLFwiZW5nbGlzaE5hbWVcIjpcIlwiLFwiZW5nbGlzaE5hbWVGb3JTaG9ydFwiOlwiXCIsXCJoZWFkcXVhcnRlcnNBZGRyZXNzXCI6XCLmtYvor5VcIixcImhpZGRlbkNoYWlybWFuSW5mb1wiOjAsXCJoaWRkZW5NYW5hZ2VySW5mb1wiOjAsXCJpZFwiOjIyNTIxMTQxMjYxMzY0MTAxMTUsXCJpc0FjdGl2ZVwiOjEsXCJpc0RlbFwiOjAsXCJpc0dlbmVyYXRlR3JvdXBcIjoxLFwibG9nb1wiOlwiaHR0cDovL3d3dy5jb21tb24udmlzdWFsaW5zdXIuY29tL2NvbW1vbl8yMjc4MjMwODMxMDU3MDc2MjI4XzE1NjA0MjEyNTM0NjAuanBnXCIsXCJuYW1lXCI6XCLlronlvr3lronlv4Pkv53pmanku6PnkIbmnInpmZDlhazlj7hcIixcIm91dHNpZGVBbGxBdXRob3JpdHlcIjowLFwicHJvdmluY2VJZFwiOlwiMzQwMDAwXCIsXCJyZWdpc3RyYXRpb25EYXRlXCI6MTU2MDk2MDAwMDAwMCxcInRlbGVwaG9uZU51bWJlclwiOlwiMTIzNDQzNTQ0MVwiLFwidXBkYXRlVGltZVwiOjE1NTg5MjAzNzUwMDB9Iiwic3RhdGUiOiIwIiwiZXhwIjoxNTYxNDYyNTIzLCJpYXQiOjE1NjE0NTg5MjMsInVzZXJJZCI6MjI1MjExNDEyNjI3MDYyNzg0NX0.BjmZUob5PkCRCVYFU2CtkhulzjuyigEm6iv5xDNgOJ4'
       },
       result: '',
       isSelf: false, // 投保人与被保人是否为同一人
       isImmunity: true, // 投保险种不涉及投保人保险费豁免责任时，投保人健康告知栏无需填写
+      isAndroid: false,
+      isiOS: false,
       applicantSignStatus: 1,
       insuredSignStatus: 1,
       agentSignStatus: 1
@@ -797,6 +811,9 @@ export default {
     socialInsuranceFlag (val) {
       return val === 0 ? '没有社保' : val === 1 ? '有社保' : '-'
     },
+    addUnits (val, units) {
+      return val ? val + units : '-'
+    },
     isNull (val) {
       return val ? val : '-'
     },
@@ -804,10 +821,13 @@ export default {
       //val 0  投保人  1  被保险人  2  法定受益人   4 指定受益人
       let text = '-'
       let num = ['一', '二', '三', '四', '五', '六', '七', '八', '九']
-      if (val) {
-        text = val === 2 ? '法定受益人' : `第${num[index]}顺序受益人`
+      if (val !== null && val !== undefined && val !== '') {
+        text = val === 4 ? `第${num[index]}顺序受益人` : '受益人'
       }
       return text
+    },
+    percentage (val) {
+      return val && !isNaN(val) ? (val * 100) + '%' : '-'
     },
     paymentMethod (val) {
       // 交费方式   0  年交  1 半年交  2 季交 3 月交
@@ -827,6 +847,9 @@ export default {
     },
     signStatusTxt (val, name) {
       return val === 2 ? '已签' : (val === 3 || val === 4) ? '签名失败' : name + '签名'
+    },
+    bankAccount (val) {
+      return val ? !isNaN(val) ? val.replace(/(\d{4})(?=\d)/g,'$1 ') : val : '-'
     }
   },
   computed: {
@@ -842,6 +865,8 @@ export default {
   mounted() {
     this.getApplicationDetailFn()
     this.signCallBack()
+    this.isAndroid = navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Adr') > -1; //android终端
+    this.isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
     window.signCallBack = this.signCallBack
   },
   methods: {
@@ -861,9 +886,14 @@ export default {
     },
     gotoSign (type) {
       // type:  0 投保人 1：被保人 2：代理人
-      console.log(type)
+      if (this.isAndroid) {
+        window.hello.onClickSign(type)
+      }
+      if (this.isiOS) {
+        window.webkit.messageHandlers.onClickSign().postMessage(type)
+      }
     },
-    signCallBack () {
+    signCallBack (type) {
       let param = {
         policyId: this.query.id
       }
@@ -874,8 +904,12 @@ export default {
           this.insuredSignStatus = item.type === 1 ? item.status : this.insuredSignStatus
           this.agentSignStatus = item.type === 2 ? item.status : this.agentSignStatus
         })
+        if (type || type === 0) {
+          let typeId = type === 0 ? "applicantSign" : type === 1 ? "insuredSign" : type === 2 ? "agentSign" : ""
+          document.getElementById(typeId) ? document.getElementById(typeId).scrollIntoView() : ""
+        }
       })
-    },
+    }
   }
 };
 </script>
