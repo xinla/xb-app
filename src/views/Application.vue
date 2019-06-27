@@ -726,7 +726,7 @@
     </div>
     
     <!-- 被保险人/法定监护人签名 -->
-    <div class="container" id="insuredSign">
+    <div v-if="!isSelf" class="container" id="insuredSign">
       <div class="title title-boder">
         <span>被保险人/法定监护人签名</span>
       </div>
@@ -743,7 +743,7 @@
     </div>
     
     <!-- 保险代理人签名 -->
-    <div class="container" id="agentSign">
+    <!-- <div class="container" id="agentSign">
       <div class="title title-boder">
         <span>保险代理人签名</span>
       </div>
@@ -763,7 +763,7 @@
         </div>
         <p class="font-small">签署日期：{{ formatDate }}</p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -780,8 +780,10 @@ export default {
     return {
       signImg: require('@/assets/sign.png'),
       query: {
-        id: this.$route.query.id || '2286739249334059016',
-        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImNvbXBhbnkiOiJ7XCJhY3R1YWxBbm5pdmVyc2FyeVwiOjE1NTc3NjMyMDAwMDAsXCJidXNpbmVzc1R5cGVcIjowLFwiY2l0eUlkXCI6XCIzNDAxMDBcIixcImNvbWFwbnlUeXBlXCI6dHJ1ZSxcImNvbXBhbnlDb250ZW50XCI6XCI8cD7lronlv4Pkv53pmanlj6_pnaDvvIzlronlhajvvIzmlL7lv4Mu44CC44CC44CC44CCPC9wPlwiLFwiY29tcGFueUZvclNob3J0XCI6XCLlronlv4NcIixcImNvbXBhbnlTbG9nYW5cIjpcIuihjOS4muesrOS4gFwiLFwiY29tcGF5QWNjb3VudFR5cGVcIjowLFwiZW5nbGlzaE5hbWVcIjpcIlwiLFwiZW5nbGlzaE5hbWVGb3JTaG9ydFwiOlwiXCIsXCJoZWFkcXVhcnRlcnNBZGRyZXNzXCI6XCLmtYvor5VcIixcImhpZGRlbkNoYWlybWFuSW5mb1wiOjAsXCJoaWRkZW5NYW5hZ2VySW5mb1wiOjAsXCJpZFwiOjIyNTIxMTQxMjYxMzY0MTAxMTUsXCJpc0FjdGl2ZVwiOjEsXCJpc0RlbFwiOjAsXCJpc0dlbmVyYXRlR3JvdXBcIjoxLFwibG9nb1wiOlwiaHR0cDovL3d3dy5jb21tb24udmlzdWFsaW5zdXIuY29tL2NvbW1vbl8yMjc4MjMwODMxMDU3MDc2MjI4XzE1NjA0MjEyNTM0NjAuanBnXCIsXCJuYW1lXCI6XCLlronlvr3lronlv4Pkv53pmanku6PnkIbmnInpmZDlhazlj7hcIixcIm91dHNpZGVBbGxBdXRob3JpdHlcIjowLFwicHJvdmluY2VJZFwiOlwiMzQwMDAwXCIsXCJyZWdpc3RyYXRpb25EYXRlXCI6MTU2MDk2MDAwMDAwMCxcInRlbGVwaG9uZU51bWJlclwiOlwiMTIzNDQzNTQ0MVwiLFwidXBkYXRlVGltZVwiOjE1NTg5MjAzNzUwMDB9Iiwic3RhdGUiOiIwIiwiZXhwIjoxNTYxNDYyNTIzLCJpYXQiOjE1NjE0NTg5MjMsInVzZXJJZCI6MjI1MjExNDEyNjI3MDYyNzg0NX0.BjmZUob5PkCRCVYFU2CtkhulzjuyigEm6iv5xDNgOJ4'
+        // id: '2286739249334059016',
+        // token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImNvbXBhbnkiOiJ7XCJhY3R1YWxBbm5pdmVyc2FyeVwiOjE1NTc3NjMyMDAwMDAsXCJidXNpbmVzc1R5cGVcIjowLFwiY2l0eUlkXCI6XCIzNDAxMDBcIixcImNvbWFwbnlUeXBlXCI6dHJ1ZSxcImNvbXBhbnlDb250ZW50XCI6XCI8cD7lronlv4Pkv53pmanlj6_pnaDvvIzlronlhajvvIzmlL7lv4Mu44CC44CC44CC44CCPC9wPlwiLFwiY29tcGFueUZvclNob3J0XCI6XCLlronlv4NcIixcImNvbXBhbnlTbG9nYW5cIjpcIuihjOS4muesrOS4gFwiLFwiY29tcGF5QWNjb3VudFR5cGVcIjowLFwiZW5nbGlzaE5hbWVcIjpcIlwiLFwiZW5nbGlzaE5hbWVGb3JTaG9ydFwiOlwiXCIsXCJoZWFkcXVhcnRlcnNBZGRyZXNzXCI6XCLmtYvor5VcIixcImhpZGRlbkNoYWlybWFuSW5mb1wiOjAsXCJoaWRkZW5NYW5hZ2VySW5mb1wiOjAsXCJpZFwiOjIyNTIxMTQxMjYxMzY0MTAxMTUsXCJpc0FjdGl2ZVwiOjEsXCJpc0RlbFwiOjAsXCJpc0dlbmVyYXRlR3JvdXBcIjoxLFwibG9nb1wiOlwiaHR0cDovL3d3dy5jb21tb24udmlzdWFsaW5zdXIuY29tL2NvbW1vbl8yMjc4MjMwODMxMDU3MDc2MjI4XzE1NjA0MjEyNTM0NjAuanBnXCIsXCJuYW1lXCI6XCLlronlvr3lronlv4Pkv53pmanku6PnkIbmnInpmZDlhazlj7hcIixcIm91dHNpZGVBbGxBdXRob3JpdHlcIjowLFwicHJvdmluY2VJZFwiOlwiMzQwMDAwXCIsXCJyZWdpc3RyYXRpb25EYXRlXCI6MTU2MDk2MDAwMDAwMCxcInRlbGVwaG9uZU51bWJlclwiOlwiMTIzNDQzNTQ0MVwiLFwidXBkYXRlVGltZVwiOjE1NTg5MjAzNzUwMDB9Iiwic3RhdGUiOiIwIiwiZXhwIjoxNTYxNDYyNTIzLCJpYXQiOjE1NjE0NTg5MjMsInVzZXJJZCI6MjI1MjExNDEyNjI3MDYyNzg0NX0.BjmZUob5PkCRCVYFU2CtkhulzjuyigEm6iv5xDNgOJ4'
+        id: this.$route.query.id || '',
+        token: this.$route.query.token || ''
       },
       result: '',
       isSelf: false, // 投保人与被保人是否为同一人
@@ -863,17 +865,24 @@ export default {
   },
   created() {},
   mounted() {
-    this.getApplicationDetailFn()
-    this.signCallBack()
     this.isAndroid = navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Adr') > -1; //android终端
-    this.isiOS = !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+    this.isiOS = !!navigator.userAgent.indexOf('iPhone') > -1; //ios终端
     window.signCallBack = this.signCallBack
+    this.getApplicationDetailFn()
   },
   methods: {
     signStatus (val) {
       return [2, 3, 4].findIndex(item => item === val) !== -1
     },
     getApplicationDetailFn() {
+      if (!this.query.id) {
+        this.Toast('未获取到保单信息')
+        return
+      }
+      if (!this.query.token) {
+        this.Toast('未获取到用户信息')
+        return
+      }
       getApplicationDetail(this.query).then(res => {
         this.result = res
       })
@@ -883,14 +892,20 @@ export default {
       getIsImmunity(this.query).then(res => {
         this.isImmunity = !!res
       })
+      this.signCallBack()
     },
     gotoSign (type) {
       // type:  0 投保人 1：被保人 2：代理人
+      let typeName = ['applicantSignStatus', 'insuredSignStatus', 'agentSignStatus']
+      let params = {
+        type: type,
+        isResign: this[typeName[type]] !== 1
+      }
       if (this.isAndroid) {
-        window.hello.onClickSign(type)
+        window.hello.onClickSign(type, params.isResign)
       }
       if (this.isiOS) {
-        window.webkit.messageHandlers.onClickSign().postMessage(type)
+        window.webkit.messageHandlers.onClickSign.postMessage(JSON.stringify(params))
       }
     },
     signCallBack (type) {
@@ -899,6 +914,7 @@ export default {
       }
       getSignStatus(param, this.query.token).then(res => {
         // status: 1：未签  2 签署完成  3：失败  4：拒签
+        // this.Toast(JSON.stringify(res))
         res.map(item => {
           this.applicantSignStatus = item.type === 0 ? item.status : this.applicantSignStatus
           this.insuredSignStatus = item.type === 1 ? item.status : this.insuredSignStatus
