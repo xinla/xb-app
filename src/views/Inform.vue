@@ -1759,7 +1759,6 @@ export default {
             (iterator.applicant = iterator.insured);
         }
       }
-
       let data = {
         policyId: this.policyId,
         id: this.id,
@@ -1771,13 +1770,13 @@ export default {
         healthSpecialExplain: JSON.stringify(this.healthSpecialExplain),
         otherSpecialExplain: JSON.stringify(this.otherSpecialExplain)
       };
+      // window.webkit.messageHandlers.submitSuccess().postMessage(null)
       // console.log(this.healthTell)
       saveInform(data, this.token).then(res => {
-        type === "IOS" ? window.webkit.messageHandlers.hello.submitSuccess().postMessage() : window.hello.submitSuccess()
+        type === "IOS" ? window.webkit.messageHandlers.submitSuccess.postMessage(null) : window.hello.submitSuccess()
       }).catch(res => {
-        type === "IOS" ? window.webkit.messageHandlers.hello.submitFailed().postMessage() : window.hello.submitFailed()
+        type === "IOS" ? window.webkit.messageHandlers.submitFailed.postMessage(null) : window.hello.submitFailed()
       });
-      // return 'success'
     },
   }
 };

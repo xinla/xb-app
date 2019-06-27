@@ -3,6 +3,7 @@ import config from '@/config'
 
 const controller1 = config.controllers.policy
 const controller = controller1 + '/' +config.controllers.beneficiary
+const controller2 = config.baseUrl.domain2 + '/proposal'
 
 /**
  * 查看权益
@@ -12,11 +13,36 @@ export const getBeneficiaryDetail = (data) => {
   return axios.request({
     url: controller1 + `/getPolicyRight/${data.id}/${data.insuredCurrentAge}/${data.insuredMaxAge}/${data.insuredCountAge}`,
     method: 'GET',
-    params: {
-      proposalId: data.proposalId
-    },
     headers: {
       auth_token: data.token
+    }
+  })
+}
+
+/**
+ * 建议书中查看权益
+ * @param {*} data 
+ */
+export const getBeneficiaryDetailByProposalId = (data) => {
+  return axios.request({
+    url: controller2 + `/getPolicyRight/${data.id}/${data.insuredCurrentAge}/${data.insuredMaxAge}/${data.insuredCountAge}`,
+    method: 'GET',
+    headers: {
+      auth_token: data.token
+    }
+  })
+}
+
+/**
+ * 查看权益建议书封面
+ * @param {*} param0 
+ */
+export const getBeneficiaryCover = ({id, token}) => {
+  return axios.request({
+    url: controller2 + `/findRelationByProposalId/${id}`,
+    method: 'get',
+    headers: {
+      auth_token: token
     }
   })
 }

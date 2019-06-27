@@ -1,5 +1,6 @@
 <template>
   <div>
+    <img v-if="cover" :src="cover" class="cover">
     <div class="member-wrap">
       <div class="member">
         <span class="semicircle"></span>
@@ -36,7 +37,7 @@
             <p class="value">{{result.applicantRelationInsured}}</p>
             <p class="key">关系</p>
           </li>
-        </ul> 
+        </ul>
       </div>
     </div>
 
@@ -47,7 +48,7 @@
         </svg>
         <span>投保计划</span>
       </div>
- 
+
       <div v-for="(item, index) in result.vitPolicyRightRiskVoList" :key="index">
         <div class="title">
           <svg v-if="index === 0" class="icon icon-title icon_zhuxian" aria-hidden="true" :key="0">
@@ -126,12 +127,10 @@
           </div>
         </div>
       </div>
-      <div class="blue ac" style="padding: .4rem 0 .2rem;">查看保单条款详情></div> -->
-
+      <div class="blue ac" style="padding: .4rem 0 .2rem;">查看保单条款详情></div>-->
     </div>
 
     <div class="container1">
-      
       <div class="title title-boder" style="border-bottom: 1px solid #f1f3f5;">
         <svg class="icon icon-title icon_liyi" aria-hidden="true">
           <use xlink:href="#icon_liyi"></use>
@@ -140,11 +139,18 @@
       </div>
 
       <div style="margin: .8rem 0 .3rem;">
-        <mt-range v-model="age" :min="query.insuredCurrentAge" :max="query.insuredMaxAge" :step="1" :key='query.insuredCountAge'>
+        <mt-range
+          v-model="age"
+          :min="query.insuredCurrentAge"
+          :max="query.insuredMaxAge"
+          :step="1"
+          :key="query.insuredCountAge"
+        >
           <div slot="start" @click="age++">
             <svg class="icon icon_add_circle" aria-hidden="true" style="margin-right: 10px;">
               <use xlink:href="#icon_add_circle"></use>
-            </svg>{{query.insuredCurrentAge}}
+            </svg>
+            {{query.insuredCurrentAge}}
           </div>
           <div slot="end" @click="age--">
             <svg class="icon icon_reduce_circle" aria-hidden="true" style="margin-left: 10px;">
@@ -183,7 +189,11 @@
           </div>
         </div>
 
-        <div class="content" v-for="(item, index) in JSON.parse(item.insurableInterest)" :key="index">
+        <div
+          class="content"
+          v-for="(item, index) in JSON.parse(item.insurableInterest)"
+          :key="index"
+        >
           <div class="title2">
             <svg class="icon icon-title icon_bao" aria-hidden="true">
               <use xlink:href="#icon_bao"></use>
@@ -251,7 +261,7 @@
             </div>
           </div>
         </div>
-      </div> -->
+      </div>-->
 
       <div class="content">
         <div class="title2">
@@ -279,39 +289,48 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-import { getBeneficiaryDetail, getInsuredAgeRange } from "@/api/beneficiary";
+import {
+  getBeneficiaryDetail,
+  getInsuredAgeRange,
+  getBeneficiaryDetailByproposalId,
+  getBeneficiaryCover
+} from "@/api/beneficiary";
 export default {
   components: {},
   props: {},
   data() {
     return {
       query: {
-        id: this.$route.query.id || '2266434895041527813',
+        id:
+          this.$route.query.id ||
+          this.$route.query.proposalId ||
+          "2266434895041527813",
         insuredCurrentAge: 0,
         insuredMaxAge: 0,
         insuredCountAge: undefined,
-        proposalId: this.$route.query.proposalId,
-        token: this.$route.query.token || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU1OTM4MDQ1MywiaWF0IjoxNTU5Mzc2ODUzLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.tOcwghVeSUi62W4u9XNx0dAaduI7vOgIjLanuRCFTx4',
+        token:
+          this.$route.query.token ||
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU1OTM4MDQ1MywiaWF0IjoxNTU5Mzc2ODUzLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.tOcwghVeSUi62W4u9XNx0dAaduI7vOgIjLanuRCFTx4"
       },
       age: undefined,
       result: {},
-      timer: undefined
+      timer: undefined,
+      cover: ""
     };
   },
   computed: {},
   watch: {
-    'age'() {
-      clearTimeout(this.timer)
+    age() {
+      clearTimeout(this.timer);
       this.timer = setTimeout(() => {
-        this.query.insuredCountAge = this.age
-        this.getData()
-      }, 500)
+        this.query.insuredCountAge = this.age;
+        this.getData();
+      }, 500);
     }
   },
   mounted() {
@@ -321,19 +340,27 @@ export default {
     init() {
       getInsuredAgeRange(this.query).then(res => {
         // console.log(res)
-        this.query.insuredCurrentAge = res.currentAge
-        this.query.insuredMaxAge = res.maxAge
-        this.query.insuredCountAge = res.currentAge
-        this.age = res.currentAge
-        this.getData()
-      })
+        this.query.insuredCurrentAge = res.currentAge;
+        this.query.insuredMaxAge = res.maxAge;
+        this.query.insuredCountAge = res.currentAge;
+        this.age = res.currentAge;
+        this.getData();
+      });
     },
     getData() {
       // console.log(this.query)
-      getBeneficiaryDetail(this.query).then(res => {
+      (this.$route.query.proposalId
+        ? getBeneficiaryDetailByProposalId(this.query)
+        : getBeneficiaryDetail(this.query)
+      ).then(res => {
         // console.log(res)
-        this.result = res
+        this.result = res;
       });
+      this.$route.query.type &&
+        getBeneficiaryCover(this.query).then(res => {
+          // 获取封面
+          res && (this.cover = res.cover);
+        });
     }
   }
 };

@@ -1,9 +1,8 @@
 import axios from '@/libs/api.request'
 import config from '@/config'
 
-const controller = config.controllers.product
-const controller1 = 'http://192.168.1.32:8115/v1/product'
-const url = 'http://192.168.1.150:8888/api/base/v1/product/desc/h5'
+const controller1 = config.baseUrl.domain2 + '/product'
+const url = config.baseUrl.domain4 + '/api/base/v1/product/desc/h5'
 
 /**
  * 获取产品详情

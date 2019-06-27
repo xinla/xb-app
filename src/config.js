@@ -2,8 +2,9 @@ const config = {
   baseUrl: {
     // dev: 'http://192.168.1.55', // 虚拟机
     dev: 'http://192.168.1.11:8888/api/policy-service/v1', // wangdong
-    dev2: 'http://192.168.1.21:8115/v1',
+    domain2: process.env.NODE_ENV === 'development' ? 'http://192.168.1.32:8115/v1' : '', // liusiyuan
     dev3: 'http://192.168.1.11:8888',
+    domain4: process.env.NODE_ENV === 'development' ? 'http://192.168.1.150:8888/' : '', // liushaung~
     pro: 'https://produce.com'
   },
 }
@@ -15,8 +16,6 @@ config.controllers = {
   product: '/product',
   role: '/role',
 
-
-  mCompany: config.baseUrl.dev2 + '/company',
   sign: config.baseUrl.dev3
 }
 
