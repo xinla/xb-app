@@ -5,7 +5,8 @@
       <router-link to="/product">产品详情</router-link>|
       <router-link to="/interest">查看权益</router-link>|
       <router-link to="/inform">告知项</router-link>|
-      <router-link to="/application">投保单</router-link>
+      <router-link to="/application">投保单</router-link>|
+      <router-link to="/company">公司详情</router-link>
     </div>
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
   </div>

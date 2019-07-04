@@ -32,6 +32,11 @@ export default new Router({
       path: '/application',
       name: 'application',
       component: () => import('./views/Application.vue')
+    },
+    {
+      path: '/company',
+      name: 'company',
+      component: () => import('./views/Company.vue')
     }
   ]
 })

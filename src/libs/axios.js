@@ -63,7 +63,14 @@ class HttpRequest {
       }
     }, error => {
       this.destroy(url)
-      addErrorLog(error.response)
+      if (error.response) {
+        addErrorLog(error.response)
+      } else {
+        Toast({
+          message: `网络错误或服务器拒绝连接`,
+          duration: 3000
+        })
+      }
       return Promise.reject(error)
     })
   }

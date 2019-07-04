@@ -1,8 +1,8 @@
 import axios from '@/libs/api.request'
 import config from '@/config'
 
-const controller1 = config.baseUrl.domain2 + '/product'
-const url = config.baseUrl.domain4 + '/api/base/v1/product/desc/h5'
+const controller = config.baseUrl.domain2 + config.controllers.product
+const controller2 = config.baseUrl.domain4 + config.controllers.product
 
 /**
  * 获取产品详情
@@ -10,7 +10,7 @@ const url = config.baseUrl.domain4 + '/api/base/v1/product/desc/h5'
  */
 export const getProductDetail = ({id, token}) => {
   return axios.request({
-    url,
+    url: controller2 + '/desc/h5',
     method: 'get',
     params: {
       id
@@ -25,12 +25,15 @@ export const getProductDetail = ({id, token}) => {
  * 获取产品费率参数
  * @param {*} id 产品id 
  */
-export const getProductRateParams = (id) => {
+export const getProductRateParams = ({id, token}) => {
   return axios.request({
-    url: controller1 + '/getParams',
+    url: controller + '/getParams',
     method: 'get',
     params: {
       productId: id
+    },
+    headers: {
+      auth_token: token
     }
   })
 }
@@ -39,11 +42,14 @@ export const getProductRateParams = (id) => {
  * 获取产品详情费率表的年龄和费率
  * @param {*} param0 
  */
-export const getProductRateDetail = (data) => {
+export const getProductRateDetail = (data, token) => {
   return axios.request({
-    url: controller1 + `/getRates/${data.page}/${data.size}`,
+    url: controller + `/getRates/${data.page}/${data.size}`,
     method: 'post',
-    data
+    data,
+    headers: {
+      auth_token: token
+    }
   })
 }
 

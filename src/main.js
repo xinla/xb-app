@@ -5,13 +5,14 @@ Es6Promise.polyfill()
 
 // CSS
 import './styles/reset.css'
-import './styles/base.less'    
+// import './styles/base.less'   
 
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
 
+ 
 // 工具函数
 import Tool from './libs/tools'
 Vue.use(Tool);

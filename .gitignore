@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
 /dist
+/H5
 
 # local env files
 .env.local
@@ -19,3 +20,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+H5/js/chunk-30ffaa60.99b719d3.js.map

@@ -6,6 +6,7 @@
       <div
         class="tab-title"
         v-for="(item, index) in product.insurableInterest"
+        v-if="item.scheduleName"
         :key="index"
       >{{item.scheduleName}}</div>
       <mt-tab-container v-model="tabActive" swipeable>
@@ -137,6 +138,7 @@
           </div>
         </div>
         <div class="ac" v-else>
+          <br>
           查无结果
         </div>
       </mt-tab-container-item>
@@ -265,7 +267,7 @@ export default {
       id: this.$route.query.id || "2266402544886480903",
       token:
         this.$route.query.token ||
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsInN0YXRlIjoiMSIsImV4cCI6MTU2MDg1NDQyNywiaWF0IjoxNTYwODUwODI3LCJ1c2VySWQiOjIyNjU2NDI5NDkzMTAxNTI3MDZ9.kDSmyNFuVG2OpMOC5-Wp6TQo7YM7Qce6h6z6EYH5r40"
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJBTkRST0lEIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJjb21wYW55Ijoie1wiYnVzaW5lc3NUeXBlXCI6MCxcImNvbXBheUFjY291bnRUeXBlXCI6MCxcImhpZGRlbkNoYWlybWFuSW5mb1wiOjAsXCJoaWRkZW5NYW5hZ2VySW5mb1wiOjAsXCJpZFwiOjIyNjU3ODYwNTExMTkyODQyMzMsXCJpc0FjdGl2ZVwiOjEsXCJpc0RlbFwiOjAsXCJpc0dlbmVyYXRlR3JvdXBcIjoxLFwibmFtZVwiOlwi5a6J5b695a6J5ZKM5L-d6Zmp5Luj55CG5pyJ6ZmQ5YWs5Y-4XCIsXCJvdXRzaWRlQWxsQXV0aG9yaXR5XCI6MH0iLCJzdGF0ZSI6IjEiLCJleHAiOjE1NjI3NDM3NjMsImlhdCI6MTU2MjEzODk2MywidXNlcklkIjoyMjkxMjAwMzI5NTkwNTA1NDgxfQ.Q6n2AiRu7qHeph0eyFeomwbwrt_u-ErXZDoVHutiiEY"
     };
     this.getData(query);
 
@@ -283,7 +285,7 @@ export default {
         );
         console.log("ProductDetail: ", res);
       });
-      getProductRateParams(query.id)
+      getProductRateParams(query)
         .then(res => {
           console.log("ProductRateParams: ", res);
           this.listParams = res;
@@ -300,7 +302,7 @@ export default {
         });
     },
     getRate() {
-      getProductRateDetail(this.query).then(res => {
+      getProductRateDetail(this.query, this.$route.query.token).then(res => {
         this.listRates = this.listRates.concat(res.list);
         !res.list.length && (this.loadingRate = true);
         // console.log('ProductRateDetail: ', res);
@@ -420,6 +422,12 @@ td {
   position: relative;
   top: 26px;
   background: #fff;
+}
+/deep/.mint-cell-wrapper{
+  font-size: 14px;
+}
+.mint-cell{
+  min-height: 36px;
 }
 </style>
 

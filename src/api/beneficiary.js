@@ -3,7 +3,8 @@ import config from '@/config'
 
 const controller1 = config.controllers.policy
 const controller = controller1 + '/' +config.controllers.beneficiary
-const controller2 = config.baseUrl.domain2 + '/proposal'
+const controller2 = config.baseUrl.domain2 + config.controllers.proposal
+const controller3 = config.controllers.proposal
 
 /**
  * 查看权益
@@ -54,6 +55,20 @@ export const getBeneficiaryCover = ({id, token}) => {
 export const getInsuredAgeRange = ({id, token}) => {
   return axios.request({
     url: controller1 + `/insuredAgeRange/${id}`,
+    method: 'get',
+    headers: {
+      auth_token: token
+    }
+  })
+}
+
+/**
+ * 获取被保人年龄区间
+ * @param {*} param0 
+ */
+export const getInsuredAgeRangeByProposalId = ({id, token}) => {
+  return axios.request({
+    url: controller3 + `/insuredAgeRange/${id}`,
     method: 'get',
     headers: {
       auth_token: token

@@ -297,7 +297,8 @@
 import {
   getBeneficiaryDetail,
   getInsuredAgeRange,
-  getBeneficiaryDetailByproposalId,
+  getBeneficiaryDetailByProposalId,
+  getInsuredAgeRangeByProposalId,
   getBeneficiaryCover
 } from "@/api/beneficiary";
 export default {
@@ -338,7 +339,10 @@ export default {
   },
   methods: {
     init() {
-      getInsuredAgeRange(this.query).then(res => {
+      (this.$route.query.proposalId
+        ? getInsuredAgeRangeByProposalId(this.query)
+        : getInsuredAgeRange(this.query)
+      ).then(res => {
         // console.log(res)
         this.query.insuredCurrentAge = res.currentAge;
         this.query.insuredMaxAge = res.maxAge;
@@ -353,6 +357,7 @@ export default {
         ? getBeneficiaryDetailByProposalId(this.query)
         : getBeneficiaryDetail(this.query)
       ).then(res => {
+      // debugger
         // console.log(res)
         this.result = res;
       });
