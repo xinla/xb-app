@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="btn-bottom">
     <div class="container">
       <div class="title">
         <b>健康告知</b>

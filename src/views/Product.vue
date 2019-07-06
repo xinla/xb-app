@@ -1,6 +1,6 @@
 <template>
   <div class="main" @scroll="scroll">
-    <img :src="product.webBanner" class="banner">
+    <img :src="product.webBanner" class="banner" />
 
     <div class="tab-wrap">
       <div
@@ -46,7 +46,7 @@
     <mt-tab-container v-model="active">
       <!-- 保险详情 -->
       <mt-tab-container-item id="1">
-        <img :src="product.descPicture" alt>
+        <img v-for="(item, index) of product.descPicture" :src="item" :key="index" alt />
         <!-- </ul> -->
       </mt-tab-container-item>
       <!-- 费率表 -->
@@ -138,8 +138,7 @@
           </div>
         </div>
         <div class="ac" v-else>
-          <br>
-          查无结果
+          <br />查无结果
         </div>
       </mt-tab-container-item>
       <!-- 投保规则 -->
@@ -158,7 +157,7 @@
           class="policy-wording-images"
           :src="item"
           :key="index"
-        >
+        />
       </mt-tab-container-item>
     </mt-tab-container>
   </div>
@@ -275,14 +274,18 @@ export default {
   },
   methods: {
     getData(query) {
+      // console.log(query.token)
       getProductDetail(query).then(res => {
         res.insurableInterest = JSON.parse(res.insurableInterest) || [];
         res.attachment.productCourse =
           JSON.parse(res.attachment.productCourse) || [];
         this.product = res;
-        this.product.attachment.policyWordingImages = this.product.attachment.policyWordingImages.split(
-          ","
-        );
+        typeof this.product.descPicture === "string" &&
+          (this.product.descPicture = this.product.descPicture.split(","));
+        typeof this.product.descPicture === "string" &&
+          (this.product.attachment.policyWordingImages = this.product.attachment.policyWordingImages.split(
+            ","
+          ));
         console.log("ProductDetail: ", res);
       });
       getProductRateParams(query)
@@ -390,7 +393,7 @@ export default {
   padding: 3px 5px;
   border-radius: 8px;
   color: #888;
-  font-size: 0.12rem;
+  font-size: 0.24rem;
 }
 option {
   color: #888;
@@ -401,7 +404,7 @@ option {
 }
 .rate-page {
   width: 800px;
-  height: 250px;
+  height: 350px;
   overflow-y: auto;
 }
 table {
@@ -423,10 +426,10 @@ td {
   top: 26px;
   background: #fff;
 }
-/deep/.mint-cell-wrapper{
-  font-size: 14px;
+/deep/.mint-cell-wrapper {
+  font-size: 0.28rem;
 }
-.mint-cell{
+.mint-cell {
   min-height: 36px;
 }
 </style>

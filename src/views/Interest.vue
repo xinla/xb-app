@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="btn-bottom">
     <img v-if="cover" :src="cover" class="cover">
     <div class="member-wrap">
       <div class="member">

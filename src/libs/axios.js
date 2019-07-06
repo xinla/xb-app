@@ -9,18 +9,23 @@ const addErrorLog = errorInfo => {
   //   url: responseURL
   // }
   // if (!responseURL.includes('save_error_logger')) store.dispatch('addErrorLog', info)
-  Toast({
+  process.env.NODE_ENV === 'development'
+    ? Toast({
       message: `错误: 路径: ${responseURL}, 返回值 : ${responseText}`,
       duration: 3000
     })
-  }
+    : Toast({
+      message: `${responseText}`,
+      duration: 3000
+    })
+}
 
 class HttpRequest {
-  constructor (baseUrl = baseURL) {
+  constructor(baseUrl = baseURL) {
     this.baseUrl = baseUrl
     this.queue = {}
   }
-  getInsideConfig () {
+  getInsideConfig() {
     const config = {
       baseURL: this.baseUrl,
       headers: {
@@ -29,13 +34,13 @@ class HttpRequest {
     }
     return config
   }
-  destroy (url) {
+  destroy(url) {
     delete this.queue[url]
     if (!Object.keys(this.queue).length) {
       // Spin.hide()
     }
   }
-  interceptors (instance, url) {
+  interceptors(instance, url) {
     // 请求拦截
     instance.interceptors.request.use(config => {
       // 添加全局的loading...
@@ -74,7 +79,7 @@ class HttpRequest {
       return Promise.reject(error)
     })
   }
-  request (options) {
+  request(options) {
     const instance = axios.create()
     options = Object.assign(this.getInsideConfig(), options)
     this.interceptors(instance, options.url)
