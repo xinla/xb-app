@@ -86,7 +86,7 @@
             </div>
             <div class="item">
               <span class="blue">￥{{item.premium}}</span>
-              <span class="key">万/年</span>
+              <span class="key">元/年</span>
             </div>
           </div>
         </div>
@@ -146,15 +146,15 @@
           :step="1"
           :key="query.insuredCountAge"
         >
-          <div slot="start" @click="age++">
-            <svg class="icon icon_add_circle" aria-hidden="true" style="margin-right: 10px;">
-              <use xlink:href="#icon_add_circle"></use>
+          <div slot="start" style="margin-right: 10px;" @click="age--">
+            <svg class="icon icon_reduce_circle" aria-hidden="true">
+              <use xlink:href="#icon_reduce_circle"></use>
             </svg>
             {{query.insuredCurrentAge}}
           </div>
-          <div slot="end" @click="age--">
-            <svg class="icon icon_reduce_circle" aria-hidden="true" style="margin-left: 10px;">
-              <use xlink:href="#icon_reduce_circle"></use>
+          <div slot="end" @click="age++">
+            <svg class="icon icon_add_circle" aria-hidden="true" style="margin-left: 10px;">
+              <use xlink:href="#icon_add_circle"></use>
             </svg>
           </div>
         </mt-range>
@@ -339,6 +339,11 @@ export default {
   },
   methods: {
     init() {
+      // let _this = this
+    //   this.Toast({
+    //   message: _this.query.token,
+    //   duration: 3000
+    // })
       (this.$route.query.proposalId
         ? getInsuredAgeRangeByProposalId(this.query)
         : getInsuredAgeRange(this.query)
@@ -358,7 +363,7 @@ export default {
         : getBeneficiaryDetail(this.query)
       ).then(res => {
       // debugger
-        // console.log(res)
+        console.log(res)
         this.result = res;
       });
       this.$route.query.type &&
@@ -491,5 +496,10 @@ export default {
   position: relative;
   top: 0px;
   left: 36%;
+}
+/deep/.mt-range-thumb {
+  width: 20px;
+  height: 20px;
+  top: 4px;
 }
 </style>

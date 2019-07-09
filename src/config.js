@@ -1,11 +1,11 @@
 const config = {
   baseUrl: {
-    // dev: 'http://192.168.1.55', // 虚拟机
-    dev: 'https://gateway.visualinsur.cn:8888', // wangdong
+    dev: 'http://192.168.1.32:8888', // 虚拟机
+    // dev: 'https://gateway.visualinsur.cn:8888', // wangdong
     pro: 'https://gateway.visualinsur.cn:8888', // wangdong
     domain2: process.env.NODE_ENV === 'development' ? 'http://192.168.1.32:8888' : 'https://gateway.visualinsur.cn:8888', // liusiyuan
     dev3:  process.env.NODE_ENV === 'development' ? 'http://192.168.1.11:8888' : 'https://gateway.visualinsur.cn:8888',
-    domain4: process.env.NODE_ENV === 'development' ? 'http://192.168.1.150:8888' : 'https://gateway.visualinsur.cn:8888', // liushaung~
+    domain4: process.env.NODE_ENV === 'development' ? 'http://192.168.1.32:8888' : 'https://gateway.visualinsur.cn:8888', // liushaung~
   },
 }
 

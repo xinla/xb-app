@@ -43,7 +43,7 @@
         <div class="line" v-show="active === '4'"></div>
       </li>
     </ul>
-    <mt-tab-container v-model="active">
+    <mt-tab-container v-model="active" style="margin-top: .94rem;">
       <!-- 保险详情 -->
       <mt-tab-container-item id="1">
         <img v-for="(item, index) of product.descPicture" :src="item" :key="index" alt />
@@ -51,66 +51,111 @@
       </mt-tab-container-item>
       <!-- 费率表 -->
       <mt-tab-container-item id="2">
-        <div v-if="listRates.length">
+        <div>
           <div class="args-wrap">
             <mt-cell title="保险金额" v-if="listParams.insuredAmounts.length">
-              <select class="select" v-model="query.amountInsured">
-                <option value="请选择">请选择</option>
+              <select class="select" v-model="query.amountInsured" @change="search">
+                <!-- <option value="请选择">请选择</option> -->
                 <option v-for="item in listParams.insuredAmounts" :value="item" :key="item">{{item}}</option>
               </select>
+              <!-- <svg class="icon icon_zhankai" aria-hidden="true">
+                <use xlink:href="#icon_zhankai" />
+              </svg>-->
+              <div class="arrow-down">∨</div>
             </mt-cell>
-            <mt-cell title="投保档次" v-if="listParams.applicationGrades.length">
-              <select class="select" v-model="query.applicationGrade">
+
+            <mt-cell title="保险期间" v-if="listParams.policyPeriods.length">
+              <select class="select" v-model="query.policyPeriod" @change="search">
+                <!-- <option value="请选择">请选择</option> -->
+                <option v-for="item in listParams.policyPeriods" :value="item" :key="item">{{item}}</option>
+              </select>
+              <div class="arrow-down">∨</div>
+            </mt-cell>
+
+            <mt-cell title="交费期间" v-if="listParams.paymentPeriods.length">
+              <select class="select" v-model="query.paymentPeriod" @change="search">
+                <!-- <option value="请选择">请选择</option> -->
+                <option v-for="item in listParams.paymentPeriods" :value="item" :key="item">{{item}}</option>
+              </select>
+              <div class="arrow-down">∨</div>
+            </mt-cell>
+
+            <mt-cell title="交费方式">
+              <!-- <select class="select" v-model="query.paymentMethod">
                 <option value="请选择">请选择</option>
+                <option v-for="item in listParams.paymentPeriods" :value="item" :key="item">{{item}}</option>
+              </select>-->
+              <mt-button type="primary" size="small" class="paymentMethod-btn">年交</mt-button>
+            </mt-cell>
+
+            <mt-cell title="性别" v-if="listParams.sexs.length">
+              <div class="btn-wrap">
+                <mt-button
+                  v-for="(item, index) in listParams.sexs"
+                  :type="item === query.sex ? 'primary' : 'default'"
+                  size="small"
+                  :key="index"
+                  @click.native="choice('sex', item)"
+                >{{item === 0 ? '男' : '女'}}</mt-button>
+              </div>
+            </mt-cell>
+
+            <mt-cell title="有无社保" v-if="listParams.socialInsuranceFlag.length">
+              <div class="btn-wrap">
+                <mt-button
+                  v-for="(item, index) in listParams.socialInsuranceFlag"
+                  :type="item === query.socialInsuranceFlags ? 'primary' : 'default'"
+                  size="small"
+                  :key="index"
+                  @click.native="choice('socialInsuranceFlags', item)"
+                >{{item}}</mt-button>
+              </div>
+            </mt-cell>
+
+            <mt-cell title="首续保" v-if="listParams.renewalFlags.length">
+              <!-- <select class="select" v-model="query.renewalFlags">
+                <option value="请选择">请选择</option>
+                <option v-for="item in listParams.renewalFlags" :value="item" :key="item">{{item}}</option>
+              </select>-->
+              <div class="btn-wrap">
+                <mt-button
+                  v-for="(item, index) in listParams.renewalFlags"
+                  :type="item === query.renewalFlags ? 'primary' : 'default'"
+                  size="small"
+                  :key="index"
+                  @click.native="choice('renewalFlags', item)"
+                >{{item}}</mt-button>
+              </div>
+            </mt-cell>
+
+            <!-- 投保档次 -->
+            <mt-cell title="投保档次" v-if="listParams.applicationGrades.length">
+              <select class="select" v-model="query.applicationGrade" @change="search">
+                <!-- <option value="请选择">请选择</option> -->
                 <option
                   v-for="item in listParams.applicationGrades"
                   :value="item"
                   :key="item"
                 >{{item}}</option>
               </select>
+              <div class="arrow-down">∨</div>
             </mt-cell>
-            <mt-cell title="保险期间" v-if="listParams.policyPeriods.length">
-              <select class="select" v-model="query.policyPeriod">
-                <option value="请选择">请选择</option>
-                <option v-for="item in listParams.policyPeriods" :value="item" :key="item">{{item}}</option>
-              </select>
-            </mt-cell>
-            <mt-cell title="交费期间" v-if="listParams.paymentPeriods.length">
-              <select class="select" v-model="query.paymentPeriod">
-                <option value="请选择">请选择</option>
-                <option v-for="item in listParams.paymentPeriods" :value="item" :key="item">{{item}}</option>
-              </select>
-            </mt-cell>
-            <mt-cell title="有无社保" v-if="listParams.socialInsuranceFlag.length">
-              <select class="select" v-model="query.socialInsuranceFlags">
+
+            <!-- 职业风险等级 -->
+            <mt-cell title="职业风险等级" v-if="listParams.occupationalRiskGrade.length">
+              <select class="select" v-model="query.occupationalRiskGrade" @change="search">
                 <option value="请选择">请选择</option>
                 <option
-                  v-for="item in listParams.socialInsuranceFlag"
+                  v-for="item in listParams.occupationalRiskGrade"
                   :value="item"
                   :key="item"
                 >{{item}}</option>
               </select>
+              <div class="arrow-down">∨</div>
             </mt-cell>
-            <mt-cell title="性别" v-if="listParams.sexs.length">
-              <select class="select" v-model="query.sex">
-                <option value="请选择">请选择</option>
-                <option
-                  v-for="item in listParams.sexs"
-                  :value="item"
-                  :key="item"
-                >{{item === 0 ? '男' : '女'}}</option>
-              </select>
-            </mt-cell>
-            <mt-cell title="首续保" v-if="listParams.renewalFlags.length">
-              <select class="select" v-model="query.renewalFlags">
-                <option value="请选择">请选择</option>
-                <option v-for="item in listParams.renewalFlags" :value="item" :key="item">{{item}}</option>
-              </select>
-            </mt-cell>
-            <mt-button type="primary" size="small" style="width: 100%;" @click.native="search()">查询</mt-button>
           </div>
 
-          <div class="rate-page-wrap">
+          <div class="rate-page-wrap" v-if="listRates.length">
             <table class="table-header">
               <tr>
                 <th v-for="(item, index) of columns" :key="index">{{item.title}}</th>
@@ -119,26 +164,21 @@
             <div
               class="rate-page"
               v-infinite-scroll="loadMore"
-              :infinite-scroll-disabled="loadingRate"
+              infinite-scroll-disabled="loadingRate"
               infinite-scroll-distance="10"
+              infinite-scroll-immediate-check="true"
             >
               <table>
-                <thead style="visibility: collapse;">
-                  <tr>
-                    <th v-for="(item, index) of columns" :key="index">{{item.title}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) of listRates" :key="index">
-                    <td v-for="(unit, unique) of columns" :key="unique">{{item[unit.key]}}</td>
-                  </tr>
-                </tbody>
+                <tr v-for="(item, index) of listRates" :key="index">
+                  <td v-for="(unit, unique) of columns" :key="unique">{{item[unit.key]}}</td>
+                </tr>
               </table>
             </div>
           </div>
-        </div>
-        <div class="ac" v-else>
-          <br />查无结果
+
+          <div class="ac" v-else>
+            <br />查无结果
+          </div>
         </div>
       </mt-tab-container-item>
       <!-- 投保规则 -->
@@ -155,11 +195,18 @@
         <img
           v-for="(item, index) in product.attachment.policyWordingImages"
           class="policy-wording-images"
+          preview="1"
           :src="item"
           :key="index"
         />
+        <iframe src="" frameborder="0"></iframe>
       </mt-tab-container-item>
     </mt-tab-container>
+
+    <!-- 图片放大 -->
+    <div >
+
+    </div>
   </div>
 </template>
 
@@ -181,14 +228,16 @@ export default {
       },
       query: {
         page: 1,
-        size: 10,
-        amountInsured: "请选择",
-        applicationGrade: "请选择",
-        policyPeriod: "请选择",
-        paymentPeriod: "请选择",
-        socialInsuranceFlags: "请选择",
-        sex: "请选择", // 0男 1女 2默认
-        renewalFlags: "请选择"
+        size: 20,
+        amountInsured: "",
+        applicationGrade: "",
+        policyPeriod: "",
+        paymentPeriod: "",
+        socialInsuranceFlags: "有",
+        sex: "0", // 0男 1女 2默认
+        renewalFlags: "首保", // 首续保
+        paymentMethod: "年交",
+        occupationalRiskGrade: ""
       },
       listParams: {
         insuredAmounts: [],
@@ -197,68 +246,70 @@ export default {
         paymentPeriods: [],
         renewalFlags: [],
         sexs: [],
-        socialInsuranceFlag: []
+        socialInsuranceFlag: [],
+        paymentMethods: [],
+        occupationalRiskGrade: []
       },
-      loadingRate: false,
+      loadingRate: true,
       columns: [
+        // {
+        //   title: "性别",
+        //   key: "sex"
+        // },
         {
-          title: "性别",
-          key: "sex"
-        },
-        {
-          title: "年龄",
+          title: "投保年龄（岁）",
           key: "age"
         },
+        // {
+        //   title: "保险期间",
+        //   key: "policyPeriod"
+        // },
+        // {
+        //   title: "交费期间",
+        //   key: "paymentPeriod"
+        // },
+        // {
+        //   title: "社保",
+        //   key: "socialInsuranceFlag"
+        // },
+        // {
+        //   title: "首续保",
+        //   key: "renewalFlag"
+        // },
+        // {
+        //   title: "保险金额",
+        //   key: "occupationalRiskGrade"
+        // },
+        // {
+        //   title: "保险金额",
+        //   key: "occupationalRiskGrade"
+        // },
+        // {
+        //   title: "投保档次",
+        //   key: "applicationGrade"
+        // },
+        // {
+        //   title: "保险金额",
+        //   key: "amountInsured"
+        // },
         {
-          title: "保险期间",
-          key: "policyPeriod"
-        },
-        {
-          title: "交费期间",
-          key: "paymentPeriod"
-        },
-        {
-          title: "社保",
-          key: "socialInsuranceFlag"
-        },
-        {
-          title: "首续保",
-          key: "renewalFlag"
-        },
-        {
-          title: "保险金额",
-          key: "occupationalRiskGrade"
-        },
-        {
-          title: "保险金额",
-          key: "occupationalRiskGrade"
-        },
-        {
-          title: "投保档次",
-          key: "applicationGrade"
-        },
-        {
-          title: "保险金额",
-          key: "amountInsured"
-        },
-        {
-          title: "费率",
+          title: "费率（元）",
           key: "rate"
-        },
-        {
-          title: "费率单位",
-          key: "rateUnit"
-        },
-        {
-          title: "计算单位",
-          key: "countMethod"
-        },
-        {
-          title: "缴费方式",
-          key: "paymentMethod"
         }
+        // {
+        //   title: "费率单位",
+        //   key: "rateUnit"
+        // },
+        // {
+        //   title: "计算单位",
+        //   key: "countMethod"
+        // },
+        // {
+        //   title: "缴费方式",
+        //   key: "paymentMethod"
+        // }
       ],
-      listRates: []
+      listRates: [],
     };
   },
   mounted() {
@@ -269,8 +320,6 @@ export default {
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJBTkRST0lEIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJjb21wYW55Ijoie1wiYnVzaW5lc3NUeXBlXCI6MCxcImNvbXBheUFjY291bnRUeXBlXCI6MCxcImhpZGRlbkNoYWlybWFuSW5mb1wiOjAsXCJoaWRkZW5NYW5hZ2VySW5mb1wiOjAsXCJpZFwiOjIyNjU3ODYwNTExMTkyODQyMzMsXCJpc0FjdGl2ZVwiOjEsXCJpc0RlbFwiOjAsXCJpc0dlbmVyYXRlR3JvdXBcIjoxLFwibmFtZVwiOlwi5a6J5b695a6J5ZKM5L-d6Zmp5Luj55CG5pyJ6ZmQ5YWs5Y-4XCIsXCJvdXRzaWRlQWxsQXV0aG9yaXR5XCI6MH0iLCJzdGF0ZSI6IjEiLCJleHAiOjE1NjI3NDM3NjMsImlhdCI6MTU2MjEzODk2MywidXNlcklkIjoyMjkxMjAwMzI5NTkwNTA1NDgxfQ.Q6n2AiRu7qHeph0eyFeomwbwrt_u-ErXZDoVHutiiEY"
     };
     this.getData(query);
-
-    this.offsetTop = this.$refs["tab2-title-wrap"].offsetTop;
   },
   methods: {
     getData(query) {
@@ -282,15 +331,18 @@ export default {
         this.product = res;
         typeof this.product.descPicture === "string" &&
           (this.product.descPicture = this.product.descPicture.split(","));
-        typeof this.product.descPicture === "string" &&
+        typeof this.product.attachment.policyWordingImages === "string" &&
           (this.product.attachment.policyWordingImages = this.product.attachment.policyWordingImages.split(
             ","
           ));
-        console.log("ProductDetail: ", res);
+        // console.log("ProductDetail: ", res);
+        this.$nextTick(() => {
+          this.offsetTop = this.$refs["tab2-title-wrap"].offsetTop;
+        });
       });
       getProductRateParams(query)
         .then(res => {
-          console.log("ProductRateParams: ", res);
+          // console.log("ProductRateParams: ", res);
           this.listParams = res;
           this.query.amountInsured = res.insuredAmounts[0] || "";
           this.query.applicationGrade = res.applicationGrades[0] || "";
@@ -299,6 +351,8 @@ export default {
           this.query.socialInsuranceFlags = res.socialInsuranceFlag[0] || "";
           this.query.sex = JSON.stringify(res.sexs[0]) ? res.sexs[0] : "";
           this.query.renewalFlags = res.renewalFlags[0] || "";
+          this.query.paymentMethod = res.paymentMethods[0] || "";
+          this.query.occupationalRiskGrade = res.occupationalRiskGrade[0] || "";
         })
         .then(() => {
           this.getRate();
@@ -306,28 +360,43 @@ export default {
     },
     getRate() {
       getProductRateDetail(this.query, this.$route.query.token).then(res => {
+        this.loadingRate = false
         this.listRates = this.listRates.concat(res.list);
         !res.list.length && (this.loadingRate = true);
-        // console.log('ProductRateDetail: ', res);
+        // console.log("ProductRateDetail: ", this.listRates);
       });
     },
     scroll($event) {
-      // console.log(this.$refs['tab2-title-wrap'].offsetTop)
+      // console.log(this.offsetTop)
+      // console.log('offsetTop :', this.$refs['tab2-title-wrap'].offsetTop)
+      // console.log('scrollTop :', $event.target.scrollTop)
       if ($event.target.scrollTop >= this.offsetTop) {
+        // debugger
         this.$refs["tab2-title-wrap"].style.position = "fixed";
       } else {
         this.$refs["tab2-title-wrap"].style.position = "relative";
       }
     },
     loadMore() {
+      // console.log('loadMore')
       this.query.page++;
       this.getRate();
     },
     search() {
+      // console.log('search')
       this.query.page = 1;
       this.listRates = [];
       this.getRate();
-    }
+    },
+    choice(type, data) {
+      this.query[type] = data;
+      this.getRate()
+      // console.log(this.query[type])
+    },
+    // change() {
+    //   this.search()
+    //   // console.log(1)
+    // }
   }
 };
 </script>
@@ -373,12 +442,13 @@ export default {
   z-index: 1;
   width: 100%;
   top: 0;
+  margin-bottom: -0.94rem;
   .current {
     color: #444;
   }
   .line {
     width: 0.4rem;
-    height: 6px;
+    height: 0.12rem;
     background-color: #6582ff;
     border-radius: 3px;
     margin: 0 auto;
@@ -389,48 +459,95 @@ export default {
 }
 .select {
   border: 1px solid #ddd;
-  width: 100px;
-  padding: 3px 5px;
+  width: 2rem;
+  padding: 8px 10px;
   border-radius: 8px;
-  color: #888;
+  color: #fff;
   font-size: 0.24rem;
+  background: #6582ff;
+  // &::after {
+  //   content: ">";
+  //   display: inline-block;
+  //   width: 20px;
+  //   height: 20px;
+  //   position: relative;
+  //   top: 60px;
+  // }
 }
 option {
   color: #888;
-  padding: 0 3px;
+  padding: 5px;
+  background: #fff;
 }
 .rate-page-wrap {
   overflow-x: auto;
+  margin: 20px 10px;
 }
 .rate-page {
-  width: 800px;
-  height: 350px;
+  width: 100%;
+  // width: 800px;
+  height: 500px;
   overflow-y: auto;
 }
 table {
-  width: 800px;
+  width: 100%;
   text-align: center;
   line-height: 0.5rem;
   // border: 1px solid #ddd;
-}
-th,
-td {
-  border: 1px solid #ddd;
-  // border-right: 1px solid #ddd;
+  th,
+  td {
+    border: 1px solid #ddd;
+    // border-right: 1px solid #ddd;
+    &:first-child {
+      width: 30%;
+    }
+  }
 }
 .policy-wording-images {
   margin: 0.1rem 0;
 }
 .table-header {
   position: relative;
-  top: 26px;
+  top: 1px;
   background: #fff;
 }
+.arrow-down {
+  display: inline-block;
+  position: absolute;
+  right: 21px;
+  top: 7px;
+  color: #fff;
+  // transform: rotate(90deg);
+  font-size: 0.36rem;
+}
+.paymentMethod-btn {
+  width: 2rem;
+  text-align: left;
+}
+.btn-wrap {
+  width: 2rem;
+  .mint-button--small{
+    width: 45%;
+    &:first-child {
+      width: 45%;
+      margin-right: 10%;
+    }
+  }
+}
+
 /deep/.mint-cell-wrapper {
   font-size: 0.28rem;
+  background-image: none;
 }
 .mint-cell {
   min-height: 36px;
+  margin: 5px 0;
+  &:last-child {
+    background-image: none;
+  }
+}
+.mint-button--primary {
+  background-color: #6582ff;
 }
 </style>
 

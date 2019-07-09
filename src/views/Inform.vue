@@ -1684,6 +1684,7 @@ export default {
       getInformDetail(query).then(res => {
         // debugger
         console.log(res);
+        if (!res) { return }
         this.id = res.id;
         let tellInfo = JSON.parse(res.tellInfo);
         this.healthTell = tellInfo.healthTell;
