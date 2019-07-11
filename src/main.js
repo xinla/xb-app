@@ -17,9 +17,10 @@ import store from './store'
 import Tool from './libs/tools'
 Vue.use(Tool);
 
-import { TabContainer, TabContainerItem, Cell, Navbar, TabItem, Range, Switch, Toast, InfiniteScroll, Button } from 'mint-ui';
+import { TabContainer, TabContainerItem, Cell, Navbar, TabItem, Range, Switch, Toast, InfiniteScroll, Button, Spinner } from 'mint-ui';
 
 Vue.use(InfiniteScroll);
+Vue.component(Spinner.name, Spinner);
 Vue.component(Button.name, Button);
 Vue.component(Switch.name, Switch);
 Vue.component(Range.name, Range);

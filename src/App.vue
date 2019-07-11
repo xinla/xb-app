@@ -57,6 +57,6 @@ body {
   overflow: hidden;
 }
 .btn-bottom{
-  padding-bottom: 50px;
+  padding-bottom: 70px;
 }
 </style>

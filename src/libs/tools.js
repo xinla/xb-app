@@ -271,8 +271,28 @@ export function formatFileSize(num) {
   return num
 }
 
+export function transInsurancePeriod(data) {
+  if (!data.includes("@")) {
+    return `保${data}年`;
+  } else if (/@$/.test(data)) {
+    return `保至${data.replace("@", "")}岁`;
+  } else {
+    let temp = data.split("@");
+    return `主险保至${temp[0]}岁，附加险保至${temp[1]}岁`;
+  }
+}
+export function transPaymentPeriod(data) {
+  if (data.includes("@")) {
+    return `交至${data.replace("@", "")}岁`;
+  } else {
+    return `交${data}年`;
+  }
+}
+
 const tool = {
-  transLogo
+  transLogo,
+  transInsurancePeriod,
+  transPaymentPeriod
 }
 
 export default {

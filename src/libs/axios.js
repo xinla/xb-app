@@ -15,7 +15,7 @@ const addErrorLog = errorInfo => {
       duration: 3000
     })
     : Toast({
-      message: `${responseText}`,
+      message: `${JSON.parse(responseText).message}`,
       duration: 3000
     })
 }

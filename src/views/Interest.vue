@@ -63,17 +63,17 @@
           <div class="item-wrap">
             <div class="item">
               <p class="key">保障额度</p>
-              <p class="value">{{item.guaranteeName}}</p>
+              <p class="value">{{item.guaranteeName}}万元</p>
             </div>
             <div class="item">
               <p class="key">保障期间</p>
-              <p class="value">{{item.policyPeriodName}}</p>
+              <p class="value">{{$Tool.transInsurancePeriod(item.policyPeriodName)}}</p>
             </div>
           </div>
           <div class="item-wrap">
             <div class="item">
               <p class="key">交费额度</p>
-              <p class="value">{{item.paymentPeriodName}}</p>
+              <p class="value">{{$Tool.transPaymentPeriod(item.paymentPeriodName)}}</p>
             </div>
             <div class="item">
               <p class="key">交费方式</p>

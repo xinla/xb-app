@@ -1,13 +1,14 @@
 <template>
-  <div class="main" @scroll="scroll">
-    <img :src="product.webBanner" class="banner" />
+  <div class="main btn-bottom" @scroll="scroll">
+    <img :src="product.appBanner" class="banner" />
 
     <div class="tab-wrap">
       <div
-        class="tab-title"
+        :class="['tab-title', {'active': tabActive == index}]"
         v-for="(item, index) in product.insurableInterest"
         v-if="item.scheduleName"
         :key="index"
+        @click="tabActive = index"
       >{{item.scheduleName}}</div>
       <mt-tab-container v-model="tabActive" swipeable>
         <mt-tab-container-item
@@ -58,26 +59,37 @@
                 <!-- <option value="请选择">请选择</option> -->
                 <option v-for="item in listParams.insuredAmounts" :value="item" :key="item">{{item}}</option>
               </select>
-              <!-- <svg class="icon icon_zhankai" aria-hidden="true">
-                <use xlink:href="#icon_zhankai" />
-              </svg>-->
-              <div class="arrow-down">∨</div>
+              <svg class="icon icon_xiala-copy" aria-hidden="true">
+                <use xlink:href="#icon_xiala-copy" />
+              </svg>
             </mt-cell>
 
             <mt-cell title="保险期间" v-if="listParams.policyPeriods.length">
               <select class="select" v-model="query.policyPeriod" @change="search">
                 <!-- <option value="请选择">请选择</option> -->
-                <option v-for="item in listParams.policyPeriods" :value="item" :key="item">{{item}}</option>
+                <option
+                  v-for="item in listParams.policyPeriods"
+                  :value="item"
+                  :key="item"
+                >{{$Tool.transInsurancePeriod(item)}}</option>
               </select>
-              <div class="arrow-down">∨</div>
+              <svg class="icon icon_xiala-copy" aria-hidden="true">
+                <use xlink:href="#icon_xiala-copy" />
+              </svg>
             </mt-cell>
 
             <mt-cell title="交费期间" v-if="listParams.paymentPeriods.length">
               <select class="select" v-model="query.paymentPeriod" @change="search">
                 <!-- <option value="请选择">请选择</option> -->
-                <option v-for="item in listParams.paymentPeriods" :value="item" :key="item">{{item}}</option>
+                <option
+                  v-for="item in listParams.paymentPeriods"
+                  :value="item"
+                  :key="item"
+                >{{$Tool.transPaymentPeriod(item)}}</option>
               </select>
-              <div class="arrow-down">∨</div>
+              <svg class="icon icon_xiala-copy" aria-hidden="true">
+                <use xlink:href="#icon_xiala-copy" />
+              </svg>
             </mt-cell>
 
             <mt-cell title="交费方式">
@@ -138,7 +150,9 @@
                   :key="item"
                 >{{item}}</option>
               </select>
-              <div class="arrow-down">∨</div>
+              <svg class="icon icon_xiala-copy" aria-hidden="true">
+                <use xlink:href="#icon_xiala-copy" />
+              </svg>
             </mt-cell>
 
             <!-- 职业风险等级 -->
@@ -151,11 +165,13 @@
                   :key="item"
                 >{{item}}</option>
               </select>
-              <div class="arrow-down">∨</div>
+              <svg class="icon icon_xiala-copy" aria-hidden="true">
+                <use xlink:href="#icon_xiala-copy" />
+              </svg>
             </mt-cell>
           </div>
 
-          <div class="rate-page-wrap" v-if="listRates.length">
+          <div class="rate-page-wrap" v-show="listRates.length">
             <table class="table-header">
               <tr>
                 <th v-for="(item, index) of columns" :key="index">{{item.title}}</th>
@@ -164,7 +180,7 @@
             <div
               class="rate-page"
               v-infinite-scroll="loadMore"
-              infinite-scroll-disabled="loadingRate"
+              infinite-scroll-disabled="isDisLoading"
               infinite-scroll-distance="10"
               infinite-scroll-immediate-check="true"
             >
@@ -173,17 +189,27 @@
                   <td v-for="(unit, unique) of columns" :key="unique">{{item[unit.key]}}</td>
                 </tr>
               </table>
+              <mt-spinner type="fading-circle" v-if="isLoadingRate"></mt-spinner>
+              <div v-else style="margin: 10px;">已加载全部</div>
             </div>
           </div>
 
-          <div class="ac" v-else>
+          <div class="ac" v-show="!listRates.length">
             <br />查无结果
+            <br />
           </div>
         </div>
       </mt-tab-container-item>
       <!-- 投保规则 -->
       <mt-tab-container-item id="3">
-        <div class="insurance-text" v-html="product.underwritingRulesText"></div>
+        <!-- <div class="insurance-text" v-html="product.underwritingRulesText"></div> -->
+        <img
+          v-for="(item, index) in product.attachment.applicationRulesImages"
+          class="policy-wording-images"
+          preview="1"
+          :src="item"
+          :key="index"
+        />
       </mt-tab-container-item>
       <!-- 产品条款 -->
       <mt-tab-container-item id="4">
@@ -195,18 +221,12 @@
         <img
           v-for="(item, index) in product.attachment.policyWordingImages"
           class="policy-wording-images"
-          preview="1"
+          preview="2"
           :src="item"
           :key="index"
         />
-        <iframe src="" frameborder="0"></iframe>
       </mt-tab-container-item>
     </mt-tab-container>
-
-    <!-- 图片放大 -->
-    <div >
-
-    </div>
   </div>
 </template>
 
@@ -237,7 +257,8 @@ export default {
         sex: "0", // 0男 1女 2默认
         renewalFlags: "首保", // 首续保
         paymentMethod: "年交",
-        occupationalRiskGrade: ""
+        occupationalRiskGrade: "",
+        insuranceId: ""
       },
       listParams: {
         insuredAmounts: [],
@@ -250,7 +271,8 @@ export default {
         paymentMethods: [],
         occupationalRiskGrade: []
       },
-      loadingRate: true,
+      isDisLoading: true,
+      isLoadingRate: true,
       columns: [
         // {
         //   title: "性别",
@@ -309,15 +331,13 @@ export default {
         //   key: "paymentMethod"
         // }
       ],
-      listRates: [],
+      listRates: []
     };
   },
   mounted() {
     let query = {
-      id: this.$route.query.id || "2266402544886480903",
-      token:
-        this.$route.query.token ||
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJBTkRST0lEIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJjb21wYW55Ijoie1wiYnVzaW5lc3NUeXBlXCI6MCxcImNvbXBheUFjY291bnRUeXBlXCI6MCxcImhpZGRlbkNoYWlybWFuSW5mb1wiOjAsXCJoaWRkZW5NYW5hZ2VySW5mb1wiOjAsXCJpZFwiOjIyNjU3ODYwNTExMTkyODQyMzMsXCJpc0FjdGl2ZVwiOjEsXCJpc0RlbFwiOjAsXCJpc0dlbmVyYXRlR3JvdXBcIjoxLFwibmFtZVwiOlwi5a6J5b695a6J5ZKM5L-d6Zmp5Luj55CG5pyJ6ZmQ5YWs5Y-4XCIsXCJvdXRzaWRlQWxsQXV0aG9yaXR5XCI6MH0iLCJzdGF0ZSI6IjEiLCJleHAiOjE1NjI3NDM3NjMsImlhdCI6MTU2MjEzODk2MywidXNlcklkIjoyMjkxMjAwMzI5NTkwNTA1NDgxfQ.Q6n2AiRu7qHeph0eyFeomwbwrt_u-ErXZDoVHutiiEY"
+      id: this.$route.query.id,
+      token: this.$route.query.token
     };
     this.getData(query);
   },
@@ -329,10 +349,17 @@ export default {
         res.attachment.productCourse =
           JSON.parse(res.attachment.productCourse) || [];
         this.product = res;
+
         typeof this.product.descPicture === "string" &&
           (this.product.descPicture = this.product.descPicture.split(","));
+
         typeof this.product.attachment.policyWordingImages === "string" &&
           (this.product.attachment.policyWordingImages = this.product.attachment.policyWordingImages.split(
+            ","
+          ));
+
+        typeof this.product.attachment.applicationRulesImages === "string" &&
+          (this.product.attachment.applicationRulesImages = this.product.attachment.applicationRulesImages.split(
             ","
           ));
         // console.log("ProductDetail: ", res);
@@ -342,7 +369,7 @@ export default {
       });
       getProductRateParams(query)
         .then(res => {
-          // console.log("ProductRateParams: ", res);
+          console.log("ProductRateParams: ", res);
           this.listParams = res;
           this.query.amountInsured = res.insuredAmounts[0] || "";
           this.query.applicationGrade = res.applicationGrades[0] || "";
@@ -353,6 +380,7 @@ export default {
           this.query.renewalFlags = res.renewalFlags[0] || "";
           this.query.paymentMethod = res.paymentMethods[0] || "";
           this.query.occupationalRiskGrade = res.occupationalRiskGrade[0] || "";
+          this.query.insuranceId = this.$route.query.id;
         })
         .then(() => {
           this.getRate();
@@ -360,9 +388,10 @@ export default {
     },
     getRate() {
       getProductRateDetail(this.query, this.$route.query.token).then(res => {
-        this.loadingRate = false
+        this.isDisLoading = false;
         this.listRates = this.listRates.concat(res.list);
-        !res.list.length && (this.loadingRate = true);
+        !res.list.length &&
+          ((this.isDisLoading = true), (this.isLoadingRate = false));
         // console.log("ProductRateDetail: ", this.listRates);
       });
     },
@@ -378,6 +407,7 @@ export default {
       }
     },
     loadMore() {
+      this.isDisLoading = true;
       // console.log('loadMore')
       this.query.page++;
       this.getRate();
@@ -390,13 +420,14 @@ export default {
     },
     choice(type, data) {
       this.query[type] = data;
-      this.getRate()
+      this.search();
       // console.log(this.query[type])
     },
     // change() {
     //   this.search()
     //   // console.log(1)
-    // }
+    // },
+    
   }
 };
 </script>
@@ -417,8 +448,12 @@ export default {
   font-size: 0.28rem;
   width: 1.6rem;
   height: 0.7rem;
-  background-color: #6582ff;
   border-radius: 10px 10px 0px 0px;
+  margin-right: 2px;
+  background: #888;
+}
+.active {
+  background: #6582ff;
 }
 .tab-wrap {
   padding: 0.3rem 0.3rem 0;
@@ -488,6 +523,7 @@ option {
   // width: 800px;
   height: 500px;
   overflow-y: auto;
+  text-align: center;
 }
 table {
   width: 100%;
@@ -511,14 +547,14 @@ table {
   top: 1px;
   background: #fff;
 }
-.arrow-down {
+.icon_xiala-copy {
   display: inline-block;
   position: absolute;
   right: 21px;
-  top: 7px;
+  top: 9px;
   color: #fff;
   // transform: rotate(90deg);
-  font-size: 0.36rem;
+  font-size: 0.32rem;
 }
 .paymentMethod-btn {
   width: 2rem;
@@ -526,7 +562,7 @@ table {
 }
 .btn-wrap {
   width: 2rem;
-  .mint-button--small{
+  .mint-button--small {
     width: 45%;
     &:first-child {
       width: 45%;
@@ -548,6 +584,9 @@ table {
 }
 .mint-button--primary {
   background-color: #6582ff;
+}
+/deep/.mint-spinner-fading-circle {
+  margin: 10px auto;
 }
 </style>
 

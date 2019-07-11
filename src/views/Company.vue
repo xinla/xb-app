@@ -64,7 +64,16 @@ export default {
     return {
       allShow: false,
       result: {
-        bigEvents: [],
+        bigEvents: [
+          // {
+          //   prizeTime: 1654,
+          //   bigEvents: '更多里程碑事件等待发生'
+          // },
+          // {
+          //   prizeTime: 1654,
+          //   bigEvents: '更多里程碑事件等待发生'
+          // },
+        ],
         honor: [],
         xbCompany: {}
       },
@@ -73,10 +82,8 @@ export default {
   },
   mounted() {
     let query = {
-      id: this.$route.query.id || "2252114126136410115",
-      token:
-        this.$route.query.token ||
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImNvbXBhbnkiOiJ7XCJhY3R1YWxBbm5pdmVyc2FyeVwiOjE1NTc3NjMyMDAwMDAsXCJidXNpbmVzc1R5cGVcIjowLFwiY2l0eUlkXCI6XCIzNDAxMDBcIixcImNvbWFwbnlUeXBlXCI6dHJ1ZSxcImNvbXBhbnlDb250ZW50XCI6XCI8cD7lronlv4Pkv53pmanlj6_pnaDvvIzlronlhajvvIzmlL7lv4Mu44CC44CC44CC44CCPC9wPlwiLFwiY29tcGFueUZvclNob3J0XCI6XCLlronlv4Pkv53pmalcIixcImNvbXBhbnlTbG9nYW5cIjpcIuihjOS4muesrOS4gFwiLFwiY29tcGF5QWNjb3VudFR5cGVcIjowLFwiZW5nbGlzaE5hbWVcIjpcIlwiLFwiZW5nbGlzaE5hbWVGb3JTaG9ydFwiOlwiXCIsXCJoZWFkcXVhcnRlcnNBZGRyZXNzXCI6XCLmtYvor5VcIixcImhpZGRlbkNoYWlybWFuSW5mb1wiOjAsXCJoaWRkZW5NYW5hZ2VySW5mb1wiOjAsXCJpZFwiOjIyNTIxMTQxMjYxMzY0MTAxMTUsXCJpc0FjdGl2ZVwiOjEsXCJpc0RlbFwiOjAsXCJpc0dlbmVyYXRlR3JvdXBcIjoxLFwibG9nb1wiOlwiaHR0cDovL3d3dy5jb21tb24udmlzdWFsaW5zdXIuY29tL2NvbW1vbl8yMjg4ODc5OTQ1NzM0MTYwMzg2XzE1NjE2OTA3MjY4NTUucG5nXCIsXCJuYW1lXCI6XCLlronlvr3lronlv4Pkv53pmanku6PnkIbmnInpmZDlhazlj7hcIixcIm91dHNpZGVBbGxBdXRob3JpdHlcIjowLFwicHJvdmluY2VJZFwiOlwiMzQwMDAwXCIsXCJyZWdpc3RyYXRpb25EYXRlXCI6MTU2MDk2MDAwMDAwMCxcInRlbGVwaG9uZU51bWJlclwiOlwiMTIzNDQzNTQ0MVwiLFwidXBkYXRlVGltZVwiOjE1NTg5MjAzNzUwMDB9Iiwic3RhdGUiOiIxIiwiZXhwIjoxNTYyMjEwMjM2LCJpYXQiOjE1NjIyMDY2MzYsInVzZXJJZCI6MjI2NTY0Mjk0OTMxMDE1MjcwNn0.KG2d0T0asGiort7eefXiSPVgPWFws2CwvFUrZ5qzwE0"
+      id: this.$route.query.id,
+      token: this.$route.query.token
     };
     this.getData(query);
   },
@@ -150,7 +157,7 @@ export default {
     font-size: 0.24rem;
   }
   .event {
-    margin: 0.2rem 0;
+    padding: 0.2rem 0;
     line-height: 0.5rem;
     color: #666;
   }
