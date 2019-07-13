@@ -24,7 +24,7 @@
     <ul>
       <li class="li" v-for="(item, index) of result.bigEvents" :key="index">
         <i class="dot"></i>
-        <div class="time">{{item.prizeTime}}</div>
+        <div class="time">{{item.time}}</div>
         <div class="event">{{item.bigEvents}}</div>
       </li>
       <li class="li">

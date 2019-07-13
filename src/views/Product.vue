@@ -104,6 +104,7 @@
               <div class="btn-wrap">
                 <mt-button
                   v-for="(item, index) in listParams.sexs"
+                  v-if="item != 2"
                   :type="item === query.sex ? 'primary' : 'default'"
                   size="small"
                   :key="index"
@@ -171,13 +172,16 @@
             </mt-cell>
           </div>
 
-          <div class="rate-page-wrap" v-show="listRates.length">
+          <div class="rate-page-wrap">
+            <!-- 表头表格 -->
             <table class="table-header">
               <tr>
                 <th v-for="(item, index) of columns" :key="index">{{item.title}}</th>
               </tr>
             </table>
+            <!-- 滚动表格 -->
             <div
+             v-show="listRates.length"
               class="rate-page"
               v-infinite-scroll="loadMore"
               infinite-scroll-disabled="isDisLoading"
@@ -517,13 +521,14 @@ option {
 .rate-page-wrap {
   overflow-x: auto;
   margin: 20px 10px;
+  height: 10rem;
 }
 .rate-page {
   width: 100%;
   // width: 800px;
-  height: 500px;
   overflow-y: auto;
   text-align: center;
+  height: 9.3rem;
 }
 table {
   width: 100%;

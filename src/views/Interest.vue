@@ -1,22 +1,25 @@
 <template>
   <div class="btn-bottom">
-    <img v-if="cover" :src="cover" class="cover">
+    <div v-if="cover" class="cover-wrap">
+      <img :src="cover" />
+      <div class="title-cover">{{title}}</div>
+    </div>
     <div class="member-wrap">
       <div class="member">
         <span class="semicircle"></span>
         <span style="margin-right：-8px;">敬呈</span>
         <span class="arrows arrows-left"></span>
         <svg class="icon icon_letter" aria-hidden="true">
-          <use xlink:href="#icon_letter"></use>
+          <use xlink:href="#icon_letter" />
         </svg>
         <span class="arrows arrows-right"></span>
-        <span>{{result.applicantName}}</span>先生
+        <span>{{result.applicantName + result.sex === 0 ? "先生" : "女士"}}</span>
       </div>
 
       <div class="relation-wrap">
         <div class="title">
           <svg class="icon icon-title icon_loverelationship" aria-hidden="true">
-            <use xlink:href="#icon_loverelationship"></use>
+            <use xlink:href="#icon_loverelationship" />
           </svg>
           <span>{{result.applicantRelationInsured}}关系</span>
         </div>
@@ -44,7 +47,7 @@
     <div class="container1">
       <div class="title title-boder">
         <svg class="icon icon-title icon_toubaoplane" aria-hidden="true">
-          <use xlink:href="#icon_toubaoplane"></use>
+          <use xlink:href="#icon_toubaoplane" />
         </svg>
         <span>投保计划</span>
       </div>
@@ -52,10 +55,10 @@
       <div v-for="(item, index) in result.vitPolicyRightRiskVoList" :key="index">
         <div class="title">
           <svg v-if="index === 0" class="icon icon-title icon_zhuxian" aria-hidden="true" :key="0">
-            <use xlink:href="#icon_zhuxian"></use>
+            <use xlink:href="#icon_zhuxian" />
           </svg>
           <svg v-if="index === 1" class="icon icon-title icon_fuxian" aria-hidden="true" :key="1">
-            <use xlink:href="#icon_fuxian"></use>
+            <use xlink:href="#icon_fuxian" />
           </svg>
           <span>{{item.productName}}</span>
         </div>
@@ -63,17 +66,17 @@
           <div class="item-wrap">
             <div class="item">
               <p class="key">保障额度</p>
-              <p class="value">{{item.guaranteeName}}万元</p>
+              <p class="value">{{item.guaranteeValue || 0}}万元</p>
             </div>
             <div class="item">
               <p class="key">保障期间</p>
-              <p class="value">{{$Tool.transInsurancePeriod(item.policyPeriodName)}}</p>
+              <p class="value">{{$Tool.transInsurancePeriod(item.policyPeriodValue)}}</p>
             </div>
           </div>
           <div class="item-wrap">
             <div class="item">
-              <p class="key">交费额度</p>
-              <p class="value">{{$Tool.transPaymentPeriod(item.paymentPeriodName)}}</p>
+              <p class="key">交费期间</p>
+              <p class="value">{{$Tool.transPaymentPeriod(item.paymentPeriodValue)}}</p>
             </div>
             <div class="item">
               <p class="key">交费方式</p>
@@ -90,7 +93,7 @@
             </div>
           </div>
         </div>
-        <div class="blue ac" style="padding: .4rem 0 .2rem;">查看保单条款详情></div>
+        <div class="blue ac" style="padding: .4rem 0 .2rem;" @click="getPolicyImg(item.productId)">查看保单条款详情></div>
       </div>
 
       <!-- <div class="title">
@@ -133,7 +136,7 @@
     <div class="container1">
       <div class="title title-boder" style="border-bottom: 1px solid #f1f3f5;">
         <svg class="icon icon-title icon_liyi" aria-hidden="true">
-          <use xlink:href="#icon_liyi"></use>
+          <use xlink:href="#icon_liyi" />
         </svg>
         <span>利益说明</span>
       </div>
@@ -148,13 +151,13 @@
         >
           <div slot="start" style="margin-right: 10px;" @click="age--">
             <svg class="icon icon_reduce_circle" aria-hidden="true">
-              <use xlink:href="#icon_reduce_circle"></use>
+              <use xlink:href="#icon_reduce_circle" />
             </svg>
             {{query.insuredCurrentAge}}
           </div>
           <div slot="end" @click="age++">
             <svg class="icon icon_add_circle" aria-hidden="true" style="margin-left: 10px;">
-              <use xlink:href="#icon_add_circle"></use>
+              <use xlink:href="#icon_add_circle" />
             </svg>
           </div>
         </mt-range>
@@ -167,7 +170,7 @@
         <div class="content">
           <div class="title2">
             <svg class="icon icon-title icon_baofei" aria-hidden="true">
-              <use xlink:href="#icon_baofei"></use>
+              <use xlink:href="#icon_baofei" />
             </svg>
             <span>保费</span>
           </div>
@@ -196,12 +199,12 @@
         >
           <div class="title2">
             <svg class="icon icon-title icon_bao" aria-hidden="true">
-              <use xlink:href="#icon_bao"></use>
+              <use xlink:href="#icon_bao" />
             </svg>
             <span>{{item.scheduleName}}</span>
           </div>
-          <div style="padding: .2rem 0;line-height: .8rem;">
-            <div v-for="(unit, unqiue) in item.content" :key="unqiue">
+          <div class="item-wrap2" style="padding: .2rem 0;">
+            <div v-for="(unit, unqiue) in item.content" class="item-wrap2" :key="unqiue">
               <div class="item">
                 <p class="key al">{{unit.title}}</p>
               </div>
@@ -266,7 +269,7 @@
       <div class="content">
         <div class="title2">
           <svg class="icon icon-title icon_baofei" aria-hidden="true">
-            <use xlink:href="#icon_baofei"></use>
+            <use xlink:href="#icon_baofei" />
           </svg>
           <span>合计保费</span>
         </div>
@@ -290,6 +293,27 @@
         </div>
       </div>
     </div>
+ <!-- v-if="imgList.length"  -->
+<div v-if="imgList.length" class="mask" @click="imgList = []">
+  <div class="cc">
+    <mt-tab-container v-model="active" swipeable>
+      <mt-tab-container-item v-for="(item, index) of imgList" :id="index" :key="index">
+        <img :src="item">
+      </mt-tab-container-item>
+      <!-- <mt-tab-container-item id="0">
+        sdrgserger 阿瓦噶娃儿发人挖法夫人让娃儿发我哦 
+        sdrgserger 阿瓦噶娃儿发人挖法夫人让娃儿发我哦 
+        sdrgserger 阿瓦噶娃儿发人挖法夫人让娃儿发我哦 
+        sdrgserger 阿瓦噶娃儿发人挖法夫人让娃儿发我哦 
+      </mt-tab-container-item>
+      <mt-tab-container-item id="2">
+        sdrgserger 色如果色弱甜热热服务艾薇儿付 
+        sdrgserger 色如果色弱甜热热服务艾薇儿付 
+        sdrgserger 色如果色弱甜热热服务艾薇儿付 
+      </mt-tab-container-item> -->
+    </mt-tab-container>
+  </div>
+</div>
   </div>
 </template>
 
@@ -299,7 +323,8 @@ import {
   getInsuredAgeRange,
   getBeneficiaryDetailByProposalId,
   getInsuredAgeRangeByProposalId,
-  getBeneficiaryCover
+  getBeneficiaryCover,
+  getPolicyDetail
 } from "@/api/beneficiary";
 export default {
   components: {},
@@ -307,21 +332,19 @@ export default {
   data() {
     return {
       query: {
-        id:
-          this.$route.query.id ||
-          this.$route.query.proposalId ||
-          "2266434895041527813",
+        id: this.$route.query.id || this.$route.query.proposalId,
         insuredCurrentAge: 0,
         insuredMaxAge: 0,
         insuredCountAge: undefined,
-        token:
-          this.$route.query.token ||
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJXRUIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTU1OTM4MDQ1MywiaWF0IjoxNTU5Mzc2ODUzLCJ1c2VySWQiOjIyNjQ0ODU0NTI2MjkxNDc2NTV9.tOcwghVeSUi62W4u9XNx0dAaduI7vOgIjLanuRCFTx4"
+        token: this.$route.query.token
       },
       age: undefined,
       result: {},
       timer: undefined,
-      cover: ""
+      cover: "",
+      title: "",
+      active: 0,
+      imgList: []
     };
   },
   computed: {},
@@ -340,10 +363,10 @@ export default {
   methods: {
     init() {
       // let _this = this
-    //   this.Toast({
-    //   message: _this.query.token,
-    //   duration: 3000
-    // })
+      //   this.Toast({
+      //   message: _this.query.token,
+      //   duration: 3000
+      // })
       (this.$route.query.proposalId
         ? getInsuredAgeRangeByProposalId(this.query)
         : getInsuredAgeRange(this.query)
@@ -362,20 +385,40 @@ export default {
         ? getBeneficiaryDetailByProposalId(this.query)
         : getBeneficiaryDetail(this.query)
       ).then(res => {
-      // debugger
-        console.log(res)
+        // debugger
+        // console.log(res);
         this.result = res;
       });
       this.$route.query.type &&
         getBeneficiaryCover(this.query).then(res => {
           // 获取封面
-          res && (this.cover = res.cover);
+          res && ((this.cover = res.cover), (this.title = res.title));
         });
+    },
+    getPolicyImg(data) {
+      getPolicyDetail({id: data, token: this.$route.query.token}).then(res => {
+        this.imgList = res.policyWordingImages.split(',')
+        // console.log(this.imgList)
+      })
     }
   }
 };
 </script>
 <style lang="less" scoped>
+.cover-wrap {
+  position: relative;
+  .title-cover {
+    position: absolute;
+    width: 100%;
+    height: 1.2rem;
+    bottom: 15%;
+    background: rgba(0, 0, 0, 0.6);
+    text-align: center;
+    line-height: 1.2rem;
+    color: #fff;
+    font-size: 0.38rem;
+  }
+}
 .member-wrap {
   border: 5px solid #f1f3f5;
   border-bottom-width: 0.1rem;
@@ -468,6 +511,7 @@ export default {
     .item {
       display: inline-block;
       width: 50%;
+      vertical-align: middle;
       .key {
         color: #a6abb7;
       }
@@ -501,5 +545,11 @@ export default {
   width: 20px;
   height: 20px;
   top: 4px;
+}
+
+.cc{
+  width: 100%;
+  padding: .25rem;
+  background: #fff;
 }
 </style>

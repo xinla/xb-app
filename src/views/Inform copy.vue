@@ -2,7 +2,7 @@
   <div class="btn-bottom">
     <div class="container">
       <div class="title">
-        <b>告知</b>
+        <b>健康告知</b>
         <!-- <span class="button">查看全部</span>
         <span class="button">查看提示</span>-->
         <svg
@@ -171,7 +171,7 @@
                 </div>
               </template>
 
-              <!-- 告知说明栏 -->
+              <!-- 健康告知说明栏 -->
               <template v-if="[4, 5, 6, 7, 8, 9, 10, 11].includes(item.index)">
                 <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
                   <div v-if="vItem.index === item.index">
@@ -307,7 +307,7 @@
                   </div>
                 </div>
 
-                <!-- 第12项告知说明栏 -->
+                <!-- 第12项健康告知说明栏 -->
                 <div v-for="(vItem, vIndex) in healthSpecialExplain" :key="vIndex">
                   <div v-if="vItem.index === 12">
                     <div>
@@ -586,7 +586,7 @@
         <b>投保人声明</b>
       </div>
 
-      <p>本人声明针对上述告知/财务告知的回答属实，并以此作为保险合同的组成部分，如有隐瞒或告知不实，足以影响贵公司承保决定的，所签发的保险合同将视为无效，贵公司有权解除合同。对于合同解除前发生的任何事故，贵公司不承担任何责任。</p>
+      <p>本人声明针对上述健康告知/财务告知的回答属实，并以此作为保险合同的组成部分，如有隐瞒或告知不实，足以影响贵公司承保决定的，所签发的保险合同将视为无效，贵公司有权解除合同。对于合同解除前发生的任何事故，贵公司不承担任何责任。</p>
 
       <div class="ac" style="margin: .5rem 0;">
         <input type="checkbox" id="checkbox" v-model="isAgree" />
@@ -645,7 +645,7 @@ export default {
         },
         5: {
           question:
-            "您在过去两年内是否做过血压、血液化验、心电图、X光、B超、超声心动图、CT、核磁共振、内窥镜及活体组织检查？若是，请在“告知说明栏”中注明检查原因、检查时间与检查结果"
+            "您在过去两年内是否做过血压、血液化验、心电图、X光、B超、超声心动图、CT、核磁共振、内窥镜及活体组织检查？若是，请在“健康告知说明栏”中注明检查原因、检查时间与检查结果"
         },
         6: {
           question:
@@ -1120,24 +1120,24 @@ export default {
             {
               index: 1,
               explainObject: "投保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ],
           insured: [
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ]
         },
@@ -1147,24 +1147,24 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ],
           insured: [
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ]
         },
@@ -1174,24 +1174,24 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ],
           insured: [
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ]
         },
@@ -1201,204 +1201,204 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 2,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 3,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 4,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 5,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 6,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 7,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 8,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 9,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 10,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ],
           insured: [
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 2,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 3,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 4,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 5,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 6,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 7,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 8,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 9,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 10,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ]
         },
@@ -1408,24 +1408,24 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ],
           insured: [
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ]
         },
@@ -1435,24 +1435,24 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ],
           insured: [
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ]
         },
@@ -1462,24 +1462,24 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ],
           insured: [
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ]
         },
@@ -1489,64 +1489,64 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 2,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 3,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ],
           insured: [
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 2,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 3,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ]
         },
@@ -1556,22 +1556,22 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             },
             {
               index: 2,
               explainObject: "被保人",
-              diseaseName: "",
-              diseaseTime: "",
-              therapies: "",
-              hospital: "",
-              lastTherapyTime: "",
-              currentState: ""
+              diseaseName: "头疼",
+              diseaseTime: "2019年6月1号",
+              therapies: "吃药",
+              hospital: "安徽省立医院",
+              lastTherapyTime: "2019年6月2号",
+              currentState: "健康"
             }
           ]
         }

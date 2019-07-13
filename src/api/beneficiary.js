@@ -104,3 +104,13 @@ export const saveBeneficiary = (data) => {
     }
   })
 }
+
+export const getPolicyDetail = (data) => {
+  return axios.request({
+    url: controller2 + `/getPolicyWording/${data.id}`,
+    method: 'get',
+    headers: {
+      auth_token: data.token
+    }
+  })
+}
