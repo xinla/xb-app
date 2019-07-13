@@ -350,6 +350,7 @@ export default {
   computed: {},
   watch: {
     age() {
+      // console.log(1)
       clearTimeout(this.timer);
       this.timer = setTimeout(() => {
         this.query.insuredCountAge = this.age;
@@ -376,7 +377,7 @@ export default {
         this.query.insuredMaxAge = res.maxAge;
         this.query.insuredCountAge = res.currentAge;
         this.age = res.currentAge;
-        this.getData();
+        // this.getData();
       });
     },
     getData() {

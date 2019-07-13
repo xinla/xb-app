@@ -38,6 +38,10 @@ body {
   max-width: 450px;
   margin: 0 auto;
 }
+.wrapper{
+  min-width: 350px;
+  max-width: 450px;
+}
 html {
   overflow-x: hidden;
   height: 100%;

@@ -3,13 +3,15 @@
     <img :src="product.appBanner" class="banner" />
 
     <div class="tab-wrap">
-      <div
-        :class="['tab-title', {'active': tabActive == index}]"
-        v-for="(item, index) in product.insurableInterest"
-        v-if="item.scheduleName"
-        :key="index"
-        @click="tabActive = index"
-      >{{item.scheduleName}}</div>
+      <div class="tab-title-wrap">
+        <div
+          :class="['tab-title', {'active': tabActive == index}]"
+          v-for="(item, index) in product.insurableInterest"
+          v-if="item.scheduleName"
+          :key="index"
+          @click="tabActive = index"
+        >{{item.scheduleName}}</div>
+      </div>
       <mt-tab-container v-model="tabActive" swipeable>
         <mt-tab-container-item
           v-for="(item, index) in product.insurableInterest"
@@ -26,7 +28,7 @@
       </mt-tab-container>
     </div>
 
-    <ul ref="tab2-title-wrap" class="tab2-title-wrap">
+    <ul ref="tab2-title-wrap" class="tab2-title-wrap wrapper">
       <li :class="{current: active === '1'}" @click="active = '1'">
         保险详情
         <div class="line" v-show="active === '1'"></div>
@@ -181,7 +183,7 @@
             </table>
             <!-- 滚动表格 -->
             <div
-             v-show="listRates.length"
+              v-show="listRates.length"
               class="rate-page"
               v-infinite-scroll="loadMore"
               infinite-scroll-disabled="isDisLoading"
@@ -426,12 +428,11 @@ export default {
       this.query[type] = data;
       this.search();
       // console.log(this.query[type])
-    },
+    }
     // change() {
     //   this.search()
     //   // console.log(1)
     // },
-    
   }
 };
 </script>
@@ -444,6 +445,11 @@ export default {
   width: 100%;
   height: 3.4rem;
 }
+.tab-title-wrap {
+  overflow: auto;
+  height: 0.7rem;
+  white-space: nowrap;
+}
 .tab-title {
   display: inline-block;
   color: #fff;
@@ -451,7 +457,6 @@ export default {
   line-height: 0.7rem;
   font-size: 0.28rem;
   width: 1.6rem;
-  height: 0.7rem;
   border-radius: 10px 10px 0px 0px;
   margin-right: 2px;
   background: #888;
