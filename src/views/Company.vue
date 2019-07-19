@@ -82,7 +82,7 @@ export default {
   },
   mounted() {
     let query = {
-      id: this.$route.query.id,
+      id: this.$route.query.id || '2291195929463619591',
       token: this.$route.query.token
     };
     this.getData(query);

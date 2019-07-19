@@ -16,7 +16,8 @@ config.controllers = {
   proposal: '/api/policy-service/v1/proposal',
 
   product: '/api/base/v1/product',
-  company: '/api/base/v1/company',
+  productShare: '/api/base/v1/share/product',
+  company: '/api/base/v1/share/company',
   role: '/role',
 
   sign: config.baseUrl.dev3

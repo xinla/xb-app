@@ -119,11 +119,12 @@
               <div class="btn-wrap">
                 <mt-button
                   v-for="(item, index) in listParams.socialInsuranceFlag"
+                  v-if="item == 0 || item == 1"
                   :type="item === query.socialInsuranceFlags ? 'primary' : 'default'"
                   size="small"
                   :key="index"
                   @click.native="choice('socialInsuranceFlags', item)"
-                >{{item}}</mt-button>
+                >{{item === 0 ? '无' : '有'}}</mt-button>
               </div>
             </mt-cell>
 
@@ -135,11 +136,12 @@
               <div class="btn-wrap">
                 <mt-button
                   v-for="(item, index) in listParams.renewalFlags"
+                  v-if="item == 2 || item == 1"
                   :type="item === query.renewalFlags ? 'primary' : 'default'"
                   size="small"
                   :key="index"
                   @click.native="choice('renewalFlags', item)"
-                >{{item}}</mt-button>
+                >{{item === 1 ? '首保' : '续保'}}</mt-button>
               </div>
             </mt-cell>
 

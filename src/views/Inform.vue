@@ -626,7 +626,7 @@ export default {
     return {
       isAgree: false,
       relation: "",
-      isSelf: false,
+      isSelf: false, // false：不是 ，true：是
       isImmunity: false,
       listQuestionHealthTell: Object.freeze({
         1: {
@@ -986,7 +986,7 @@ export default {
           answers: [
             {
               index: 1,
-              insured: 0,
+              insured: 1,
               insuredContent: {
                 childWeek: 0,
                 childHeight: 0,
@@ -1583,14 +1583,14 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              explainContent: "长城人寿康健人生50万1998年"
+              explainContent: ""
             }
           ],
           applicant: [
             {
               index: 1,
               explainObject: "投保人",
-              explainContent: "长城人寿康健人生50万1998年"
+              explainContent: ""
             }
           ]
         },
@@ -1600,14 +1600,14 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              explainContent: "长城人寿康健人生50万1998年原因结果"
+              explainContent: ""
             }
           ],
           applicant: [
             {
               index: 1,
               explainObject: "投保人",
-              explainContent: "长城人寿康健人生50万1998年原因结果"
+              explainContent: ""
             }
           ]
         },
@@ -1617,14 +1617,14 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              explainContent: "美国计划2018年果"
+              explainContent: ""
             }
           ],
           applicant: [
             {
               index: 1,
               explainObject: "投保人",
-              explainContent: "美国计划2018年"
+              explainContent: ""
             }
           ]
         },
@@ -1634,14 +1634,14 @@ export default {
             {
               index: 1,
               explainObject: "被保人",
-              explainContent: "承包土地负债300万"
+              explainContent: ""
             }
           ],
           applicant: [
             {
               index: 1,
               explainObject: "投保人",
-              explainContent: "承包土地负债300万"
+              explainContent: ""
             }
           ]
         }
@@ -1680,6 +1680,8 @@ export default {
   methods: {
     getData(query) {
       getInformDetail(query).then(res => {
+        // 同意协议
+        this.isAgree = true;
         // debugger
         console.log(res);
         if (!res) {
@@ -1690,6 +1692,8 @@ export default {
         this.healthTell = tellInfo.healthTell;
         this.otherTell = tellInfo.otherTell;
         this.agentTell = tellInfo.agentTell;
+
+        // 与投保人关系转换判断
         if (
           !relationList.includes(
             this.agentTell[0].answers[0].agentContent.relation
@@ -1698,14 +1702,18 @@ export default {
           this.relation = this.agentTell[0].answers[0].agentContent.relation;
           this.agentTell[0].answers[0].agentContent.relation = "其他";
         }
+
         this.healthSpecialExplain = JSON.parse(res.healthSpecialExplain);
         this.otherSpecialExplain = JSON.parse(res.otherSpecialExplain);
         // console.log(res.agentTell);
       });
+      // 判断是否为本人
       getIsSelf(query).then(res => {
         console.log(res);
         this.isSelf = res;
       });
+
+      // 判断是否豁免责任
       getIsImmunity(query).then(res => {
         this.isImmunity = res;
         console.log(JSON.stringify(res));
@@ -1723,6 +1731,141 @@ export default {
         this.Toast("请先同意《投保人声明》");
         return;
       }
+
+      // 数据格式判断
+      // 健康告知项信息
+      for (const iterator of this.healthTell) {
+        for (const iterator1 of iterator.answers) {
+
+          if (iterator1.applicant && !this.isSelf) {
+            if (iterator1.applicantContent) {
+              for (const key in iterator1.applicantContent) {
+                if (
+                  iterator1.applicantContent.hasOwnProperty(key) &&
+                  iterator1.applicantContent[key] === ""
+                ) {
+                  this.Toast("健康告知项投保人信息填写不完整，请修改");
+                  return;
+                }
+              }
+            } else {
+              for (const iteratorB of this.healthSpecialExplain) {
+                if (iterator.index === iteratorB.index && this.isImmunity) {
+                  for (const iteratorB1 of iteratorB.applicant) {
+                    for (const key in iteratorB1) {
+                      if (
+                        iteratorB1.hasOwnProperty(key) &&
+                        iteratorB1[key] === ""
+                      ) {
+                        this.Toast("健康告知项说明栏投保人信息填写不完整，请修改");
+                        return;
+                      }
+                    }
+                  }
+                }
+
+              }
+            }
+          }
+
+          if (iterator1.insured) {
+            if (iterator1.insuredContent) {
+              for (const key in iterator1.insuredContent) {
+                if (
+                  iterator1.insuredContent.hasOwnProperty(key) &&
+                  iterator1.insuredContent[key] === ""
+                ) {
+                  this.Toast("健康告知项被保人信息填写不完整，请修改");
+                  return;
+                }
+              }
+            } else {
+              for (const iteratorB of this.healthSpecialExplain) {
+                if (iterator.index === iteratorB.index) {
+                  for (const iteratorB1 of iteratorB.insured) {
+                    for (const key in iteratorB1) {
+                      if (
+                        iteratorB1.hasOwnProperty(key) &&
+                        iteratorB1[key] === ""
+                      ) {
+                        this.Toast("健康告知项说明栏被保人信息填写不完整，请修改");
+                        return;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            
+          }
+        }
+      }
+
+      // 其他告知项信息
+      for (const iterator of this.otherTell) {
+        for (const iterator1 of iterator.answers) {
+          if (iterator1.applicant && !this.isSelf) {
+          let temp = iterator.index >= 2 && iterator.index <= 8 && !this.isImmunity
+            if (iterator1.applicantContent && !temp) {
+              for (const key in iterator1.applicantContent) {
+                if (
+                  iterator1.applicantContent.hasOwnProperty(key) &&
+                  iterator1.applicantContent[key] === ""
+                ) {
+                  this.Toast("财务及其他告知项投保人信息填写不完整，请修改");
+                  return;
+                }
+              }
+            }
+            for (const iteratorB of this.otherSpecialExplain) {
+              if (iterator.index === iteratorB.index) {
+                for (const iteratorB1 of iteratorB.applicant) {
+                  for (const key in iteratorB1) {
+                    if (
+                      iteratorB1.hasOwnProperty(key) &&
+                      iteratorB1[key] === ""
+                    ) {
+                      this.Toast("财务及其他告知项说明栏投保人信息填写不完整，请修改");
+                      return;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          if (iterator1.insured) {
+            if (iterator1.insuredContent) {
+              for (const key in iterator1.insuredContent) {
+                if (
+                  iterator1.insuredContent.hasOwnProperty(key) &&
+                  iterator1.insuredContent[key] === ""
+                ) {
+                  this.Toast("财务及其他告知项被保人信息填写不完整，请修改");
+                  return;
+                }
+              }
+            }
+            for (const iteratorB of this.otherSpecialExplain) {
+              if (iterator.index === iteratorB.index) {
+                for (const iteratorB1 of iteratorB.insured) {
+                  for (const key in iteratorB1) {
+                    if (
+                      iteratorB1.hasOwnProperty(key) &&
+                      iteratorB1[key] === ""
+                    ) {
+                      this.Toast("财务及其他告知项说明栏被保人信息填写不完整，请修改");
+                      return;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // 与投保人关系转换判断
       if (this.agentTell[0].answers[0].agentContent.relation === "其他") {
         this.agentTell[0].answers[0].agentContent.relation = this.relation;
       }
@@ -1760,6 +1903,7 @@ export default {
             (iterator.applicant = iterator.insured);
         }
       }
+
       let data = {
         policyId: this.policyId,
         id: this.id,

@@ -13,7 +13,7 @@
           <use xlink:href="#icon_letter" />
         </svg>
         <span class="arrows arrows-right"></span>
-        <span>{{result.applicantName + result.sex === 0 ? "先生" : "女士"}}</span>
+        <span>{{result.applicantName}} {{result.sex === 0 ? "先生" : result.sex === 1 ? "女士" : '未知'}}</span>
       </div>
 
       <div class="relation-wrap">
@@ -93,7 +93,11 @@
             </div>
           </div>
         </div>
-        <div class="blue ac" style="padding: .4rem 0 .2rem;" @click="getPolicyImg(item.productId)">查看保单条款详情></div>
+        <div
+          class="blue ac"
+          style="padding: .4rem 0 .2rem;"
+          @click="getPolicyImg(item.productId)"
+        >查看保单条款详情></div>
       </div>
 
       <!-- <div class="title">
@@ -149,13 +153,13 @@
           :step="1"
           :key="query.insuredCountAge"
         >
-          <div slot="start" style="margin-right: 10px;" @click="age--">
-            <svg class="icon icon_reduce_circle" aria-hidden="true">
+          <div slot="start" style="margin-right: 10px;" @click="age > query.insuredCurrentAge && age--">
+            <svg class="icon icon_reduce_circle" aria-hidden="true" style="margin-right: 5px;">
               <use xlink:href="#icon_reduce_circle" />
             </svg>
             {{query.insuredCurrentAge}}
           </div>
-          <div slot="end" @click="age++">
+          <div slot="end" @click="age < query.insuredMaxAge && age++">
             <svg class="icon icon_add_circle" aria-hidden="true" style="margin-left: 10px;">
               <use xlink:href="#icon_add_circle" />
             </svg>
@@ -293,27 +297,25 @@
         </div>
       </div>
     </div>
- <!-- v-if="imgList.length"  -->
-<div v-if="imgList.length" class="mask" @click="imgList = []">
-  <div class="cc">
-    <mt-tab-container v-model="active" swipeable>
-      <mt-tab-container-item v-for="(item, index) of imgList" :id="index" :key="index">
-        <img :src="item">
-      </mt-tab-container-item>
-      <!-- <mt-tab-container-item id="0">
-        sdrgserger 阿瓦噶娃儿发人挖法夫人让娃儿发我哦 
-        sdrgserger 阿瓦噶娃儿发人挖法夫人让娃儿发我哦 
-        sdrgserger 阿瓦噶娃儿发人挖法夫人让娃儿发我哦 
-        sdrgserger 阿瓦噶娃儿发人挖法夫人让娃儿发我哦 
-      </mt-tab-container-item>
-      <mt-tab-container-item id="2">
-        sdrgserger 色如果色弱甜热热服务艾薇儿付 
-        sdrgserger 色如果色弱甜热热服务艾薇儿付 
-        sdrgserger 色如果色弱甜热热服务艾薇儿付 
-      </mt-tab-container-item> -->
-    </mt-tab-container>
-  </div>
-</div>
+    <!-- v-if="imgList.length"  -->
+    <!-- <div v-if="imgList.length" class="mask" @click="imgList = []">
+      <div class="cc">
+        <mt-tab-container v-model="active" swipeable>
+          <mt-tab-container-item v-for="(item, index) of imgList" :id="index" :key="index">
+            <img :src="item" />
+          </mt-tab-container-item>
+        </mt-tab-container>
+      </div>
+    </div> -->
+
+    <img
+      ref="preview-img"
+      v-for="(item, index) in imgList"
+      style="display: none;"
+      preview="1"
+      :src="item"
+      :key="index"
+    />
   </div>
 </template>
 
@@ -397,10 +399,22 @@ export default {
         });
     },
     getPolicyImg(data) {
-      getPolicyDetail({id: data, token: this.$route.query.token}).then(res => {
-        this.imgList = res.policyWordingImages.split(',')
-        // console.log(this.imgList)
-      })
+      getPolicyDetail({ id: data, token: this.$route.query.token }).then(
+        res => {
+          this.imgList = res.policyWordingImages.split(",");
+          this.$nextTick(() => {
+            // console.log(this.$refs['preview-img'][0])
+
+            // 模拟调用vue-photo-preview点击事件，不可随意更改
+            this.$previewRefresh()
+            let e = {
+              target: this.$refs['preview-img'][0]
+            }
+            this.onThumbnailsClick(e)
+          })
+          // console.log(this.imgList)
+        }
+      );
     }
   }
 };
@@ -548,9 +562,9 @@ export default {
   top: 4px;
 }
 
-.cc{
+.cc {
   width: 100%;
-  padding: .25rem;
+  padding: 0.25rem;
   background: #fff;
 }
 </style>
