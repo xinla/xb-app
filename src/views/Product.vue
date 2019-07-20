@@ -1,6 +1,10 @@
 <template>
-  <div class="main btn-bottom" @scroll="scroll">
+  <div class="main" @scroll="scroll">
     <img :src="product.appBanner" class="banner" />
+    <div class="title" ref="title">
+      {{product.product.productFullName}}
+      <p class="sub-title">{{product.product.productAbbr}}</p>
+      </div>
 
     <div class="tab-wrap">
       <div class="tab-title-wrap">
@@ -251,8 +255,10 @@ export default {
       tabActive: 0,
       active: "1",
       offsetTop: 0,
+      offsetTopTitle: 0,
       product: {
-        attachment: {}
+        attachment: {},
+        product: {}
       },
       query: {
         page: 1,
@@ -372,7 +378,8 @@ export default {
           ));
         // console.log("ProductDetail: ", res);
         this.$nextTick(() => {
-          this.offsetTop = this.$refs["tab2-title-wrap"].offsetTop;
+          this.offsetTop = this.$refs["tab2-title-wrap"].offsetTop - this.$refs["title"].clientHeight;
+          this.offsetTopTitle = this.$refs["title"].offsetTop;
         });
       });
       getProductRateParams(query)
@@ -410,8 +417,19 @@ export default {
       if ($event.target.scrollTop >= this.offsetTop) {
         // debugger
         this.$refs["tab2-title-wrap"].style.position = "fixed";
+        this.$refs["tab2-title-wrap"].style.top = 1.45 + "rem";
       } else {
         this.$refs["tab2-title-wrap"].style.position = "relative";
+        this.$refs["tab2-title-wrap"].style.top = 0;
+      }
+
+      if ($event.target.scrollTop >= this.offsetTopTitle) {
+        // debugger
+        this.$refs["title"].style.position = "fixed";
+        this.$refs["title"].style.zIndex = 9;
+      } else {
+        this.$refs["title"].style.position = "relative";
+        this.$refs["title"].style.zIndex = 1;
       }
     },
     loadMore() {
@@ -467,8 +485,15 @@ export default {
   background: #6582ff;
 }
 .tab-wrap {
-  padding: 0.3rem 0.3rem 0;
+  padding: 0 0.3rem;
+  border-top: .3rem #fff solid;
   border-bottom: 10px solid #f1f3f5;
+  border-radius: 10px 10px 0 0;
+  position: relative;
+  top: -8px;
+      z-index: 1;
+       margin-top: 1.45rem;
+
 }
 .tab1 {
   border-top: 1px solid #dbdbdb;
@@ -487,7 +512,6 @@ export default {
   color: #a6abb7;
   z-index: 1;
   width: 100%;
-  top: 0;
   margin-bottom: -0.94rem;
   .current {
     color: #444;
@@ -580,6 +604,21 @@ table {
       width: 45%;
       margin-right: 10%;
     }
+  }
+}
+.title {
+  padding: 0.3rem;
+  background: #6582ff;
+  color: #fff;
+  width: 100%;
+  line-height: .45rem;
+  position: relative;
+  top: 0;
+  z-index: 1;
+      height: 1.45rem;
+          margin-bottom: -1.45rem;
+  .sub-title{
+    font-size: .20rem;
   }
 }
 
