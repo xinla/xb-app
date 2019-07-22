@@ -1,7 +1,7 @@
 <template>
   <div class="main" @scroll="scroll">
     <img :src="product.appBanner" class="banner" />
-    <div class="title" ref="title">
+    <div class="title wrapper" ref="title">
       {{product.product.productFullName}}
       <p class="sub-title">{{product.product.productAbbr}}</p>
       </div>

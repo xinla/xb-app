@@ -1,8 +1,8 @@
 import axios from '@/libs/api.request'
 import config from '@/config'
 
-const controller1 = config.controllers.policy
-const controller = controller1 + '/' +config.controllers.beneficiary
+const controller1 = config.controllers.sign
+const controller = config.controllers.policy + '/' +config.controllers.beneficiary
 const controller2 = config.baseUrl.domain2 + config.controllers.proposal
 const controller3 = config.controllers.proposal
 
@@ -94,16 +94,16 @@ export const getBeneficiaryMemmberDetail = (data) => {
  * 新增或者修改受益人信息
  * @param {*} data 
  */
-export const saveBeneficiary = (data) => {
-  return axios.request({
-    url: controller1 + `/saveOrUpdatePolicyBeneficiary`,
-    method: 'post',
-    data,
-    headers: {
-      auth_token: data.token
-    }
-  })
-}
+// export const saveBeneficiary = (data) => {
+//   return axios.request({
+//     url: controller1 + `/saveOrUpdatePolicyBeneficiary`,
+//     method: 'post',
+//     data,
+//     headers: {
+//       auth_token: data.token
+//     }
+//   })
+// }
 
 export const getPolicyDetail = (data) => {
   return axios.request({

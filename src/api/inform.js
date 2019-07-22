@@ -90,3 +90,19 @@ export const getSignStatus = (data, token) => {
     }
   })
 }
+
+/**
+ * 查看保单id查询投保人或者被保人信息
+ * @param {*} id 
+ * @param {*} type 类型  0 投保人  1  被保人 
+ * @param {*} token 
+ */
+export const getUserInfo = ({id, type, token}) => {
+  return axios.request({
+    url: controller + `/applicantInsured/${id}/${type}`,
+    method: 'get',
+    headers: {
+      auth_token: token
+    }
+  })
+}

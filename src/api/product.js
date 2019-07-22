@@ -1,7 +1,7 @@
 import axios from '@/libs/api.request'
 import config from '@/config'
 
-const controller = config.baseUrl.domain2 + config.controllers.product
+const controller = config.baseUrl.domain2 + config.controllers.rate
 const controller2 = config.baseUrl.domain4 + config.controllers.productShare
 
 /**

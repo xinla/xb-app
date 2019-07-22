@@ -609,7 +609,8 @@ import {
   getInformDetail,
   saveInform,
   getIsSelf,
-  getIsImmunity
+  getIsImmunity,
+  getUserInfo
 } from "@/api/inform";
 
 const relationList = ["本人", "子女", "父母", "配偶", "其他"];
@@ -1669,7 +1670,8 @@ export default {
   mounted() {
     let query = {
       id: this.policyId,
-      token: this.token
+      token: this.token,
+      type: 1
     };
     // console.log(query)
     // return
@@ -1681,12 +1683,19 @@ export default {
     getData(query) {
       getInformDetail(query).then(res => {
         // 同意协议
-        this.isAgree = true;
         // debugger
-        console.log(res);
+        // console.log(res);
         if (!res) {
-          return;
+          //获取投保人信息（身高、体重）
+          getUserInfo(query).then(_res => {
+            console.log(_res);
+            this.healthTell[0].answers[0].insuredContent.height =
+              _res.stature || 0;
+            this.healthTell[0].answers[0].insuredContent.weight =
+              _res.avoirDupois || 0;
+          });
         }
+        this.isAgree = true;
         this.id = res.id;
         let tellInfo = JSON.parse(res.tellInfo);
         this.healthTell = tellInfo.healthTell;
@@ -1707,6 +1716,7 @@ export default {
         this.otherSpecialExplain = JSON.parse(res.otherSpecialExplain);
         // console.log(res.agentTell);
       });
+
       // 判断是否为本人
       getIsSelf(query).then(res => {
         console.log(res);
@@ -1736,7 +1746,6 @@ export default {
       // 健康告知项信息
       for (const iterator of this.healthTell) {
         for (const iterator1 of iterator.answers) {
-
           if (iterator1.applicant && !this.isSelf) {
             if (iterator1.applicantContent) {
               for (const key in iterator1.applicantContent) {
@@ -1757,13 +1766,14 @@ export default {
                         iteratorB1.hasOwnProperty(key) &&
                         iteratorB1[key] === ""
                       ) {
-                        this.Toast("健康告知项说明栏投保人信息填写不完整，请修改");
+                        this.Toast(
+                          "健康告知项说明栏投保人信息填写不完整，请修改"
+                        );
                         return;
                       }
                     }
                   }
                 }
-
               }
             }
           }
@@ -1788,7 +1798,9 @@ export default {
                         iteratorB1.hasOwnProperty(key) &&
                         iteratorB1[key] === ""
                       ) {
-                        this.Toast("健康告知项说明栏被保人信息填写不完整，请修改");
+                        this.Toast(
+                          "健康告知项说明栏被保人信息填写不完整，请修改"
+                        );
                         return;
                       }
                     }
@@ -1796,7 +1808,6 @@ export default {
                 }
               }
             }
-            
           }
         }
       }
@@ -1805,7 +1816,8 @@ export default {
       for (const iterator of this.otherTell) {
         for (const iterator1 of iterator.answers) {
           if (iterator1.applicant && !this.isSelf) {
-          let temp = iterator.index >= 2 && iterator.index <= 8 && !this.isImmunity
+            let temp =
+              iterator.index >= 2 && iterator.index <= 8 && !this.isImmunity;
             if (iterator1.applicantContent && !temp) {
               for (const key in iterator1.applicantContent) {
                 if (
@@ -1825,7 +1837,9 @@ export default {
                       iteratorB1.hasOwnProperty(key) &&
                       iteratorB1[key] === ""
                     ) {
-                      this.Toast("财务及其他告知项说明栏投保人信息填写不完整，请修改");
+                      this.Toast(
+                        "财务及其他告知项说明栏投保人信息填写不完整，请修改"
+                      );
                       return;
                     }
                   }
@@ -1854,7 +1868,9 @@ export default {
                       iteratorB1.hasOwnProperty(key) &&
                       iteratorB1[key] === ""
                     ) {
-                      this.Toast("财务及其他告知项说明栏被保人信息填写不完整，请修改");
+                      this.Toast(
+                        "财务及其他告知项说明栏被保人信息填写不完整，请修改"
+                      );
                       return;
                     }
                   }
@@ -1982,7 +1998,7 @@ export default {
   .half {
     display: inline-block;
     width: 50%;
-    padding: 0 5%;
+    padding: 0 4%;
     vertical-align: top;
   }
   // .switch-wrap .half:nth-child(2n), .input-wrap .half:nth-child(2n + 1) {

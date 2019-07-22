@@ -13,7 +13,7 @@
           <use xlink:href="#icon_letter" />
         </svg>
         <span class="arrows arrows-right"></span>
-        <span>{{result.applicantName}} {{result.sex === 0 ? "先生" : result.sex === 1 ? "女士" : '未知'}}</span>
+        <span>{{result.applicantName}} {{ $route.query.type ? result.respectName : result.sex === 0 ? "先生" : result.sex === 1 ? "女士" : '未知'}}</span>
       </div>
 
       <div class="relation-wrap">
@@ -154,13 +154,13 @@
           :key="query.insuredCountAge"
         >
           <div slot="start" style="margin-right: 10px;" @click="age > query.insuredCurrentAge && age--">
-            <svg class="icon icon_reduce_circle" aria-hidden="true" style="margin-right: 5px;">
+            <svg class="icon icon_reduce_circle" aria-hidden="true" style="margin-right: 5px;vertical-align: middle;">
               <use xlink:href="#icon_reduce_circle" />
             </svg>
             {{query.insuredCurrentAge}}
           </div>
           <div slot="end" @click="age < query.insuredMaxAge && age++">
-            <svg class="icon icon_add_circle" aria-hidden="true" style="margin-left: 10px;">
+            <svg class="icon icon_add_circle" aria-hidden="true" style="margin-left: 10px;vertical-align: middle;">
               <use xlink:href="#icon_add_circle" />
             </svg>
           </div>
@@ -389,7 +389,7 @@ export default {
         : getBeneficiaryDetail(this.query)
       ).then(res => {
         // debugger
-        // console.log(res);
+        console.log(res);
         this.result = res;
       });
       this.$route.query.type &&
@@ -560,6 +560,10 @@ export default {
   width: 20px;
   height: 20px;
   top: 4px;
+}
+/deep/.mt-range > * {
+  display: flex;
+  align-items: center;
 }
 
 .cc {

@@ -20,6 +20,10 @@ config.controllers = {
   company: '/api/base/v1/share/company',
   role: '/role',
 
+  sign: '/api/policy-service/v1/sign', // 查看权益无鉴权
+  rate: '/api/base/v1/share', // 费率无鉴权
+
+
   sign: config.baseUrl.dev3
 }
 
