@@ -1,10 +1,9 @@
 import axios from '@/libs/api.request'
 import config from '@/config'
 
-const controller1 = config.controllers.sign
-const controller = config.controllers.policy + '/' +config.controllers.beneficiary
-const controller2 = config.baseUrl.domain2 + config.controllers.proposal
-const controller3 = config.controllers.proposal
+const controller1 = config.controllers.policy
+const controller = controller1 + '/' +config.controllers.beneficiary
+const controller2 = config.baseUrl.domain2 + config.controllers.proposalNoSign
 
 /**
  * 查看权益
@@ -68,7 +67,7 @@ export const getInsuredAgeRange = ({id, token}) => {
  */
 export const getInsuredAgeRangeByProposalId = ({id, token}) => {
   return axios.request({
-    url: controller3 + `/insuredAgeRange/${id}`,
+    url: controller2 + `/insuredAgeRange/${id}`,
     method: 'get',
     headers: {
       auth_token: token
