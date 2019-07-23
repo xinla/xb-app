@@ -21,24 +21,24 @@
           <svg class="icon icon-title icon_loverelationship" aria-hidden="true">
             <use xlink:href="#icon_loverelationship" />
           </svg>
-          <span>{{result.applicantRelationInsured}}关系</span>
+          <span>关爱关系</span>
         </div>
         <ul class="relation-ul">
           <li class="relation-li">
-            <p class="value">{{result.applicantName}}</p>
             <p class="key">投保人</p>
+            <p class="value">{{result.applicantName}}</p>
           </li>
           <li class="relation-li">
-            <p class="value">{{result.insuredName}}</p>
             <p class="key">被保人</p>
+            <p class="value">{{result.insuredName}}</p>
           </li>
           <li class="relation-li">
-            <p class="value">{{result.insuredAge}}</p>
             <p class="key">被保人年龄</p>
+            <p class="value">{{result.insuredAge}}</p>
           </li>
           <li class="relation-li">
-            <p class="value">{{result.applicantRelationInsured}}</p>
             <p class="key">关系</p>
+            <p class="value">{{result.applicantRelationInsured}}</p>
           </li>
         </ul>
       </div>
@@ -153,14 +153,26 @@
           :step="1"
           :key="query.insuredCountAge"
         >
-          <div slot="start" style="margin-right: 10px;" @click="age > query.insuredCurrentAge && age--">
-            <svg class="icon icon_reduce_circle" aria-hidden="true" style="margin-right: 5px;vertical-align: middle;">
+          <div
+            slot="start"
+            style="margin-right: 10px;"
+            @click="age > query.insuredCurrentAge && age--"
+          >
+            <svg
+              class="icon icon_reduce_circle"
+              aria-hidden="true"
+              style="margin-right: 5px;vertical-align: middle;"
+            >
               <use xlink:href="#icon_reduce_circle" />
             </svg>
             {{query.insuredCurrentAge}}
           </div>
           <div slot="end" @click="age < query.insuredMaxAge && age++">
-            <svg class="icon icon_add_circle" aria-hidden="true" style="margin-left: 10px;vertical-align: middle;">
+            <svg
+              class="icon icon_add_circle"
+              aria-hidden="true"
+              style="margin-left: 10px;vertical-align: middle;"
+            >
               <use xlink:href="#icon_add_circle" />
             </svg>
           </div>
@@ -183,7 +195,7 @@
               <p class="key al">当期保费</p>
             </div>
             <div class="item">
-              <p class="value ar">{{item.currentPremium}}</p>
+              <p class="value ar">{{item.currentPremium}}元</p>
             </div>
           </div>
           <div style="line-height: 1rem;">
@@ -191,7 +203,7 @@
               <p class="key al">累计保费</p>
             </div>
             <div class="item">
-              <p class="value ar">{{item.totalPremium}}</p>
+              <p class="value ar">{{item.totalPremium}}元</p>
             </div>
           </div>
         </div>
@@ -209,10 +221,10 @@
           </div>
           <div class="item-wrap2" style="padding: .2rem 0;">
             <div v-for="(unit, unqiue) in item.content" class="item-wrap2" :key="unqiue">
-              <div class="item">
+              <div class="item item-left">
                 <p class="key al">{{unit.title}}</p>
               </div>
-              <div class="item">
+              <div class="item item-right">
                 <p class="yellow ar">{{unit.algorithmValue}}</p>
               </div>
             </div>
@@ -277,13 +289,13 @@
           </svg>
           <span>合计保费</span>
         </div>
-        <div class="item-wrap2">
+        <div class="item-wrapitem-wrap2">
           <div class="item-wrap2">
             <div class="item">
               <p class="key al">合计当期保费</p>
             </div>
             <div class="item">
-              <p class="yellow ar">{{result.currentTotalPremium}}</p>
+              <p class="yellow ar">{{result.currentTotalPremium}}元</p>
             </div>
           </div>
           <div class="item-wrap2">
@@ -291,10 +303,32 @@
               <p class="key al">合计累计保费</p>
             </div>
             <div class="item">
-              <p class="yellow ar">{{result.countTotalPremium}}</p>
+              <p class="yellow ar">{{result.countTotalPremium}}元</p>
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="content card">
+        <div class="head">
+          <img v-if="result.agentHeadImage" :src="result.agentHeadImage" class="head-photo" />
+          <div v-else class="head-photo">{{result.agentName.substr(-2, 2)}}</div>
+
+          <b class="name">{{result.agentName}}</b>
+          <span
+            class="position"
+            v-for="(item, index) of result.position"
+            :key="index"
+          >{{item}}</span>
+        </div>
+        <div>{{result.agentCompany}}</div>
+        <div class="gray">
+          <svg class="icon icon_baofei" aria-hidden="true">
+            <use xlink:href="#icon_baofei" />
+          </svg>
+          +86 {{result.agentMobile}}
+        </div>
+        <div class="gray slogan">现保科技，让保险创业更简单</div>
       </div>
     </div>
     <!-- v-if="imgList.length"  -->
@@ -306,7 +340,7 @@
           </mt-tab-container-item>
         </mt-tab-container>
       </div>
-    </div> -->
+    </div>-->
 
     <img
       ref="preview-img"
@@ -341,7 +375,9 @@ export default {
         token: this.$route.query.token
       },
       age: undefined,
-      result: {},
+      result: {
+        agentName: ''
+      },
       timer: undefined,
       cover: "",
       title: "",
@@ -391,6 +427,8 @@ export default {
         // debugger
         console.log(res);
         this.result = res;
+        // 代理人职位转换
+        this.result.position = res.position.split(',')
       });
       this.$route.query.type &&
         getBeneficiaryCover(this.query).then(res => {
@@ -406,12 +444,12 @@ export default {
             // console.log(this.$refs['preview-img'][0])
 
             // 模拟调用vue-photo-preview点击事件，不可随意更改
-            this.$previewRefresh()
+            this.$previewRefresh();
             let e = {
-              target: this.$refs['preview-img'][0]
-            }
-            this.onThumbnailsClick(e)
-          })
+              target: this.$refs["preview-img"][0]
+            };
+            this.onThumbnailsClick(e);
+          });
           // console.log(this.imgList)
         }
       );
@@ -531,6 +569,12 @@ export default {
         color: #a6abb7;
       }
     }
+    .item-left {
+      width: 65%;
+    }
+    .item-right {
+      width: 35%;
+    }
     .item-wrap2 {
       padding: 0.2rem 0;
       line-height: 0.4rem;
@@ -541,6 +585,47 @@ export default {
   }
   .yellow {
     color: #fcb33f;
+  }
+
+  .card {
+    overflow: hidden;
+    text-align: left;
+    .head {
+      margin-top: 0.2rem;
+    }
+    .name {
+      font-size: 0.32rem;
+    }
+    .position {
+      border: 1px solid #6582ff;
+      border-radius: 1rem;
+      line-height: 0.4rem;
+      margin-left: 0.2rem;
+      color: #6582ff;
+      padding: 0 0.1rem;
+      font-size: 0.22rem;
+    }
+    .gray {
+      color: #bbb;
+    }
+    .icon_baofei {
+      margin-right: 0.1rem;
+    }
+    .slogan {
+      margin: 0.5rem 0 0.3rem;
+    }
+    .head-photo {
+      width: 1.5rem;
+      height: 1.5rem;
+      line-height: 1.5rem;
+      text-align: center;
+      font-size: .32rem;
+      border-radius: 50%;
+      float: right;
+      background: #6582ff;
+      color: #fff;
+      font-weight: 600;
+    }
   }
 }
 
