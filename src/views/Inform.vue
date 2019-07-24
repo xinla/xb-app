@@ -2117,4 +2117,20 @@ input[type="checkbox"]:checked + label .icon {
     font-weight: 600;
   }
 }
+/deep/ .mint-switch-core {
+  width: 62px;
+  line-height: 28px;
+  color: #fff;
+  text-align: left;
+  text-indent: 9px;
+}
+/deep/ .mint-switch-core::before {
+  content: "否";
+  width: 60px;
+  text-indent: 35px;
+  color: #bbb;
+}
+/deep/ .mint-switch-input:checked + .mint-switch-core::after {
+  transform: translateX(30px);
+}
 </style>

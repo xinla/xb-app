@@ -323,10 +323,11 @@
         </div>
         <div>{{result.agentCompany}}</div>
         <div class="gray">
-          <svg class="icon icon_baofei" aria-hidden="true">
-            <use xlink:href="#icon_baofei" />
+          <svg class="icon icon_phone" aria-hidden="true">
+            <use xlink:href="#icon_phone" />
           </svg>
-          +86 {{result.agentMobile}}
+          <span>{{result.agentMobile ? '+86 ' + result.agentMobile : '暂未联系方式'}}</span>
+          
         </div>
         <div class="gray slogan">现保科技，让保险创业更简单</div>
       </div>
@@ -625,6 +626,9 @@ export default {
       background: #6582ff;
       color: #fff;
       font-weight: 600;
+    }
+    .icon_phone{
+      font-size: 0.24rem;
     }
   }
 }
