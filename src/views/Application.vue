@@ -432,6 +432,7 @@
         <span>身故保险金受益人资料</span>
       </div>
       <div class="info-list" v-for="(item, index) in result.dead" :key="item.id">
+        <!-- 若为指定受益人显示此标题 //beneficiaryQuickfillFlag 0  投保人  1  被保险人  2  法定受益人   4 指定受益人-->
         <div v-if="item.beneficiaryQuickfillFlag === 4" class="title small title-boder">{{ item.beneficiaryQuickfillFlag | beneficiaryQuickfillFlag(index) }}</div>
         <ul v-if="item.beneficiaryQuickfillFlag !== 2">
           <li>
@@ -486,15 +487,11 @@
         <ul v-else>
           <li>
             <span class="label">姓名</span>
-            <span class="desc">{{ item.name | isNull }}</span>
-          </li>
-          <li>
-            <span class="label">住址</span>
-            <span class="desc">{{ item.address | isNull }}</span>
+            <span class="desc">法定</span>
           </li>
           <li>
             <span class="label">受益比例</span>
-            <span class="desc">{{ item.percentage | percentage }}</span>
+            <span class="desc">100%</span>
           </li>
         </ul>
       </div>
@@ -506,6 +503,7 @@
         <span>生存保险金受益人资料</span>
       </div>
       <div class="info-list" v-for="(item, index) in result.survival" :key="item.id">
+        <!-- 若为指定受益人显示此标题 //beneficiaryQuickfillFlag 0  投保人  1  被保险人  2  法定受益人   4 指定受益人-->
         <div v-if="item.beneficiaryQuickfillFlag === 4" class="title small title-boder">{{ item.beneficiaryQuickfillFlag | beneficiaryQuickfillFlag(index) }}</div>
         <ul v-if="item.beneficiaryQuickfillFlag !== 2">
           <li>
@@ -560,15 +558,11 @@
         <ul v-else>
           <li>
             <span class="label">姓名</span>
-            <span class="desc">{{ item.name | isNull }}</span>
-          </li>
-          <li>
-            <span class="label">住址</span>
-            <span class="desc">{{ item.address | isNull }}</span>
+            <span class="desc">法定</span>
           </li>
           <li>
             <span class="label">受益比例</span>
-            <span class="desc">{{ item.percentage | percentage }}</span>
+            <span class="desc">100%</span>
           </li>
         </ul>
       </div>
