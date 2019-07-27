@@ -282,7 +282,7 @@
         </div>
       </div>-->
 
-      <div class="content">
+      <div class="content" v-if="result.vitPolicyRightRiskVoList.length > 1">
         <div class="title2">
           <svg class="icon icon-title icon_baofei" aria-hidden="true">
             <use xlink:href="#icon_baofei" />
@@ -309,7 +309,7 @@
         </div>
       </div>
 
-      <div class="content card">
+      <div class="content card" v-if="$route.query.proposalId">
         <div class="head">
           <img v-if="result.agentHeadImage" :src="result.agentHeadImage" class="head-photo" />
           <div v-else class="head-photo">{{result.agentName.substr(-2, 2)}}</div>
@@ -326,10 +326,9 @@
           <svg class="icon icon_phone" aria-hidden="true">
             <use xlink:href="#icon_phone" />
           </svg>
-          <span>{{result.agentMobile ? '+86 ' + result.agentMobile : '暂未联系方式'}}</span>
-          
+          <a :href="'tel:' + result.agentMobile">{{result.agentMobile ? '+86 ' + result.agentMobile : '暂未联系方式'}}</a>
         </div>
-        <div class="gray slogan">现保科技，让保险创业更简单</div>
+        <div class="gray slogan">{{result.companySlogan}}</div>
       </div>
     </div>
     <!-- v-if="imgList.length"  -->
@@ -377,7 +376,8 @@ export default {
       },
       age: undefined,
       result: {
-        agentName: ''
+        agentName: '',
+        vitPolicyRightRiskVoList: []
       },
       timer: undefined,
       cover: "",

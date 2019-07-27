@@ -3,7 +3,7 @@
     <img :src="product.appBanner" class="banner" />
     <div class="title wrapper" ref="title">
       {{product.product.productFullName}}
-      <p class="sub-title">{{product.product.productAbbr}}</p>
+      <p class="sub-title">投保年龄：{{product.ageStart ? product.ageStart + '周岁' : product.ageDay + '天'}}至{{product.ageEnd}}周岁</p>
       </div>
 
     <div class="tab-wrap">

@@ -1,7 +1,7 @@
 <template>
   <div class="btn-bottom">
     <div class="container">
-      <div class="title">
+      <div ref="title" class="title">
         <b>告知</b>
         <!-- <span class="button">查看全部</span>
         <span class="button">查看提示</span>-->
@@ -25,11 +25,22 @@
       <transition name="slide-down">
         <div v-show="showIndex === 1">
           <div v-for="(item, index) in healthTell" :key="index">
-            <div class="number-line">{{index + 1}}</div>
-            <p>{{listQuestionHealthTell[item.index].question}}</p>
+
+            <template v-if="!([11,12].includes(item.index))">
+              <div class="number-line">{{index + 1}}</div>
+              <p>{{listQuestionHealthTell[item.index].question}}</p>
+            </template>
+            <template v-else-if="item.index === 11 && (insuredSex || applicantSex)">
+              <div class="number-line">{{index + 1}}</div>
+              <p>{{listQuestionHealthTell[item.index].question}}</p>
+            </template>
+            <template v-if="item.index === 12 && !isTwoAge">
+              <div class="number-line">{{index + 1}}</div>
+              <p>{{listQuestionHealthTell[item.index].question}}</p>
+            </template>
 
             <div v-for="(unit, unique) in item.answers" :key="'a' + unique">
-              <template v-if="!([1,12].includes(item.index))">
+              <template v-if="!([1,11,12].includes(item.index))">
                 <p
                   v-if="listQuestionHealthTell[item.index].children"
                 >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
@@ -156,19 +167,35 @@
                 </div>
               </template>
 
-              <template v-if="item.index === 11 && unique === 0">
-                <div class="input-wrap" v-show="unit.applicant && !isSelf">
-                  <div>
-                    投保人已怀孕
-                    <input class="input" v-model="unit.applicantContent.pregnant" />周
+              <template v-if="item.index === 11 && (insuredSex || applicantSex)">
+                  <p
+                    v-if="listQuestionHealthTell[item.index].children"
+                  >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
+
+                  <div class="switch-wrap">
+                    <div class="half" v-if="!isSelf && applicantSex">
+                      投保人
+                      <mt-switch v-model="unit.applicant"></mt-switch>
+                    </div>
+                    <div class="half fr" v-if="insuredSex">
+                      被保人
+                      <mt-switch v-model="unit.insured"></mt-switch>
+                    </div>
                   </div>
-                </div>
-                <div class="input-wrap" v-show="unit.insured">
-                  <div>
-                    被保人已怀孕
-                    <input class="input" v-model="unit.insuredContent.pregnant" />周
+                <template v-if="unique === 0">
+                  <div class="input-wrap" v-show="unit.applicant && !isSelf">
+                    <div>
+                      投保人已怀孕
+                      <input class="input" v-model="unit.applicantContent.pregnant" />周
+                    </div>
                   </div>
-                </div>
+                  <div class="input-wrap" v-show="unit.insured">
+                    <div>
+                      被保人已怀孕
+                      <input class="input" v-model="unit.insuredContent.pregnant" />周
+                    </div>
+                  </div>
+                </template>
               </template>
 
               <!-- 告知说明栏 -->
@@ -273,7 +300,7 @@
                   </div>
               </template>-->
 
-              <template v-if="item.index === 12">
+              <template v-if="item.index === 12 && !isTwoAge">
                 <div class="input-wrap" v-if="unit.index === 1">
                   <div class="title2">被保人</div>
                   <div>
@@ -284,11 +311,8 @@
                       class="input"
                       v-model="unit.insuredContent.childHeight"
                     />厘米
-                    体重
-                    <input
-                      class="input"
-                      v-model="unit.insuredContent.childWeight"
-                    />公斤
+                    <br />体重
+                    <input class="input" v-model="unit.insuredContent.childWeight" />公斤
                     出生时留院
                     <input
                       class="input"
@@ -781,12 +805,12 @@ export default {
               applicant: 1,
               insured: 1,
               applicantContent: {
-                height: 0,
-                weight: 0
+                height: "",
+                weight: ""
               },
               insuredContent: {
-                height: 0,
-                weight: 0
+                height: "",
+                weight: ""
               }
             }
           ]
@@ -797,18 +821,18 @@ export default {
             {
               index: 1,
               applicantContent: {
-                smokeNumEveryDay: 0,
-                smokeYear: 0,
-                stopSmoke: 0,
-                stopReason: "无"
+                smokeNumEveryDay: "",
+                smokeYear: "",
+                stopSmoke: "",
+                stopReason: ""
               },
               insured: 0,
               applicant: 0,
               insuredContent: {
-                stopSmoke: 0,
-                smokeNumEveryDay: 0,
-                smokeYear: 0,
-                stopReason: "无"
+                stopSmoke: "",
+                smokeNumEveryDay: "",
+                smokeYear: "",
+                stopReason: ""
               }
             }
           ]
@@ -819,17 +843,17 @@ export default {
               index: 1,
               insured: 0,
               insuredContent: {
-                drinkYear: 0,
-                stopReason: "无",
-                stopDrink: 0,
-                drinkNumEveryTime: 0
+                drinkYear: "",
+                stopReason: "",
+                stopDrink: "",
+                drinkNumEveryTime: ""
               },
               applicant: 0,
               applicantContent: {
-                drinkYear: 0,
-                stopReason: "无",
-                stopDrink: 0,
-                drinkNumEveryTime: 0
+                drinkYear: "",
+                stopReason: "",
+                stopDrink: "",
+                drinkNumEveryTime: ""
               }
             }
           ],
@@ -962,12 +986,12 @@ export default {
             {
               insured: 0,
               insuredContent: {
-                pregnant: 0
+                pregnant: ""
               },
               index: 1,
-              applicant: 1,
+              applicant: 0,
               applicantContent: {
-                pregnant: 0
+                pregnant: ""
               }
             },
             {
@@ -989,10 +1013,10 @@ export default {
               index: 1,
               insured: 1,
               insuredContent: {
-                childWeek: 0,
-                childHeight: 0,
-                childWeight: 0,
-                stayHospital: 0
+                childWeek: "",
+                childHeight: "",
+                childWeight: "",
+                stayHospital: ""
               },
               applicant: 0
             },
@@ -1011,11 +1035,11 @@ export default {
               insured: 1,
               index: 1,
               applicantContent: {
-                income: 0,
+                income: "",
                 incomeFrom: ""
               },
               insuredContent: {
-                income: 0,
+                income: "",
                 incomeFrom: ""
               },
               applicant: 1
@@ -1080,14 +1104,14 @@ export default {
             {
               applicantContent: {
                 project: "",
-                frequency: 0
+                frequency: ""
               },
               insured: 0,
               index: 1,
               applicant: 0,
               insuredContent: {
                 project: "",
-                frequency: 0
+                frequency: ""
               }
             }
           ],
@@ -1653,7 +1677,7 @@ export default {
           answers: [
             {
               index: 1,
-              agent: 1,
+              agent: 0,
               agentContent: {
                 relation: "父母"
               }
@@ -1664,7 +1688,10 @@ export default {
       showIndex: 1,
       policyId: this.$route.query.id,
       id: "",
-      token: this.$route.query.token
+      token: this.$route.query.token,
+      insuredSex: 0,
+      applicantSex: 0,
+      isTwoAge: true
     };
   },
   mounted() {
@@ -1686,14 +1713,7 @@ export default {
         // debugger
         // console.log(res);
         if (!res) {
-          //获取投保人信息（身高、体重）
-          getUserInfo(query).then(_res => {
-            console.log(_res);
-            this.healthTell[0].answers[0].insuredContent.height =
-              _res.stature || 0;
-            this.healthTell[0].answers[0].insuredContent.weight =
-              _res.avoirDupois || 0;
-          });
+          return;
         }
         this.isAgree = true;
         this.id = res.id;
@@ -1717,6 +1737,39 @@ export default {
         // console.log(res.agentTell);
       });
 
+      //获取被保人信息（）
+      getUserInfo(query).then(_res => {
+        console.log(_res);
+        this.healthTell[0].answers[0].insuredContent.height =
+          _res.stature || "";
+        this.healthTell[0].answers[0].insuredContent.weight =
+          _res.avoirDupois || "";
+        this.otherTell[0].answers[0].insuredContent = {
+          income: _res.annualIncome,
+          incomeFrom: _res.sourceIncomeName
+        };
+        // 判断年龄是否大于两周岁
+        let birthday = _res.birthday.replace(/-/g, '')
+        let now = new Date().toJSON().replace(/-/g, '').slice(0, 8)
+        this.isTwoAge = (now - birthday) > 20000
+        this.insuredSex = Number(res.sex);
+      });
+
+      //获取投保人信息
+      query.type = 0;
+      getUserInfo(query).then(_res => {
+        console.log(_res);
+        this.healthTell[0].answers[0].applicantContent.height =
+          _res.stature || "";
+        this.healthTell[0].answers[0].applicantContent.weight =
+          _res.avoirDupois || "";
+        this.otherTell[0].answers[0].applicantContent = {
+          income: _res.annualIncome,
+          incomeFrom: _res.sourceIncomeName
+        };
+        this.applicantSex = Number(res.sex);
+      });
+
       // 判断是否为本人
       getIsSelf(query).then(res => {
         console.log(res);
@@ -1730,11 +1783,20 @@ export default {
       });
     },
     slide(index) {
+      // console.log(event)
       if (this.showIndex === index) {
         this.showIndex = 0;
       } else {
         this.showIndex = index;
       }
+      this.$nextTick(() => {
+        let y =
+          (index - 1) *
+            (this.$refs.title.clientHeight + this.$refs.title.offsetLeft * 2) +
+          (index === 1 ? 0 : 5);
+        // console.log(this.$refs.title.offsetHeight)
+        window.scrollTo(event.clientX, y);
+      });
     },
     submit(type) {
       if (!this.isAgree) {
@@ -1767,7 +1829,7 @@ export default {
                         iteratorB1[key] === ""
                       ) {
                         this.Toast(
-                          "健康告知项说明栏投保人信息填写不完整，请修改"
+                          `健康告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
                         );
                         return;
                       }
@@ -1780,13 +1842,15 @@ export default {
 
           if (iterator1.insured) {
             if (iterator1.insuredContent) {
-              for (const key in iterator1.insuredContent) {
-                if (
-                  iterator1.insuredContent.hasOwnProperty(key) &&
-                  iterator1.insuredContent[key] === ""
-                ) {
-                  this.Toast("健康告知项被保人信息填写不完整，请修改");
-                  return;
+              if (!(iterator.index === 12 && this.isTwoAge)) {
+                for (const key in iterator1.insuredContent) {
+                  if (
+                    iterator1.insuredContent.hasOwnProperty(key) &&
+                    iterator1.insuredContent[key] === ""
+                  ) {
+                    this.Toast(`健康告知项被保人第${iterator.index}项信息填写不完整，请修改:${key}`);
+                    return;
+                  }
                 }
               }
             } else {
@@ -1799,7 +1863,7 @@ export default {
                         iteratorB1[key] === ""
                       ) {
                         this.Toast(
-                          "健康告知项说明栏被保人信息填写不完整，请修改"
+                          `健康告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
                         );
                         return;
                       }
@@ -1824,7 +1888,7 @@ export default {
                   iterator1.applicantContent.hasOwnProperty(key) &&
                   iterator1.applicantContent[key] === ""
                 ) {
-                  this.Toast("财务及其他告知项投保人信息填写不完整，请修改");
+                  this.Toast(`财务及其他告知项投保人第${iterator.index}项信息填写不完整，请修改`);
                   return;
                 }
               }
@@ -1838,7 +1902,7 @@ export default {
                       iteratorB1[key] === ""
                     ) {
                       this.Toast(
-                        "财务及其他告知项说明栏投保人信息填写不完整，请修改"
+                        `财务及其他告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
                       );
                       return;
                     }
@@ -1855,7 +1919,7 @@ export default {
                   iterator1.insuredContent.hasOwnProperty(key) &&
                   iterator1.insuredContent[key] === ""
                 ) {
-                  this.Toast("财务及其他告知项被保人信息填写不完整，请修改");
+                  this.Toast(`财务及其他告知项被保人第${iterator.index}项信息填写不完整，请修改`);
                   return;
                 }
               }
@@ -1869,7 +1933,7 @@ export default {
                       iteratorB1[key] === ""
                     ) {
                       this.Toast(
-                        "财务及其他告知项说明栏被保人信息填写不完整，请修改"
+                        `财务及其他告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
                       );
                       return;
                     }
@@ -1948,6 +2012,13 @@ export default {
   }
 };
 </script>
+<style>
+#app,
+.router-view {
+  height: auto;
+}
+</style>
+
 <style lang="less" scoped>
 .container {
   border-bottom: 0.1rem solid #f1f3f5;
