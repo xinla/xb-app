@@ -315,18 +315,16 @@
           <div v-else class="head-photo">{{result.agentName.substr(-2, 2)}}</div>
 
           <b class="name">{{result.agentName}}</b>
-          <span
-            class="position"
-            v-for="(item, index) of result.position"
-            :key="index"
-          >{{item}}</span>
+          <span class="position" v-for="(item, index) of result.position" :key="index">{{item}}</span>
         </div>
         <div>{{result.agentCompany}}</div>
         <div class="gray">
           <svg class="icon icon_phone" aria-hidden="true">
             <use xlink:href="#icon_phone" />
           </svg>
-          <a :href="'tel:' + result.agentMobile">{{result.agentMobile ? '+86 ' + result.agentMobile : '暂未联系方式'}}</a>
+          <a
+            :href="'tel:' + result.agentMobile"
+          >{{result.agentMobile ? '+86 ' + result.agentMobile : '暂未联系方式'}}</a>
         </div>
         <div class="gray slogan">{{result.companySlogan}}</div>
       </div>
@@ -360,7 +358,8 @@ import {
   getBeneficiaryDetailByProposalId,
   getInsuredAgeRangeByProposalId,
   getBeneficiaryCover,
-  getPolicyDetail
+  getPolicyDetail,
+  read
 } from "@/api/beneficiary";
 export default {
   components: {},
@@ -372,11 +371,12 @@ export default {
         insuredCurrentAge: 0,
         insuredMaxAge: 0,
         insuredCountAge: undefined,
-        token: this.$route.query.token
+        token: this.$route.query.token,
+        status: 4
       },
       age: undefined,
       result: {
-        agentName: '',
+        agentName: "",
         vitPolicyRightRiskVoList: []
       },
       timer: undefined,
@@ -418,6 +418,15 @@ export default {
         this.age = res.currentAge;
         // this.getData();
       });
+
+      this.$route.query.type &&
+        getBeneficiaryCover(this.query).then(res => {
+          // 获取封面
+          res && ((this.cover = res.cover), (this.title = res.title));
+        });
+
+      // 设置已读状态
+      this.$route.query.proposalId && read(this.query);
     },
     getData() {
       // console.log(this.query)
@@ -429,13 +438,8 @@ export default {
         console.log(res);
         this.result = res;
         // 代理人职位转换
-        this.result.position = res.position.split(',')
+        this.result.position = res.position.split(",");
       });
-      this.$route.query.type &&
-        getBeneficiaryCover(this.query).then(res => {
-          // 获取封面
-          res && ((this.cover = res.cover), (this.title = res.title));
-        });
     },
     getPolicyImg(data) {
       getPolicyDetail({ id: data, token: this.$route.query.token }).then(
@@ -620,14 +624,14 @@ export default {
       height: 1.5rem;
       line-height: 1.5rem;
       text-align: center;
-      font-size: .32rem;
+      font-size: 0.32rem;
       border-radius: 50%;
       float: right;
       background: #6582ff;
       color: #fff;
       font-weight: 600;
     }
-    .icon_phone{
+    .icon_phone {
       font-size: 0.24rem;
     }
   }

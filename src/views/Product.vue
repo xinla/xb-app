@@ -2,7 +2,7 @@
   <div class="main" @scroll="scroll">
     <img :src="product.appBanner" class="banner" />
     <div class="title wrapper" ref="title">
-      {{product.product.productFullName}}
+      <h1>{{product.product.productFullName}}</h1>
       <p class="sub-title">投保年龄：{{product.ageStart ? product.ageStart + '周岁' : product.ageDay + '天'}}至{{product.ageEnd}}周岁</p>
       </div>
 
@@ -50,7 +50,7 @@
         <div class="line" v-show="active === '4'"></div>
       </li>
     </ul>
-    <mt-tab-container v-model="active" style="margin-top: .94rem;">
+    <mt-tab-container v-model="active" style="margin-top: .94rem;min-height: 1rem;">
       <!-- 保险详情 -->
       <mt-tab-container-item id="1">
         <img v-for="(item, index) of product.descPicture" :src="item" :key="index" alt />
@@ -58,14 +58,14 @@
       </mt-tab-container-item>
       <!-- 费率表 -->
       <mt-tab-container-item id="2">
-        <div>
+        <div class="btn-bottom">
           <div class="args-wrap">
             <mt-cell title="保险金额" v-if="listParams.insuredAmounts.length">
               <select class="select" v-model="query.amountInsured" @change="search">
                 <!-- <option value="请选择">请选择</option> -->
-                <option v-for="item in listParams.insuredAmounts" :value="item" :key="item">{{item}}</option>
+                <option v-for="item in listParams.insuredAmounts" :value="item" :key="item">{{item}}{{listParams.rateUnit}}</option>
               </select>
-              <svg class="icon icon_xiala-copy" aria-hidden="true">
+              <svg class="icon icon_xiala-copy" aria-hidden="true" v-if="listParams.insuredAmounts.length > 1">
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
             </mt-cell>
@@ -79,7 +79,7 @@
                   :key="item"
                 >{{$Tool.transInsurancePeriod(item)}}</option>
               </select>
-              <svg class="icon icon_xiala-copy" aria-hidden="true">
+              <svg class="icon icon_xiala-copy" aria-hidden="true" v-if="listParams.policyPeriods.length > 1">
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
             </mt-cell>
@@ -93,7 +93,7 @@
                   :key="item"
                 >{{$Tool.transPaymentPeriod(item)}}</option>
               </select>
-              <svg class="icon icon_xiala-copy" aria-hidden="true">
+              <svg class="icon icon_xiala-copy" aria-hidden="true" v-if="listParams.paymentPeriods.length > 1">
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
             </mt-cell>
@@ -143,6 +143,7 @@
                   v-if="item == 2 || item == 1"
                   :type="item === query.renewalFlags ? 'primary' : 'default'"
                   size="small"
+                  style="padding: 0;"
                   :key="index"
                   @click.native="choice('renewalFlags', item)"
                 >{{item === 1 ? '首保' : '续保'}}</mt-button>
@@ -159,7 +160,7 @@
                   :key="item"
                 >{{item}}</option>
               </select>
-              <svg class="icon icon_xiala-copy" aria-hidden="true">
+              <svg class="icon icon_xiala-copy" aria-hidden="true" v-if="listParams.applicationGrades.length > 1">
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
             </mt-cell>
@@ -174,7 +175,7 @@
                   :key="item"
                 >{{item}}</option>
               </select>
-              <svg class="icon icon_xiala-copy" aria-hidden="true">
+              <svg class="icon icon_xiala-copy" aria-hidden="true" v-if="listParams.occupationalRiskGrade.length > 1">
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
             </mt-cell>
@@ -386,6 +387,8 @@ export default {
         .then(res => {
           console.log("ProductRateParams: ", res);
           this.listParams = res;
+          // 过虑性别出男女外的不合法选项
+          res.sexs = res.sexs.filter(data => data == 1 || data == 0)
           this.query.amountInsured = res.insuredAmounts[0] || "";
           this.query.applicationGrade = res.applicationGrades[0] || "";
           this.query.policyPeriod = res.policyPeriods[0] || "";
@@ -607,9 +610,10 @@ table {
   }
 }
 .title {
+  font-size: .32rem;
   padding: 0.3rem;
-  background: #6582ff;
-  color: #fff;
+  background: #fff;
+  // color: #fff;
   width: 100%;
   line-height: .45rem;
   position: relative;

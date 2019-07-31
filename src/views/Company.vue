@@ -20,7 +20,7 @@
       </span>
     </div>
 
-    <div class="title">公司里程碑</div>
+    <div class="title" v-if="result.bigEvents.length">公司里程碑</div>
     <ul>
       <li class="li" v-for="(item, index) of result.bigEvents" :key="index">
         <i class="dot"></i>
@@ -33,7 +33,7 @@
       </li>
     </ul>
 
-    <div class="title">公司荣誉</div>
+    <div class="title" v-if="result.honor.length">公司荣誉</div>
     <ul>
       <li class="li" v-for="(item, index) of result.honor" :key="index">
         <i class="dot"></i>
@@ -92,6 +92,8 @@ export default {
       getCompanyDetail(query).then(res => {
         // console.log(res);
         this.result = res;
+        // 用于设置分享标题
+        document.title = res.xbCompany.companyForShort || res.xbCompany.name
         this.$nextTick(() => {
           if (this.$refs.describe.clientHeight >= 100) {
             this.isShow = true;

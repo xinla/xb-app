@@ -25,7 +25,6 @@
       <transition name="slide-down">
         <div v-show="showIndex === 1">
           <div v-for="(item, index) in healthTell" :key="index">
-
             <template v-if="!([11,12].includes(item.index))">
               <div class="number-line">{{index + 1}}</div>
               <p>{{listQuestionHealthTell[item.index].question}}</p>
@@ -168,20 +167,20 @@
               </template>
 
               <template v-if="item.index === 11 && (insuredSex || applicantSex)">
-                  <p
-                    v-if="listQuestionHealthTell[item.index].children"
-                  >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
+                <p
+                  v-if="listQuestionHealthTell[item.index].children"
+                >{{`（${unique + 1}）` + listQuestionHealthTell[item.index].children[unit.index].question}}</p>
 
-                  <div class="switch-wrap">
-                    <div class="half" v-if="!isSelf && applicantSex">
-                      投保人
-                      <mt-switch v-model="unit.applicant"></mt-switch>
-                    </div>
-                    <div class="half fr" v-if="insuredSex">
-                      被保人
-                      <mt-switch v-model="unit.insured"></mt-switch>
-                    </div>
+                <div class="switch-wrap">
+                  <div class="half" v-if="!isSelf && applicantSex">
+                    投保人
+                    <mt-switch v-model="unit.applicant"></mt-switch>
                   </div>
+                  <div class="half fr" v-if="insuredSex">
+                    被保人
+                    <mt-switch v-model="unit.insured"></mt-switch>
+                  </div>
+                </div>
                 <template v-if="unique === 0">
                   <div class="input-wrap" v-show="unit.applicant && !isSelf">
                     <div>
@@ -1749,9 +1748,12 @@ export default {
           incomeFrom: _res.sourceIncomeName
         };
         // 判断年龄是否大于两周岁
-        let birthday = _res.birthday.replace(/-/g, '')
-        let now = new Date().toJSON().replace(/-/g, '').slice(0, 8)
-        this.isTwoAge = (now - birthday) > 20000
+        let birthday = _res.birthday.replace(/-/g, "");
+        let now = new Date()
+          .toJSON()
+          .replace(/-/g, "")
+          .slice(0, 8);
+        this.isTwoAge = now - birthday > 20000;
         this.insuredSex = Number(res.sex);
       });
 
@@ -1799,205 +1801,266 @@ export default {
       });
     },
     submit(type) {
-      if (!this.isAgree) {
-        this.Toast("请先同意《投保人声明》");
-        return;
-      }
-
-      // 数据格式判断
-      // 健康告知项信息
-      for (const iterator of this.healthTell) {
-        for (const iterator1 of iterator.answers) {
-          if (iterator1.applicant && !this.isSelf) {
-            if (iterator1.applicantContent) {
-              for (const key in iterator1.applicantContent) {
-                if (
-                  iterator1.applicantContent.hasOwnProperty(key) &&
-                  iterator1.applicantContent[key] === ""
-                ) {
-                  this.Toast("健康告知项投保人信息填写不完整，请修改");
-                  return;
-                }
-              }
-            } else {
-              for (const iteratorB of this.healthSpecialExplain) {
-                if (iterator.index === iteratorB.index && this.isImmunity) {
-                  for (const iteratorB1 of iteratorB.applicant) {
-                    for (const key in iteratorB1) {
-                      if (
-                        iteratorB1.hasOwnProperty(key) &&
-                        iteratorB1[key] === ""
-                      ) {
-                        this.Toast(
-                          `健康告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
-                        );
-                        return;
-                      }
-                    }
-                  }
-                }
-              }
-            }
+      Promise.resolve()
+        .then(() => {
+          if (!this.isAgree) {
+            this.Toast("请先同意《投保人声明》");
+            return Promise.rejected();
           }
 
-          if (iterator1.insured) {
-            if (iterator1.insuredContent) {
-              if (!(iterator.index === 12 && this.isTwoAge)) {
-                for (const key in iterator1.insuredContent) {
-                  if (
-                    iterator1.insuredContent.hasOwnProperty(key) &&
-                    iterator1.insuredContent[key] === ""
-                  ) {
-                    this.Toast(`健康告知项被保人第${iterator.index}项信息填写不完整，请修改:${key}`);
-                    return;
-                  }
-                }
-              }
-            } else {
-              for (const iteratorB of this.healthSpecialExplain) {
-                if (iterator.index === iteratorB.index) {
-                  for (const iteratorB1 of iteratorB.insured) {
-                    for (const key in iteratorB1) {
-                      if (
-                        iteratorB1.hasOwnProperty(key) &&
-                        iteratorB1[key] === ""
-                      ) {
-                        this.Toast(
-                          `健康告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
-                        );
-                        return;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-
-      // 其他告知项信息
-      for (const iterator of this.otherTell) {
-        for (const iterator1 of iterator.answers) {
-          if (iterator1.applicant && !this.isSelf) {
-            let temp =
-              iterator.index >= 2 && iterator.index <= 8 && !this.isImmunity;
-            if (iterator1.applicantContent && !temp) {
-              for (const key in iterator1.applicantContent) {
-                if (
-                  iterator1.applicantContent.hasOwnProperty(key) &&
-                  iterator1.applicantContent[key] === ""
-                ) {
-                  this.Toast(`财务及其他告知项投保人第${iterator.index}项信息填写不完整，请修改`);
-                  return;
-                }
-              }
-            }
-            for (const iteratorB of this.otherSpecialExplain) {
-              if (iterator.index === iteratorB.index) {
-                for (const iteratorB1 of iteratorB.applicant) {
-                  for (const key in iteratorB1) {
+          // 数据格式判断
+          // 健康告知项信息
+          for (const iterator of this.healthTell) {
+            for (const iterator1 of iterator.answers) {
+              if (iterator1.applicant && !this.isSelf) {
+                if (iterator1.applicantContent) {
+                  for (const key in iterator1.applicantContent) {
                     if (
-                      iteratorB1.hasOwnProperty(key) &&
-                      iteratorB1[key] === ""
+                      iterator1.applicantContent.hasOwnProperty(key) &&
+                      iterator1.applicantContent[key] === ""
                     ) {
+                      this.Toast("健康告知项投保人信息填写不完整，请修改");
+                      return Promise.rejected();
+                    }
+                  }
+                } else {
+                  if (this.isImmunity) {
+                    return Promise.rejected();
+                  }
+
+                  let object = this.healthSpecialExplain[iterator.index - 1]
+                    .applicant[iterator1.index - 1];
+                  for (const key in object) {
+                    if (object.hasOwnProperty(key) && object[key] === "") {
+                      this.Toast(
+                        `健康告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
+                      );
+                      return Promise.rejected();
+                    }
+                  }
+
+                  // for (const iteratorB of this.healthSpecialExplain) {
+                  //   if (iterator.index === iteratorB.index && this.isImmunity) {
+                  //     for (const iteratorB1 of iteratorB.applicant) {
+                  //       for (const key in iteratorB1) {
+                  //         if (
+                  //           iteratorB1.hasOwnProperty(key) &&
+                  //           iteratorB1[key] === ""
+                  //         ) {
+                  //           this.Toast(
+                  //             `健康告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
+                  //           );
+                  //           return Promise.rejected();
+                  //         }
+                  //       }
+                  //     }
+                  //   }
+                  // }
+                }
+              }
+
+              if (iterator1.insured) {
+                if (iterator1.insuredContent) {
+                  if (!(iterator.index === 12 && this.isTwoAge)) {
+                    for (const key in iterator1.insuredContent) {
+                      if (
+                        iterator1.insuredContent.hasOwnProperty(key) &&
+                        iterator1.insuredContent[key] === ""
+                      ) {
+                        this.Toast(
+                          `健康告知项被保人第${iterator.index}项信息填写不完整，请修改`
+                        );
+                        return Promise.rejected();
+                      }
+                    }
+                  }
+                } else {
+                  let object = this.healthSpecialExplain[iterator.index - 1]
+                    .insured[iterator1.index - 1];
+                  for (const key in object) {
+                    if (object.hasOwnProperty(key) && object[key] === "") {
+                      this.Toast(
+                        `健康告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
+                      );
+                      return Promise.rejected();
+                    }
+                  }
+
+                  // for (const iteratorB of this.healthSpecialExplain) {
+                  //   if (iterator.index === iteratorB.index) {
+                  //     for (const iteratorB1 of iteratorB.insured) {
+                  //       for (const key in iteratorB1) {
+                  //         if (
+                  //           iteratorB1.hasOwnProperty(key) &&
+                  //           iteratorB1[key] === ""
+                  //         ) {
+                  //           this.Toast(
+                  //             `健康告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
+                  //           );
+                  //           return Promise.rejected();
+                  //         }
+                  //       }
+                  //     }
+                  //   }
+                  // }
+                }
+              }
+            }
+          }
+
+          // 其他告知项信息
+          for (const iterator of this.otherTell) {
+            for (const iterator1 of iterator.answers) {
+              if (iterator1.applicant && !this.isSelf) {
+                if (iterator1.applicantContent) {
+                  let temp =
+                    iterator.index >= 2 &&
+                    iterator.index <= 8 &&
+                    !this.isImmunity;
+                  if (!temp) {
+                    for (const key in iterator1.applicantContent) {
+                      if (
+                        iterator1.applicantContent.hasOwnProperty(key) &&
+                        iterator1.applicantContent[key] === ""
+                      ) {
+                        this.Toast(
+                          `财务及其他告知项投保人第${iterator.index}项信息填写不完整，请修改`
+                        );
+                        return Promise.rejected();
+                      }
+                    }
+                  }
+                } else {
+                  let object = this.otherSpecialExplain[iterator.index - 1]
+                    .applicant[iterator1.index - 1];
+                  for (const key in object) {
+                    if (object.hasOwnProperty(key) && object[key] === "") {
                       this.Toast(
                         `财务及其他告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
                       );
-                      return;
+                      return Promise.rejected();
                     }
                   }
+                  // for (const iteratorB of this.otherSpecialExplain) {
+                  //   if (iterator.index === iteratorB.index) {
+                  //     for (const iteratorB1 of iteratorB.applicant) {
+                  //       for (const key in iteratorB1) {
+                  //         if (
+                  //           iteratorB1.hasOwnProperty(key) &&
+                  //           iteratorB1[key] === ""
+                  //         ) {
+                  //           this.Toast(
+                  //             `财务及其他告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
+                  //           );
+                  //           return Promise.rejected();
+                  //         }
+                  //       }
+                  //     }
+                  //   }
+                  // }
                 }
               }
-            }
-          }
 
-          if (iterator1.insured) {
-            if (iterator1.insuredContent) {
-              for (const key in iterator1.insuredContent) {
-                if (
-                  iterator1.insuredContent.hasOwnProperty(key) &&
-                  iterator1.insuredContent[key] === ""
-                ) {
-                  this.Toast(`财务及其他告知项被保人第${iterator.index}项信息填写不完整，请修改`);
-                  return;
-                }
-              }
-            }
-            for (const iteratorB of this.otherSpecialExplain) {
-              if (iterator.index === iteratorB.index) {
-                for (const iteratorB1 of iteratorB.insured) {
-                  for (const key in iteratorB1) {
+              if (iterator1.insured) {
+                if (iterator1.insuredContent) {
+                  for (const key in iterator1.insuredContent) {
                     if (
-                      iteratorB1.hasOwnProperty(key) &&
-                      iteratorB1[key] === ""
+                      iterator1.insuredContent.hasOwnProperty(key) &&
+                      iterator1.insuredContent[key] === ""
                     ) {
+                      this.Toast(
+                        `财务及其他告知项被保人第${iterator.index}项信息填写不完整，请修改`
+                      );
+                      return Promise.rejected();
+                    }
+                  }
+                } else {
+                  let object = this.otherSpecialExplain[iterator.index - 1]
+                    .insured[iterator1.index - 1];
+                  for (const key in object) {
+                    if (object.hasOwnProperty(key) && object[key] === "") {
                       this.Toast(
                         `财务及其他告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
                       );
-                      return;
+                      return Promise.rejected();
                     }
                   }
                 }
+                // for (const iteratorB of this.otherSpecialExplain) {
+                //   if (iterator.index === iteratorB.index) {
+                //     for (const iteratorB1 of iteratorB.insured) {
+                //       for (const key in iteratorB1) {
+                //         if (
+                //           iteratorB1.hasOwnProperty(key) &&
+                //           iteratorB1[key] === ""
+                //         ) {
+                //           this.Toast(
+                //             `财务及其他告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
+                //           );
+                //           return Promise.rejected();
+                //         }
+                //       }
+                //     }
+                //   }
+                // }
               }
             }
           }
-        }
-      }
 
-      // 与投保人关系转换判断
-      if (this.agentTell[0].answers[0].agentContent.relation === "其他") {
-        this.agentTell[0].answers[0].agentContent.relation = this.relation;
-      }
+          // 与投保人关系转换判断
+          if (this.agentTell[0].answers[0].agentContent.relation === "其他") {
+            this.agentTell[0].answers[0].agentContent.relation = this.relation;
+          }
 
-      if (this.isSelf) {
-        // 同人下，投保人和被保人复制
-        for (let iterator of this.healthTell) {
-          // 第12项只有被保人，无需复制
-          if (iterator.index !== 12) {
-            for (const item of iterator.answers) {
-              item.insured != undefined && (item.applicant = item.insured);
-              item.insuredContent != undefined &&
-                (item.applicantContent = item.insuredContent);
+          if (this.isSelf) {
+            // 同人下，投保人和被保人复制
+            for (let iterator of this.healthTell) {
+              // 第12项只有被保人，无需复制
+              if (iterator.index !== 12) {
+                for (const item of iterator.answers) {
+                  item.insured != undefined && (item.applicant = item.insured);
+                  item.insuredContent != undefined &&
+                    (item.applicantContent = item.insuredContent);
+                }
+              }
+            }
+
+            for (let iterator of this.otherTell) {
+              for (const item of iterator.answers) {
+                item.insured != undefined && (item.applicant = item.insured);
+                item.insuredContent != undefined &&
+                  (item.applicantContent = item.insuredContent);
+              }
+            }
+
+            for (let iterator of this.healthSpecialExplain) {
+              if (iterator.index !== 12) {
+                iterator.insured != undefined &&
+                  (iterator.applicant = iterator.insured);
+              }
+            }
+
+            for (let iterator of this.otherSpecialExplain) {
+              iterator.insured != undefined &&
+                (iterator.applicant = iterator.insured);
             }
           }
-        }
 
-        for (let iterator of this.otherTell) {
-          for (const item of iterator.answers) {
-            item.insured != undefined && (item.applicant = item.insured);
-            item.insuredContent != undefined &&
-              (item.applicantContent = item.insuredContent);
-          }
-        }
-
-        for (let iterator of this.healthSpecialExplain) {
-          if (iterator.index !== 12) {
-            iterator.insured != undefined &&
-              (iterator.applicant = iterator.insured);
-          }
-        }
-
-        for (let iterator of this.otherSpecialExplain) {
-          iterator.insured != undefined &&
-            (iterator.applicant = iterator.insured);
-        }
-      }
-
-      let data = {
-        policyId: this.policyId,
-        id: this.id,
-        tellInfo: JSON.stringify({
-          healthTell: this.healthTell,
-          otherTell: this.otherTell,
-          agentTell: this.agentTell
-        }),
-        healthSpecialExplain: JSON.stringify(this.healthSpecialExplain),
-        otherSpecialExplain: JSON.stringify(this.otherSpecialExplain)
-      };
-      // window.webkit.messageHandlers.submitSuccess().postMessage(null)
-      // console.log(this.healthTell)
-      saveInform(data, this.token)
+          let data = {
+            policyId: this.policyId,
+            id: this.id,
+            tellInfo: JSON.stringify({
+              healthTell: this.healthTell,
+              otherTell: this.otherTell,
+              agentTell: this.agentTell
+            }),
+            healthSpecialExplain: JSON.stringify(this.healthSpecialExplain),
+            otherSpecialExplain: JSON.stringify(this.otherSpecialExplain)
+          };
+          // window.webkit.messageHandlers.submitSuccess().postMessage(null)
+          // console.log(this.healthTell)
+          return saveInform(data, this.token);
+        })
         .then(res => {
           type === "IOS"
             ? window.webkit.messageHandlers.submitSuccess.postMessage(null)

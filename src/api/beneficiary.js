@@ -81,7 +81,7 @@ export const getInsuredAgeRangeByProposalId = ({id, token}) => {
  */
 export const getBeneficiaryMemmberDetail = (data) => {
   return axios.request({
-    url: controller + `/${id}`,
+    url: controller + `/${data.id}`,
     method: 'get',
     headers: {
       auth_token: data.token
@@ -104,12 +104,29 @@ export const getBeneficiaryMemmberDetail = (data) => {
 //   })
 // }
 
+// 获取保险单详情
 export const getPolicyDetail = (data) => {
   return axios.request({
     url: controller2 + `/getPolicyWording/${data.id}`,
     method: 'get',
     headers: {
       auth_token: data.token
+    }
+  })
+}
+
+/**
+ * 发送给客户/客户阅读
+ * @param {string} id 建议书id
+ * @param {} status 3已发送,4已阅读
+ * @param {*} token 
+ */
+export const read = ({id, status, token}) => {
+  return axios.request({
+    url: controller2 + `/SendById/${id}/${status}`,
+    method: 'get',
+    headers: {
+      auth_token: token
     }
   })
 }

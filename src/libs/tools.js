@@ -275,10 +275,13 @@ export function transInsurancePeriod(data) {
   if (!data.includes("@")) {
     return `保${data}年`;
   } else if (/@$/.test(data)) {
-    return `保至${data.replace("@", "")}岁`;
+    let age = data.replace("@", "") == 105 ? '终身' : data.replace("@", "岁")
+    return `保至${age}`;
   } else {
     let temp = data.split("@");
-    return `主险保至${temp[0]}岁，附加险保至${temp[1]}岁`;
+    temp[0] = temp[0] == 105 ? '终身' : temp[0] + '岁'
+    temp[1] = temp[1] == 105 ? '终身' : temp[1] + '岁'
+    return `主险保至${temp[0]}，附加险保至${temp[1]}`;
   }
 }
 export function transPaymentPeriod(data) {
