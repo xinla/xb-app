@@ -470,7 +470,7 @@ export default {
 }
 .tab-title-wrap {
   overflow: auto;
-  height: 0.7rem;
+  // height: 0.7rem;
   white-space: nowrap;
 }
 .tab-title {

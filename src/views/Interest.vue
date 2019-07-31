@@ -54,10 +54,15 @@
 
       <div v-for="(item, index) in result.vitPolicyRightRiskVoList" :key="index">
         <div class="title">
-          <svg v-if="index === 0" class="icon icon-title icon_zhuxian" aria-hidden="true" :key="0">
+          <svg v-if="index === 0" class="icon icon-title icon_zhuxian" aria-hidden="true" key="0">
             <use xlink:href="#icon_zhuxian" />
           </svg>
-          <svg v-if="index === 1" class="icon icon-title icon_fuxian" aria-hidden="true" :key="1">
+          <svg
+            v-else-if="index === 1"
+            class="icon icon-title icon_fuxian"
+            aria-hidden="true"
+            key="1"
+          >
             <use xlink:href="#icon_fuxian" />
           </svg>
           <span>{{item.productName}}</span>
@@ -426,7 +431,7 @@ export default {
         });
 
       // 设置已读状态
-      this.$route.query.proposalId && read(this.query);
+      navigator.userAgent.indexOf('MicroMessenger') > -1 && read(this.query)
     },
     getData() {
       // console.log(this.query)
@@ -436,9 +441,16 @@ export default {
       ).then(res => {
         // debugger
         console.log(res);
-        this.result = res;
-        // 代理人职位转换
-        this.result.position = res.position.split(",");
+        if (res) {
+          this.result = res;
+          // 代理人职位转换
+          res.position && (this.result.position = res.position.split(","));
+        } else {
+          this.Toast({
+            message: `无对应计算结果`,
+            duration: 2000
+          });
+        }
       });
     },
     getPolicyImg(data) {

@@ -1697,7 +1697,7 @@ export default {
     let query = {
       id: this.policyId,
       token: this.token,
-      type: 1
+      type: 1 //  0 投保人  1  被保人
     };
     // console.log(query)
     // return
@@ -1738,7 +1738,7 @@ export default {
 
       //获取被保人信息（）
       getUserInfo(query).then(_res => {
-        console.log(_res);
+        // console.log(_res);
         this.healthTell[0].answers[0].insuredContent.height =
           _res.stature || "";
         this.healthTell[0].answers[0].insuredContent.weight =
@@ -1754,13 +1754,16 @@ export default {
           .replace(/-/g, "")
           .slice(0, 8);
         this.isTwoAge = now - birthday > 20000;
-        this.insuredSex = Number(res.sex);
+        this.insuredSex = Number(_res.sex); // 0 男，1 女
+        // this.Toast(`被保人${_res.sex}-${_res.sex==0 ? '男' : '女'}`)
+      }).catch(error => {
+        this.Toast(JSON.stringify(error))
       });
 
       //获取投保人信息
       query.type = 0;
       getUserInfo(query).then(_res => {
-        console.log(_res);
+        // console.log(_res);
         this.healthTell[0].answers[0].applicantContent.height =
           _res.stature || "";
         this.healthTell[0].answers[0].applicantContent.weight =
@@ -1769,19 +1772,21 @@ export default {
           income: _res.annualIncome,
           incomeFrom: _res.sourceIncomeName
         };
-        this.applicantSex = Number(res.sex);
+        this.applicantSex = Number(_res.sex);
+      }).catch(error => {
+        this.Toast(JSON.stringify(error))
       });
 
       // 判断是否为本人
       getIsSelf(query).then(res => {
-        console.log(res);
-        this.isSelf = res;
+        this.isSelf = Number(res);
+        // console.log(typeof this.isSelf);
       });
 
       // 判断是否豁免责任
       getIsImmunity(query).then(res => {
-        this.isImmunity = res;
-        console.log(JSON.stringify(res));
+        this.isImmunity = Number(res);
+        // console.log(JSON.stringify(this.isImmunity));
       });
     },
     slide(index) {
