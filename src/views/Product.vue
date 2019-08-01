@@ -3,10 +3,12 @@
     <img :src="product.appBanner" class="banner" />
     <div class="title wrapper" ref="title">
       <h1>{{product.product.productFullName}}</h1>
-      <p class="sub-title">投保年龄：{{product.ageStart ? product.ageStart + '周岁' : product.ageDay + '天'}}至{{product.ageEnd}}周岁</p>
-      </div>
+      <p
+        class="sub-title"
+      >投保年龄：{{product.ageStart ? product.ageStart + '周岁' : product.ageDay + '天'}}至{{product.ageEnd}}周岁</p>
+    </div>
 
-    <div class="tab-wrap">
+    <div ref="tab-wrap" class="tab-wrap">
       <div class="tab-title-wrap">
         <div
           :class="['tab-title', {'active': tabActive == index}]"
@@ -63,9 +65,17 @@
             <mt-cell title="保险金额" v-if="listParams.insuredAmounts.length">
               <select class="select" v-model="query.amountInsured" @change="search">
                 <!-- <option value="请选择">请选择</option> -->
-                <option v-for="item in listParams.insuredAmounts" :value="item" :key="item">{{item}}{{listParams.rateUnit}}</option>
+                <option
+                  v-for="item in listParams.insuredAmounts"
+                  :value="item"
+                  :key="item"
+                >{{item}}{{listParams.rateUnit[0]}}</option>
               </select>
-              <svg class="icon icon_xiala-copy" aria-hidden="true" v-if="listParams.insuredAmounts.length > 1">
+              <svg
+                class="icon icon_xiala-copy"
+                aria-hidden="true"
+                v-if="listParams.insuredAmounts.length > 1"
+              >
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
             </mt-cell>
@@ -79,7 +89,11 @@
                   :key="item"
                 >{{$Tool.transInsurancePeriod(item)}}</option>
               </select>
-              <svg class="icon icon_xiala-copy" aria-hidden="true" v-if="listParams.policyPeriods.length > 1">
+              <svg
+                class="icon icon_xiala-copy"
+                aria-hidden="true"
+                v-if="listParams.policyPeriods.length > 1"
+              >
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
             </mt-cell>
@@ -93,7 +107,11 @@
                   :key="item"
                 >{{$Tool.transPaymentPeriod(item)}}</option>
               </select>
-              <svg class="icon icon_xiala-copy" aria-hidden="true" v-if="listParams.paymentPeriods.length > 1">
+              <svg
+                class="icon icon_xiala-copy"
+                aria-hidden="true"
+                v-if="listParams.paymentPeriods.length > 1"
+              >
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
             </mt-cell>
@@ -158,9 +176,13 @@
                   v-for="item in listParams.applicationGrades"
                   :value="item"
                   :key="item"
-                >{{item}}</option>
+                >{{item}}档</option>
               </select>
-              <svg class="icon icon_xiala-copy" aria-hidden="true" v-if="listParams.applicationGrades.length > 1">
+              <svg
+                class="icon icon_xiala-copy"
+                aria-hidden="true"
+                v-if="listParams.applicationGrades.length > 1"
+              >
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
             </mt-cell>
@@ -175,7 +197,11 @@
                   :key="item"
                 >{{item}}</option>
               </select>
-              <svg class="icon icon_xiala-copy" aria-hidden="true" v-if="listParams.occupationalRiskGrade.length > 1">
+              <svg
+                class="icon icon_xiala-copy"
+                aria-hidden="true"
+                v-if="listParams.occupationalRiskGrade.length > 1"
+              >
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
             </mt-cell>
@@ -379,8 +405,14 @@ export default {
           ));
         // console.log("ProductDetail: ", res);
         this.$nextTick(() => {
-          this.offsetTop = this.$refs["tab2-title-wrap"].offsetTop - this.$refs["title"].clientHeight;
+          this.offsetTop =
+            this.$refs["tab2-title-wrap"].offsetTop -
+            this.$refs["title"].clientHeight;
           this.offsetTopTitle = this.$refs["title"].offsetTop;
+          
+          // 动态设置标题css
+          this.$refs["tab-wrap"].style.marginTop = this.$refs["title"].clientHeight + 'px'
+          this.$refs["title"].style.marginBottom = -this.$refs["title"].clientHeight + 'px'
         });
       });
       getProductRateParams(query)
@@ -388,7 +420,7 @@ export default {
           console.log("ProductRateParams: ", res);
           this.listParams = res;
           // 过虑性别出男女外的不合法选项
-          res.sexs = res.sexs.filter(data => data == 1 || data == 0)
+          res.sexs = res.sexs.filter(data => data == 1 || data == 0);
           this.query.amountInsured = res.insuredAmounts[0] || "";
           this.query.applicationGrade = res.applicationGrades[0] || "";
           this.query.policyPeriod = res.policyPeriods[0] || "";
@@ -420,7 +452,7 @@ export default {
       if ($event.target.scrollTop >= this.offsetTop) {
         // debugger
         this.$refs["tab2-title-wrap"].style.position = "fixed";
-        this.$refs["tab2-title-wrap"].style.top = 1.45 + "rem";
+        this.$refs["tab2-title-wrap"].style.top = this.$refs["title"].clientHeight + 'px';
       } else {
         this.$refs["tab2-title-wrap"].style.position = "relative";
         this.$refs["tab2-title-wrap"].style.top = 0;
@@ -489,14 +521,12 @@ export default {
 }
 .tab-wrap {
   padding: 0 0.3rem;
-  border-top: .3rem #fff solid;
+  border-top: 0.3rem #fff solid;
   border-bottom: 10px solid #f1f3f5;
   border-radius: 10px 10px 0 0;
   position: relative;
   top: -8px;
-      z-index: 1;
-       margin-top: 1.45rem;
-
+  z-index: 1;
 }
 .tab1 {
   border-top: 1px solid #dbdbdb;
@@ -610,19 +640,17 @@ table {
   }
 }
 .title {
-  font-size: .32rem;
-  padding: 0.3rem;
+  font-size: 0.36rem;
+  padding: 0.3rem 0.3rem 0.2rem;
   background: #fff;
   // color: #fff;
   width: 100%;
-  line-height: .45rem;
+  line-height: 0.45rem;
   position: relative;
   top: 0;
   z-index: 1;
-      height: 1.45rem;
-          margin-bottom: -1.45rem;
-  .sub-title{
-    font-size: .20rem;
+  .sub-title {
+    font-size: 0.28rem;
   }
 }
 

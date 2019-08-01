@@ -145,6 +145,8 @@ export default {
 .wrap {
   line-height: 30px;
   padding: 0 0.3rem;
+  text-align: justify;
+  // word-break: break-all;
   .header {
     line-height: 1rem;
   }

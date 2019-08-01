@@ -13,7 +13,10 @@
           <use xlink:href="#icon_letter" />
         </svg>
         <span class="arrows arrows-right"></span>
-        <span>{{result.applicantName}} {{ $route.query.type ? result.respectName : result.sex === 0 ? "先生" : result.sex === 1 ? "女士" : '未知'}}</span>
+        <span>
+          <b style="font-size: .32rem;">{{result.applicantName}}</b>
+          {{ $route.query.type ? result.respectName : result.sex === 0 ? "先生" : result.sex === 1 ? "女士" : '未知'}}
+        </span>
       </div>
 
       <div class="relation-wrap">
@@ -65,7 +68,7 @@
           >
             <use xlink:href="#icon_fuxian" />
           </svg>
-          <span>{{item.productName}}</span>
+          <span style="vertical-align: bottom;">{{item.productName}}</span>
         </div>
         <div class="content">
           <div class="item-wrap">
@@ -186,7 +189,7 @@
 
       <div v-for="(item, index) in result.vitPolicyRightRiskVoList" :key="index">
         <div class="title">
-          <span>{{item.productName}}</span>
+          <b>{{item.productName}}</b>
         </div>
         <div class="content">
           <div class="title2">
@@ -431,7 +434,7 @@ export default {
         });
 
       // 设置已读状态
-      navigator.userAgent.indexOf('MicroMessenger') > -1 && read(this.query)
+      navigator.userAgent.indexOf("MicroMessenger") > -1 && read(this.query);
     },
     getData() {
       // console.log(this.query)
@@ -448,7 +451,7 @@ export default {
         } else {
           this.Toast({
             message: `无对应计算结果`,
-            duration: 2000
+            duration: 1500
           });
         }
       });
@@ -457,6 +460,10 @@ export default {
       getPolicyDetail({ id: data, token: this.$route.query.token }).then(
         res => {
           this.imgList = res.policyWordingImages.split(",");
+          if (!imgList.length) {
+            this.Toast('暂无保单条款详情')
+            return
+          }
           this.$nextTick(() => {
             // console.log(this.$refs['preview-img'][0])
 
@@ -469,12 +476,23 @@ export default {
           });
           // console.log(this.imgList)
         }
-      );
+      ).catch(error => {
+        this.Toast('系统正忙，请稍后再试')
+      });
     }
   }
 };
 </script>
 <style lang="less" scoped>
+.icon {
+  font-size: 0.4rem;
+  vertical-align: middle;
+  + span {
+    font-weight: 600;
+    vertical-align: text-bottom;
+        line-height: 100%;
+  }
+}
 .cover-wrap {
   position: relative;
   .title-cover {
@@ -507,9 +525,7 @@ export default {
   left: -0.15rem;
   position: relative;
 }
-.icon {
-  font-size: 0.4rem;
-}
+
 .arrows {
   display: inline-block;
   width: 20%;
@@ -562,6 +578,9 @@ export default {
   }
   .title-boder {
     border-bottom: 1px solid #f1f3f5;
+    span {
+      font-size: 0.32rem;
+    }
   }
   .title2 {
     padding: 0.2rem 0;
