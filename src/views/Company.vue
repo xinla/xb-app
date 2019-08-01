@@ -20,21 +20,23 @@
       </span>
     </div>
 
-    <div class="title" v-if="result.bigEvents.length">公司里程碑</div>
-    <ul>
-      <li class="li" v-for="(item, index) of result.bigEvents" :key="index">
-        <i class="dot"></i>
-        <div class="time">{{item.time}}</div>
-        <div class="event">{{item.bigEvents}}</div>
-      </li>
-      <li class="li">
-        <i class="dot"></i>
-        <div class="time">更多里程碑事件等待发生</div>
-      </li>
-    </ul>
+    <template v-if="result.bigEvents.length">
+      <div class="title">公司里程碑</div>
+      <ul class="ul">
+        <li class="li" v-for="(item, index) of result.bigEvents" :key="index">
+          <i class="dot"></i>
+          <div class="time">{{item.time}}</div>
+          <div class="event">{{item.bigEvents}}</div>
+        </li>
+        <li class="li">
+          <i class="dot"></i>
+          <div class="time">更多里程碑事件等待发生</div>
+        </li>
+      </ul>
+    </template>
 
     <div class="title" v-if="result.honor.length">公司荣誉</div>
-    <ul>
+    <ul class="ul">
       <li class="li" v-for="(item, index) of result.honor" :key="index">
         <i class="dot"></i>
         <div class="time">{{item.prizeTime}}</div>
@@ -82,7 +84,7 @@ export default {
   },
   mounted() {
     let query = {
-      id: this.$route.query.id || '2291195929463619591',
+      id: this.$route.query.id || "2291195929463619591",
       token: this.$route.query.token
     };
     this.getData(query);
@@ -93,7 +95,7 @@ export default {
         // console.log(res);
         this.result = res;
         // 用于设置分享标题
-        document.title = res.xbCompany.companyForShort || res.xbCompany.name
+        document.title = res.xbCompany.companyForShort || res.xbCompany.name;
         this.$nextTick(() => {
           if (this.$refs.describe.clientHeight >= 100) {
             this.isShow = true;
@@ -121,7 +123,8 @@ export default {
   line-height: 0.5rem;
   overflow: hidden;
   transition: all 0.3s;
-  word-break: break-all;
+  // word-break: break-all;
+  text-align: justify !important;
   // .ellipsis-line();
 }
 .all-wrap {
@@ -135,6 +138,10 @@ export default {
   .up {
     transform: rotate(-90deg);
   }
+}
+.ul {
+  position: relative;
+  left: 0.1rem;
 }
 .li {
   position: relative;
@@ -176,6 +183,7 @@ export default {
     width: 60%;
     color: #666;
     text-align: right;
+    font-weight: 600;
   }
 }
 </style>

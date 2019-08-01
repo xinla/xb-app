@@ -459,11 +459,11 @@ export default {
     getPolicyImg(data) {
       getPolicyDetail({ id: data, token: this.$route.query.token }).then(
         res => {
-          this.imgList = res.policyWordingImages.split(",");
-          if (!imgList.length) {
+          if (!res.policyWordingImages) {
             this.Toast('暂无保单条款详情')
             return
           }
+          this.imgList = res.policyWordingImages.split(",");
           this.$nextTick(() => {
             // console.log(this.$refs['preview-img'][0])
 
