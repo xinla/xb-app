@@ -8,13 +8,13 @@
 export default {
   name: "App",
   created() {
-    var resizeEvt =
-      "orientationchange" in window ? "orientationchange" : "resize";
+    var docEl = document.documentElement,
+      resizeEvt =
+        "orientationchange" in window ? "orientationchange" : "resize";
     window.addEventListener(resizeEvt, subRecalc, false);
     document.addEventListener("DOMContentLoaded", subRecalc, false);
     function subRecalc() {
-      var docEl = document.documentElement,
-        clientWidth = Math.min(window.innerWidth, docEl.clientWidth);
+      var clientWidth = Math.min(window.innerWidth, docEl.clientWidth);
       clientWidth >= 450 && (clientWidth = 450);
       docEl.style.fontSize = (clientWidth / 750) * 100 + "px";
     }
@@ -30,21 +30,11 @@ export default {
 // }
 html,
 body {
-  background-color: #fff;
   width: 100%;
   height: 100%;
   color: #444444;
   min-width: 350px;
-  max-width: 450px;
-  margin: 0 auto;
-}
-.wrapper{
-  min-width: 350px;
-  max-width: 450px;
-}
-html {
-  overflow-x: hidden;
-  height: 100%;
+  // max-width: 450px;
 }
 body {
   font-size: 0.28em;
@@ -57,8 +47,15 @@ body {
   height: 100%;
   overflow: hidden;
 }
-.router-view {
-  overflow: auto;
+.router-view{
+  background-color: #fff;
+}
+.router-view,
+.wrapper {
+  overflow-y: auto;
+  min-width: 350px;
+  max-width: 450px;
+  margin: 0 auto;
 }
 .icon {
   width: 1em;

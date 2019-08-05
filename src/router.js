@@ -14,6 +14,7 @@ export default new Router({
       meta: {
         title: '首页'
       },
+      redirect: '/download',
       component: Home
     },
     {
@@ -60,7 +61,7 @@ export default new Router({
       path: '/agreement',
       name: 'agreement',
       meta: {
-        title: '服务协议'
+        title: '服务协议-现保'
       },
       component: () => import('./views/Agreement.vue')
     },
@@ -68,9 +69,17 @@ export default new Router({
       path: '/privacy',
       name: 'privacy',
       meta: {
-        title: '隐私政策'
+        title: '隐私政策-现保'
       },
       component: () => import('./views/Privacy.vue')
+    },
+    {
+      path: '/agreementHuaSheng',
+      name: 'agreementHuaSheng',
+      meta: {
+        title: '注册协议-华圣'
+      },
+      component: () => import('./views/AgreementHuaSheng.vue')
     },
     {
       path: '/welcome',
@@ -87,6 +96,22 @@ export default new Router({
         title: '欢迎页-百惠'
       },
       component: () => import('./views/Hello.vue')
+    },
+    {
+      path: '/download',
+      name: 'download',
+      meta: {
+        title: '下载现保app'
+      },
+      component: () => import('./views/Download.vue')
+    },
+    {
+      path: '/downloads',
+      name: 'downloads',
+      meta: {
+        title: '下载华圣app'
+      },
+      component: () => import('./views/DownloadHuaSheng.vue')
     }
   ]
 })

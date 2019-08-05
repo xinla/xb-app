@@ -48,7 +48,7 @@
     <ul>
       <li class="li2">
         <span class="left">服务电话</span>
-        <span class="right">{{result.xbCompany.telephoneNumber}}</span>
+        <a :href="result.xbCompany.telephoneNumber" class="right">{{result.xbCompany.telephoneNumber}}</a>
       </li>
       <li class="li2">
         <span class="left">公司地址</span>
@@ -128,9 +128,11 @@ export default {
   // .ellipsis-line();
 }
 .all-wrap {
+  position: relative;
   color: #6582ff;
   line-height: 1rem;
   .icon_more-B {
+    position: relative;
     transition: all 0.3s;
     margin-left: 5px;
     transform: rotate(90deg);

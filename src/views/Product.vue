@@ -270,6 +270,7 @@
 </template>
 
 <script>
+import '@/libs/jsSDK'
 import {
   getProductDetail,
   getProductRateParams,
@@ -381,6 +382,15 @@ export default {
       token: this.$route.query.token
     };
     this.getData(query);
+
+    wx.config({
+    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+    appId: '', // 必填，公众号的唯一标识
+    timestamp: '', // 必填，生成签名的时间戳
+    nonceStr: '', // 必填，生成签名的随机串
+    signature: '',// 必填，签名
+    jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'] // 必填，需要使用的JS接口列表
+});
   },
   methods: {
     getData(query) {
@@ -390,7 +400,9 @@ export default {
         res.attachment.productCourse =
           JSON.parse(res.attachment.productCourse) || [];
         this.product = res;
-
+        // 设置文档标题
+        document.title = res.product.productFullName;
+        
         typeof this.product.descPicture === "string" &&
           (this.product.descPicture = this.product.descPicture.split(","));
 
@@ -409,10 +421,12 @@ export default {
             this.$refs["tab2-title-wrap"].offsetTop -
             this.$refs["title"].clientHeight;
           this.offsetTopTitle = this.$refs["title"].offsetTop;
-          
+
           // 动态设置标题css
-          this.$refs["tab-wrap"].style.marginTop = this.$refs["title"].clientHeight + 'px'
-          this.$refs["title"].style.marginBottom = -this.$refs["title"].clientHeight + 'px'
+          this.$refs["tab-wrap"].style.marginTop =
+            this.$refs["title"].clientHeight + "px";
+          this.$refs["title"].style.marginBottom =
+            -this.$refs["title"].clientHeight + "px";
         });
       });
       getProductRateParams(query)
@@ -452,7 +466,8 @@ export default {
       if ($event.target.scrollTop >= this.offsetTop) {
         // debugger
         this.$refs["tab2-title-wrap"].style.position = "fixed";
-        this.$refs["tab2-title-wrap"].style.top = this.$refs["title"].clientHeight + 'px';
+        this.$refs["tab2-title-wrap"].style.top =
+          this.$refs["title"].clientHeight + "px";
       } else {
         this.$refs["tab2-title-wrap"].style.position = "relative";
         this.$refs["tab2-title-wrap"].style.top = 0;

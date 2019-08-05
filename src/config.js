@@ -4,8 +4,9 @@ const config = {
     dev: 'https://gateway.visualinsur.cn:8888', // wangdong
     pro: 'https://gateway.visualinsur.cn:8888', // wangdong
     domain2: process.env.NODE_ENV === 'development' ? 'https://gateway.visualinsur.cn:8888' : 'https://gateway.visualinsur.cn:8888', // liusiyuan
-    dev3:  process.env.NODE_ENV === 'development' ? 'http://192.168.1.11:8888' : 'https://gateway.visualinsur.cn:8888',
+    dev3:  process.env.NODE_ENV === 'development' ? 'https://gateway.visualinsur.cn:8888' : 'https://gateway.visualinsur.cn:8888',
     domain4: process.env.NODE_ENV === 'development' ? 'https://gateway.visualinsur.cn:8888' : 'https://gateway.visualinsur.cn:8888', // liushaung~
+    domain5: process.env.NODE_ENV === 'development' ? 'http://47.98.153.101:8118' : 'http://47.98.153.101:8118', // liushaung~
   },
 }
 
@@ -22,6 +23,8 @@ config.controllers = {
 
   proposalNoSign: '/api/policy-service/v1/sign', // 查看权益无鉴权
   rate: '/api/base/v1/share', // 费率无鉴权
+
+  version: '/version',
 
 
   sign: config.baseUrl.dev3

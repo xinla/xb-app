@@ -103,7 +103,7 @@
         </div>
         <div
           class="blue ac"
-          style="padding: .4rem 0 .2rem;"
+          :style="{'padding': (index === 0 ? '.4rem 0 .2rem' : '.4rem 0')}"
           @click="getPolicyImg(item.productId)"
         >查看保单条款详情></div>
       </div>
@@ -189,7 +189,7 @@
 
       <div v-for="(item, index) in result.vitPolicyRightRiskVoList" :key="index">
         <div class="title">
-          <b>{{item.productName}}</b>
+          <span>{{item.productName}}</span>
         </div>
         <div class="content">
           <div class="title2">
@@ -246,7 +246,7 @@
       <div class="content">
         <div class="title2">
           <svg class="icon icon-title icon_baofei" aria-hidden="true">
-            <use xlink:href="#icon_baofei"></use>
+            <use xlink:href="#icon_baofei" />
           </svg>
           <span>保费</span>
         </div>
@@ -271,7 +271,7 @@
       <div class="content">
         <div class="title2">
           <svg class="icon icon-title icon_bao" aria-hidden="true">
-            <use xlink:href="#icon_bao"></use>
+            <use xlink:href="#icon_bao" />
           </svg>
           <span>保险金</span>
         </div>
@@ -288,7 +288,7 @@
             </div>
           </div>
         </div>
-      </div>-->
+      </div> -->
 
       <div class="content" v-if="result.vitPolicyRightRiskVoList.length > 1">
         <div class="title2">
@@ -457,11 +457,11 @@ export default {
       });
     },
     getPolicyImg(data) {
-      getPolicyDetail({ id: data, token: this.$route.query.token }).then(
-        res => {
+      getPolicyDetail({ id: data, token: this.$route.query.token })
+        .then(res => {
           if (!res.policyWordingImages) {
-            this.Toast('暂无保单条款详情')
-            return
+            this.Toast("暂无保单条款详情");
+            return;
           }
           this.imgList = res.policyWordingImages.split(",");
           this.$nextTick(() => {
@@ -475,10 +475,10 @@ export default {
             this.onThumbnailsClick(e);
           });
           // console.log(this.imgList)
-        }
-      ).catch(error => {
-        this.Toast('系统正忙，请稍后再试')
-      });
+        })
+        .catch(error => {
+          this.Toast("系统正忙，请稍后再试");
+        });
     }
   }
 };
@@ -486,11 +486,11 @@ export default {
 <style lang="less" scoped>
 .icon {
   font-size: 0.4rem;
-  vertical-align: middle;
+  vertical-align: text-bottom;
   + span {
     font-weight: 600;
-    vertical-align: text-bottom;
-        line-height: 100%;
+    vertical-align: middle;
+    line-height: 100%;
   }
 }
 .cover-wrap {
@@ -527,8 +527,7 @@ export default {
 }
 
 .arrows {
-  display: inline-block;
-  width: 20%;
+  flex: 1;
   height: 0.3rem;
   margin: 0 0.3rem;
   border: 1px solid #f1f3f5;
@@ -548,6 +547,10 @@ export default {
 .title {
   padding: 0.4rem 0;
   text-align: left;
+  > span {
+    font-size: 0.3rem;
+    font-weight: 600;
+  }
 }
 .icon-title {
   margin: 0 0.3rem;
@@ -573,19 +576,23 @@ export default {
 .container1 {
   border-bottom: 0.1rem solid #f1f3f5;
   padding: 0 0.3rem;
+  &:last-child {
+    border: 0;
+  }
   .icon-title {
     margin-left: 0;
   }
   .title-boder {
     border-bottom: 1px solid #f1f3f5;
     span {
-      font-size: 0.32rem;
+      font-size: 0.34rem;
+      vertical-align: middle;
     }
   }
   .title2 {
     padding: 0.2rem 0;
     text-align: left;
-    .title-boder;
+    border-bottom: 1px solid #f1f3f5;
   }
   .content {
     padding: 0 0.3rem;
