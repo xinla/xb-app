@@ -9,12 +9,20 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '/test',
+      name: 'home',
+      meta: {
+        title: '测试'
+      },
+      component: () => import('./views/Test.vue')
+    },
+    {
       path: '/',
       name: 'home',
       meta: {
         title: '首页'
       },
-      redirect: '/download',
+      // redirect: '/download',
       component: Home
     },
     {

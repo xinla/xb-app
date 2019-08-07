@@ -270,13 +270,12 @@
 </template>
 
 <script>
-import '@/libs/jsSDK'
 import {
   getProductDetail,
   getProductRateParams,
   getProductRateDetail
 } from "@/api/product";
-
+import { getWeChatSign } from "@/api/share";
 export default {
   data() {
     return {
@@ -382,53 +381,86 @@ export default {
       token: this.$route.query.token
     };
     this.getData(query);
-
-    wx.config({
-    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-    appId: '', // 必填，公众号的唯一标识
-    timestamp: '', // 必填，生成签名的时间戳
-    nonceStr: '', // 必填，生成签名的随机串
-    signature: '',// 必填，签名
-    jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'] // 必填，需要使用的JS接口列表
-});
   },
   methods: {
     getData(query) {
       // console.log(query.token)
-      getProductDetail(query).then(res => {
-        res.insurableInterest = JSON.parse(res.insurableInterest) || [];
-        res.attachment.productCourse =
-          JSON.parse(res.attachment.productCourse) || [];
-        this.product = res;
-        // 设置文档标题
-        document.title = res.product.productFullName;
-        
-        typeof this.product.descPicture === "string" &&
-          (this.product.descPicture = this.product.descPicture.split(","));
+      // 获取产品详情
+      getProductDetail(query)
+        .then(res => {
+          res.insurableInterest = JSON.parse(res.insurableInterest) || [];
+          res.attachment.productCourse =
+            JSON.parse(res.attachment.productCourse) || [];
+          this.product = res;
+          // 设置文档标题
+          document.title = res.product.productFullName;
 
-        typeof this.product.attachment.policyWordingImages === "string" &&
-          (this.product.attachment.policyWordingImages = this.product.attachment.policyWordingImages.split(
-            ","
-          ));
+          typeof this.product.descPicture === "string" &&
+            (this.product.descPicture = this.product.descPicture.split(","));
 
-        typeof this.product.attachment.applicationRulesImages === "string" &&
-          (this.product.attachment.applicationRulesImages = this.product.attachment.applicationRulesImages.split(
-            ","
-          ));
-        // console.log("ProductDetail: ", res);
-        this.$nextTick(() => {
-          this.offsetTop =
-            this.$refs["tab2-title-wrap"].offsetTop -
-            this.$refs["title"].clientHeight;
-          this.offsetTopTitle = this.$refs["title"].offsetTop;
+          typeof this.product.attachment.policyWordingImages === "string" &&
+            (this.product.attachment.policyWordingImages = this.product.attachment.policyWordingImages.split(
+              ","
+            ));
 
-          // 动态设置标题css
-          this.$refs["tab-wrap"].style.marginTop =
-            this.$refs["title"].clientHeight + "px";
-          this.$refs["title"].style.marginBottom =
-            -this.$refs["title"].clientHeight + "px";
+          typeof this.product.attachment.applicationRulesImages === "string" &&
+            (this.product.attachment.applicationRulesImages = this.product.attachment.applicationRulesImages.split(
+              ","
+            ));
+          // console.log("ProductDetail: ", res);
+          this.$nextTick(() => {
+            this.offsetTop =
+              this.$refs["tab2-title-wrap"].offsetTop -
+              this.$refs["title"].clientHeight;
+            this.offsetTopTitle = this.$refs["title"].offsetTop;
+
+            // 动态设置标题css
+            this.$refs["tab-wrap"].style.marginTop =
+              this.$refs["title"].clientHeight + "px";
+            this.$refs["title"].style.marginBottom =
+              -this.$refs["title"].clientHeight + "px";
+          });
+          return getWeChatSign(location.href);
+        })
+        .then(res => {
+          console.log(res);
+          res = JSON.parse(res);
+          wx.config({
+            debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: "wx02b7033c0c901dd7", // 必填，公众号的唯一标识
+            timestamp: res.timestamp, // 必填，生成签名的时间戳
+            nonceStr: res.nonceStr, // 必填，生成签名的随机串
+            signature: res.signature, // 必填，签名
+            jsApiList: ["updateAppMessageShareData", "updateTimelineShareData"] // 必填，需要使用的JS接口列表
+          });
+        });
+
+      //自定义分享 需在用户可能点击分享按钮前就先调用
+      wx.ready(() => {
+        // 自定义“分享给朋友”及“分享到QQ”按钮的分享内容（1.4.0）
+        let product = this.product
+        wx.updateAppMessageShareData({
+          title: product.product.productFullName, // 分享标题
+          desc: `投保年龄：${product.ageStart ? product.ageStart + '周岁' : product.ageDay + '天'}至${product.ageEnd}周岁`, // 分享描述
+          link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: 'http://h5.visualinsur.cn/static/logo.png', // 分享图标
+          success: function() {
+            // 设置成功
+          }
+        });
+
+        // 自定义“分享到朋友圈”及“分享到QQ空间”按钮的分享内容（1.4.0）
+        wx.updateTimelineShareData({
+          title: product.product.productFullName, // 分享标题
+          link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: "http://h5.visualinsur.cn/static/logo.png", // 分享图标
+          success: function() {
+            // 设置成功
+          }
         });
       });
+
+      // 获取产品费率条件参数
       getProductRateParams(query)
         .then(res => {
           console.log("ProductRateParams: ", res);
@@ -451,6 +483,7 @@ export default {
         });
     },
     getRate() {
+      // 获取费率详情
       getProductRateDetail(this.query, this.$route.query.token).then(res => {
         this.isDisLoading = false;
         this.listRates = this.listRates.concat(res.list);
