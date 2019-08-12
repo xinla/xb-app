@@ -1,7 +1,7 @@
 import axios from '@/libs/api.request'
 import config from '@/config'
 
-const controller = config.baseUrl.domain4 + config.controllers.company
+const controller = config.baseUrl.domain4 + config.controllers.share + '/company'
 
 /**
  * 查看权益

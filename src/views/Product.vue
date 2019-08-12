@@ -275,7 +275,7 @@ import {
   getProductRateParams,
   getProductRateDetail
 } from "@/api/product";
-import { getWeChatSign } from "@/api/share";
+import { getWeChatSign } from "@/api/weChatShare";
 export default {
   data() {
     return {

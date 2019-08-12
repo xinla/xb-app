@@ -120,6 +120,14 @@ export default new Router({
         title: '下载华圣app'
       },
       component: () => import('./views/DownloadHuaSheng.vue')
+    },
+    {
+      path: '/brand',
+      name: 'brand',
+      meta: {
+        title: '品牌详情'
+      },
+      component: () => import('./views/Brand.vue')
     }
   ]
 })
