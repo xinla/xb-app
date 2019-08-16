@@ -21,7 +21,7 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon_ios" />
         </svg>
-        正在加急上线
+        <a href="https://apps.apple.com/cn/app/%E7%8E%B0%E4%BF%9D/id1475200923">点击下载</a>
       </div>
       <div class="desc">
         <p>
@@ -114,7 +114,6 @@ export default {
 }
 .ios {
   font-size: 0.28rem;
-  background-color: #b5b5b5;
   margin: 0.4rem auto 0.8rem;
 }
 h1 {

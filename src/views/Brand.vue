@@ -1,25 +1,447 @@
 <template>
-  <div>
-    brand
+  <div class="main" @scroll="scroll">
+    <div class="top" ref="top">
+      <svg class="icon icon_fanhui" aria-hidden="true" @click="back">
+        <use xlink:href="#icon_fanhui" />
+      </svg>
+      <span>{{result.supplier.name}}</span>
+      <svg class="icon icon_fenxiang" aria-hidden="true" @click="share">
+        <use xlink:href="#icon_fenxiang" />
+      </svg>
+    </div>
+
+    <div>
+      <div class="top top1">
+        <svg class="icon icon_fanhui" aria-hidden="true" style="color: #fff;" @click="back">
+          <use xlink:href="#icon_fanhui" />
+        </svg>
+        <svg class="icon icon_fenxiang" aria-hidden="true" style="color: #fff;" @click="share">
+          <use xlink:href="#icon_fenxiang" />
+        </svg>
+      </div>
+      <img src="http://www.common.visualinsur.com/1561368733229.jpg" class="banner" />
+      <!-- <img :src="result.supplier.publicityImage" class="banner" /> -->
+    </div>
+
+    <ul ref="tab2-title-wrap" class="tab2-title-wrap wrapper">
+      <li :class="{current: active === '1'}" @click="active = '1'">
+        公司介绍
+        <div class="line" v-show="active === '1'"></div>
+      </li>
+      <li :class="{current: active === '2'}" @click="active = '2'">
+        联系方式
+        <div class="line" v-show="active === '2'"></div>
+      </li>
+      <li :class="{current: active === '3'}" @click="active = '3'">
+        分支机构
+        <div class="line" v-show="active === '3'"></div>
+      </li>
+      <li :class="{current: active === '4'}" @click="active = '4'">
+        产品列表
+        <div class="line" v-show="active === '4'"></div>
+      </li>
+    </ul>
+    <mt-tab-container
+      v-model="active"
+      style="margin-top: .94rem;min-height: 1rem;padding: 0 0.25rem;"
+    >
+      <!-- 公司介绍 -->
+      <mt-tab-container-item id="1">
+        <div class="title-wrap">
+          <svg class="icon zu" aria-hidden="true">
+            <use xlink:href="#zu" />
+          </svg>
+          <span class="title">公司简介</span>
+        </div>
+        <p
+          ref="describe"
+          class="describe"
+          :style="{maxHeight: allShow ? 'none' : '100px'}"
+          v-html="result.supplier.supplierDescription"
+        ></p>
+        <div class="ac all-wrap" v-if="isShow">
+          <div @click="toggle">{{allShow ? '收起' : '阅读全文'}}</div>
+          <svg
+            class="icon icon_more"
+            aria-hidden="true"
+            :style="{transform: allShow ? 'rotate(-90deg)' : 'rotate(90deg)'}"
+          >
+            <use xlink:href="#icon_more" />
+          </svg>
+        </div>
+
+        <template v-if="result.bigEvents.length">
+          <div class="title">公司里程碑</div>
+          <ul class="ul">
+            <li class="li" v-for="(item, index) of result.bigEvents" :key="index">
+              <i class="dot"></i>
+              <div class="time">{{item.time}}</div>
+              <div class="event">{{item.bigEvents}}</div>
+            </li>
+            <li class="li">
+              <i class="dot"></i>
+              <div class="time">更多里程碑事件等待发生</div>
+            </li>
+          </ul>
+        </template>
+
+        <template v-if="result.honors.length">
+          <div class="title">公司荣誉</div>
+          <ul class="ul">
+            <li class="li" v-for="(item, index) of result.honors" :key="index">
+              <i class="dot"></i>
+              <div class="time">{{item.prizeTime}}</div>
+              <div class="event">{{item.honorName}}</div>
+            </li>
+          </ul>
+        </template>
+      </mt-tab-container-item>
+
+      <!-- 联系方式 -->
+      <mt-tab-container-item id="2">
+        <ul>
+          <li class="li2">
+            <div class="left">服务电话</div>
+            <a :href="result.supplier.nationalServicePhone">{{result.supplier.nationalServicePhone}}</a>
+          </li>
+          <li class="li2">
+            <div class="left">公司网址</div>
+            <span>{{result.supplier.companyWebsite}}</span>
+          </li>
+          <li class="li2">
+            <div class="left">总部地址</div>
+            <iframe src="//uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1" frameborder="0"></iframe>
+            <!-- https://m.amap.com/search/mapview/keywords=合肥国家大学科技园 -->
+            
+            <!-- <a :href="`http://api.map.baidu.com/geocoder?address=合肥国家大学科技园&output=html`" target="_blank">
+              <img
+                style="margin:2px"
+                width="400"
+                height="300"
+                :src="`http://api.map.baidu.com/staticimage? 
+            width=400&height=300&zoom=11&center=合肥国家大学科技园`"
+              />
+            </a> -->
+          </li>
+        </ul>
+      </mt-tab-container-item>
+
+      <!-- 分支机构 -->
+      <mt-tab-container-item id="3">
+        <ul>
+          <li class="li2" v-for="(item, index) of result.list" :key="index">
+            <div class="left">{{item.name}}</div>
+            <div>
+              <svg class="icon dianhua" aria-hidden="true">
+                <use xlink:href="#dianhua" />
+              </svg>
+              <a :href="item.organizationPhone" class="right">{{item.organizationPhone}}</a>
+            </div>
+            <div>
+              <svg class="icon location-" aria-hidden="true">
+                <use xlink:href="#location-" />
+              </svg>
+              {{item.organizationAddress}}
+            </div>
+          </li>
+        </ul>
+      </mt-tab-container-item>
+
+      <!-- 产品列表 -->
+      <mt-tab-container-item id="4">
+        <ul>
+          <li class="li-pro bfc-o" v-for="(item, index) of productList" :key="index">
+            <img class="cover-pro fl" :src="item.appNavigation" alt />
+            <div class="title-pro">{{item.name}}</div>
+            <div class="txt1">{{item.coreBuy}}</div>
+            <div class="txt2">{{item.typicalRate}}</div>
+            <div class="txt3">
+              <img class="supplier-logo" :src="item.supplierLogo" alt />
+              <span>{{item.startAge ? item.startAge + '周岁' : item.ageDay + '天'}}至{{item.endAge}}周岁可保</span>
+            </div>
+          </li>
+        </ul>
+      </mt-tab-container-item>
+    </mt-tab-container>
   </div>
 </template>
 
 <script>
-import { getBrandDetail } from "@/api/brand";
+import { getBrandInfo, getBrandProductList } from "@/api/brand";
 
 export default {
-  components:{},
-  props:{},
-  data(){
+  components: {},
+  props: {},
+  data() {
     return {
-    }
+      active: "1",
+      result: {
+        supplier: {},
+        bigEvents: [],
+        honors: [],
+        list: []
+      },
+      productList: {},
+      allShow: false,
+      isShow: false,
+      offsetTop: 0,
+      // offsetTopTitle: 0,
+      isSwitch: false
+    };
   },
-  computed:{},
-  watch:{},
-  created(){},
-  mounted(){},
-  methods:{}
-}
+  computed: {},
+  watch: {},
+  created() {},
+  mounted() {
+    this.getData();
+  },
+  methods: {
+    getData() {
+      getBrandInfo("2252792750044872711").then(res => {
+        console.log(res);
+        this.result = res;
+
+        // 用于设置分享标题
+        document.title = res.supplier.nameForShort || res.supplier.name;
+        this.$nextTick(() => {
+          this.offsetTop =
+            this.$refs["tab2-title-wrap"].offsetTop -
+            this.$refs["top"].clientHeight;
+          console.log(this.$refs["top"].clientHeight);
+          if (this.$refs.describe.clientHeight >= 100) {
+            this.isShow = true;
+          }
+          // console.log(this.$refs.describe.offsetHeight);
+        });
+      });
+      getBrandProductList("2252792750044872711").then(res => {
+        console.log(res);
+        this.productList = res.list;
+      });
+    },
+    scroll($event) {
+      // console.log(this.offsetTop)
+      // console.log('offsetTop :', this.$refs['tab2-title-wrap'].offsetTop)
+      // console.log('scrollTop :', $event.target.scrollTop)
+      if ($event.target.scrollTop >= this.offsetTop) {
+        // debugger
+        this.$refs["tab2-title-wrap"].style.position = "fixed";
+        this.$refs["tab2-title-wrap"].style.top =
+          this.$refs["top"].clientHeight + "px";
+
+        this.$refs["top"].style.transform = "scale(1)";
+        this.isSwitch = false;
+      } else {
+        this.$refs["tab2-title-wrap"].style.position = "relative";
+        this.$refs["tab2-title-wrap"].style.top = 0;
+
+        this.$refs["top"].style.transform = "scale(0)";
+        this.isSwitch = true;
+      }
+
+      // if ($event.target.scrollTop >= this.offsetTopTitle) {
+      //   // debugger
+      //   this.$refs["title"].style.position = "fixed";
+      //   this.$refs["title"].style.zIndex = 9;
+      // } else {
+      //   this.$refs["title"].style.position = "relative";
+      //   this.$refs["title"].style.zIndex = 1;
+      // }
+    },
+    toggle() {
+      this.allShow = !this.allShow;
+    },
+    back() {
+      // 调用两端返回事件
+    },
+    share() {
+      // 调用两端分享事件
+    }
+  }
+};
 </script>
 <style lang="less" scoped>
+.main {
+  overflow: scroll;
+}
+.top {
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+  padding: 20px 0.25rem 0;
+  line-height: 1rem;
+  height: 1rem;
+  display: flex;
+  justify-content: space-between;
+  background: #fcfcfc;
+  align-items: center;
+  font-weight: 600;
+  transform: scale(0);
+  transition: all 0.1s;
+}
+.top1 {
+  z-index: 1;
+  transform: scale(1);
+  background: none;
+}
+.banner {
+  width: 100%;
+  height: 3.4rem;
+}
+.tab2-title-wrap {
+  display: flex;
+  justify-content: space-around;
+  background: #fff;
+  border-bottom: solid 1px #f1f3f5;
+  line-height: 0.8rem;
+  color: #a6abb7;
+  z-index: 1;
+  width: 100%;
+  margin-bottom: -0.94rem;
+  .current {
+    color: #6582ff;
+  }
+  .line {
+    width: 0.4rem;
+    height: 0.06rem;
+    background-color: #6582ff;
+    border-radius: 0.03rem;
+    margin: 0 auto;
+  }
+}
+.title-wrap {
+  margin-top: 0.5rem;
+  .title {
+    font-size: 0.32rem;
+    font-weight: 600;
+    line-height: 1rem;
+    &:after {
+      content: "";
+      display: inline-block;
+      border-top: 1px solid #dbdbdb;
+      width: 70%;
+      margin-left: 0.18rem;
+      vertical-align: middle;
+    }
+  }
+}
+.zu {
+  margin-right: 0.18rem;
+  font-size: 0.36rem;
+  vertical-align: middle;
+}
+
+.describe {
+  line-height: 0.5rem;
+  overflow: hidden;
+  transition: all 0.3s;
+  word-break: break-all !important;
+  white-space: normal !important;
+  text-align: justify !important;
+  table {
+    width: 100% !important;
+  }
+  // .ellipsis-line();
+}
+.all-wrap {
+  margin-top: 0.5rem;
+  position: relative;
+  color: #bdc1cc;
+  line-height: 0.3rem;
+  font-size: 0.24rem;
+  .icon_more {
+    position: relative;
+    transition: all 0.3s;
+    transform: rotate(90deg);
+    color: #bdc1cc;
+  }
+  .up {
+    transform: rotate(-90deg);
+  }
+}
+.li2 {
+  line-height: 0.5rem;
+  border-bottom: 1px solid #dbdbdb;
+  padding: 0.2rem 0;
+  color: #888;
+  .left {
+    line-height: 0.7rem;
+    font-weight: 600;
+    color: #444;
+  }
+}
+
+.li-pro {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #dbdbdb;
+  line-height: 0.4rem;
+  &:last-child {
+    border: 0;
+  }
+  .cover-pro {
+    width: 2.4rem;
+    height: 1.72rem;
+    margin-right: 0.2rem;
+  }
+  .title-pro {
+    margin-top: 0.1rem;
+    font-weight: 600;
+    font-size: 0.3rem;
+  }
+  .txt1 {
+    font-size: 0.24rem;
+  }
+  .txt2 {
+    font-size: 0.2rem;
+    color: #fcb33f;
+  }
+  .txt3 {
+    font-size: 0.22rem;
+  }
+}
+
+.ul {
+  position: relative;
+  left: 0.1rem;
+}
+.li {
+  position: relative;
+  padding: 0 0 0.2rem 0.3rem;
+  border-left: 1px solid #ccc;
+  &:last-child {
+    border: 0;
+  }
+  .dot {
+    position: absolute;
+    display: inline-block;
+    width: 0.2rem;
+    height: 0.2rem;
+    border-radius: 50%;
+    background: #6582ff;
+    left: 0;
+    transform: translate(-50%);
+    box-shadow: 0 0 4px 0 #6582ff;
+  }
+  .time {
+    color: #bbb;
+    font-size: 0.24rem;
+  }
+  .event {
+    padding: 0.2rem 0;
+    line-height: 0.5rem;
+    color: #666;
+  }
+}
+iframe {
+  width: 100%;
+  height: 10rem;
+}
+</style>
+<style lang='less'>
+table {
+  width: 100%;
+  td {
+    text-align: justify !important;
+  }
+}
 </style>
