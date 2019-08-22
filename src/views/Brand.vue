@@ -1,17 +1,17 @@
 <template>
   <div class="main" @scroll="scroll">
-    <div class="top" ref="top">
-      <svg class="icon icon_fanhui" aria-hidden="true" @click="back">
+    <div class="top wrapper ac" ref="top" :style="{paddingTop: isShare && '.3rem'}">
+      <svg class="icon icon_fanhui" aria-hidden="true" @click="back" v-if="!isShare">
         <use xlink:href="#icon_fanhui" />
       </svg>
       <span>{{result.supplier.name}}</span>
-      <svg class="icon icon_fenxiang" aria-hidden="true" @click="share">
+      <svg class="icon icon_fenxiang" aria-hidden="true" @click="share" v-if="!isShare">
         <use xlink:href="#icon_fenxiang" />
       </svg>
     </div>
 
     <div>
-      <div class="top top1">
+      <div class="top top1 wrapper" v-if="!isShare">
         <svg class="icon icon_fanhui" aria-hidden="true" style="color: #fff;" @click="back">
           <use xlink:href="#icon_fanhui" />
         </svg>
@@ -19,6 +19,7 @@
           <use xlink:href="#icon_fenxiang" />
         </svg>
       </div>
+      
       <img src="http://www.common.visualinsur.com/1561368733229.jpg" class="banner" />
       <!-- <img :src="result.supplier.publicityImage" class="banner" /> -->
     </div>
@@ -110,9 +111,12 @@
           </li>
           <li class="li2">
             <div class="left">总部地址</div>
-            <iframe src="//uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1" frameborder="0"></iframe>
+            <iframe
+              src="//uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1"
+              frameborder="0"
+            ></iframe>
             <!-- https://m.amap.com/search/mapview/keywords=合肥国家大学科技园 -->
-            
+
             <!-- <a :href="`http://api.map.baidu.com/geocoder?address=合肥国家大学科技园&output=html`" target="_blank">
               <img
                 style="margin:2px"
@@ -121,7 +125,7 @@
                 :src="`http://api.map.baidu.com/staticimage? 
             width=400&height=300&zoom=11&center=合肥国家大学科技园`"
               />
-            </a> -->
+            </a>-->
           </li>
         </ul>
       </mt-tab-container-item>
@@ -186,18 +190,24 @@ export default {
       isShow: false,
       offsetTop: 0,
       // offsetTopTitle: 0,
-      isSwitch: false
+      isSwitch: false,
     };
   },
-  computed: {},
+  computed: {
+    // 是否为分享状态
+    isShare() {
+      return this.$route.query && this.$route.query.share
+    }
+  },
   watch: {},
   created() {},
   mounted() {
-    this.getData();
+    console.log(this.$route.query)
+    this.getData(this.$route.query && this.$route.query.id);
   },
   methods: {
-    getData() {
-      getBrandInfo("2252792750044872711").then(res => {
+    getData(id) {
+      getBrandInfo(id || "2252792750044872711").then(res => {
         console.log(res);
         this.result = res;
 
@@ -214,7 +224,7 @@ export default {
           // console.log(this.$refs.describe.offsetHeight);
         });
       });
-      getBrandProductList("2252792750044872711").then(res => {
+      getBrandProductList(id || "2252792750044872711").then(res => {
         console.log(res);
         this.productList = res.list;
       });
@@ -253,9 +263,15 @@ export default {
     },
     back() {
       // 调用两端返回事件
+      !(navigator.userAgent.indexOf("Android") > -1)
+        ? window.webkit.messageHandlers.back.postMessage(null)
+        : window.hello.back();
     },
     share() {
       // 调用两端分享事件
+      !(navigator.userAgent.indexOf("Android") > -1)
+        ? window.webkit.messageHandlers.share.postMessage(JSON.stringify(this.result.supplier))
+        : window.hello.share(JSON.stringify(this.result.supplier));
     }
   }
 };
@@ -268,9 +284,7 @@ export default {
   position: absolute;
   width: 100%;
   z-index: 2;
-  padding: 20px 0.25rem 0;
-  line-height: 1rem;
-  height: 1rem;
+  padding: 37px 0.5rem 0.3rem;
   display: flex;
   justify-content: space-between;
   background: #fcfcfc;
@@ -278,6 +292,12 @@ export default {
   font-weight: 600;
   transform: scale(0);
   transition: all 0.1s;
+  .icon {
+    font-size: 0.36rem;
+  }
+  span {
+    flex: 1;
+  }
 }
 .top1 {
   z-index: 1;
