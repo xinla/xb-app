@@ -2062,8 +2062,6 @@ export default {
             healthSpecialExplain: JSON.stringify(this.healthSpecialExplain),
             otherSpecialExplain: JSON.stringify(this.otherSpecialExplain)
           };
-          // window.webkit.messageHandlers.submitSuccess().postMessage(null)
-          // console.log(this.healthTell)
           return saveInform(data, this.token);
         })
         .then(res => {

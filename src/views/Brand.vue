@@ -10,7 +10,7 @@
       </svg>
     </div>
 
-    <div>
+    <div class="bfc-o">
       <div class="top top1 wrapper" v-if="!isShare">
         <svg class="icon icon_fanhui" aria-hidden="true" style="color: #fff;" @click="back">
           <use xlink:href="#icon_fanhui" />
@@ -20,8 +20,17 @@
         </svg>
       </div>
       
-      <img src="http://www.common.visualinsur.com/1561368733229.jpg" class="banner" />
-      <!-- <img :src="result.supplier.publicityImage" class="banner" /> -->
+      <!-- <img src="http://www.common.visualinsur.com/1561368733229.jpg" class="banner" /> -->
+      <img :src="result.supplier.publicityImage" class="banner" />
+
+      <div class="title-logo">
+        <div class="logo-wrap">
+        <img v-if="result.supplier.logo" :src="result.supplier.logo" class="logo">
+        <!-- <img src="http://www.common.visualinsur.com/1561368733229.jpg" class="logo" /> -->
+        </div>
+        <div class="pro-name">{{result.supplier.name}}</div>
+        <div>创立于{{new Date(result.supplier.foundingTime).getFullYear()}}年</div>
+      </div>
     </div>
 
     <ul ref="tab2-title-wrap" class="tab2-title-wrap wrapper">
@@ -191,6 +200,11 @@ export default {
       offsetTop: 0,
       // offsetTopTitle: 0,
       isSwitch: false,
+      query: {
+        id: this.$route.query && this.$route.query.id || "2252792750044872711",
+        page: 1,
+        size: 10
+      }
     };
   },
   computed: {
@@ -202,13 +216,13 @@ export default {
   watch: {},
   created() {},
   mounted() {
-    console.log(this.$route.query)
-    this.getData(this.$route.query && this.$route.query.id);
+    // console.log(this.$route.query)
+    this.getData();
   },
   methods: {
-    getData(id) {
-      getBrandInfo(id || "2252792750044872711").then(res => {
-        console.log(res);
+    getData() {
+      getBrandInfo(this.query.id).then(res => {
+        console.log('BrandInfo：', res);
         this.result = res;
 
         // 用于设置分享标题
@@ -224,7 +238,7 @@ export default {
           // console.log(this.$refs.describe.offsetHeight);
         });
       });
-      getBrandProductList(id || "2252792750044872711").then(res => {
+      getBrandProductList(this.query).then(res => {
         console.log(res);
         this.productList = res.list;
       });
@@ -308,6 +322,31 @@ export default {
   width: 100%;
   height: 3.4rem;
 }
+.title-logo {
+    position: absolute;
+    top: 1.4rem;
+    color: #fff;
+    padding: 0 .6rem;
+    width: 100%;
+}
+.logo-wrap{
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 50%;
+  float: right;
+  background: #fff;
+  line-height: 1.2rem;
+  text-align: center;
+}
+.logo{
+  width: .6rem;
+  height: .6rem;
+}
+.pro-name {
+  font-weight: 600;
+  font-size: .4rem;
+  margin-bottom: .14rem;
+}
 .tab2-title-wrap {
   display: flex;
   justify-content: space-around;
@@ -318,6 +357,9 @@ export default {
   z-index: 1;
   width: 100%;
   margin-bottom: -0.94rem;
+      border-radius: .2rem .2rem 0 0;
+    top: -.2rem;
+    position: relative;
   .current {
     color: #6582ff;
   }

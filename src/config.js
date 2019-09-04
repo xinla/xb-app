@@ -1,4 +1,5 @@
 const config = {
+  // 测试服
   baseUrl: {
     // dev: 'http://192.168.1.32:8888', // 虚拟机
     dev: 'https://gateway.visualinsur.cn:8888', // wangdong
@@ -9,6 +10,7 @@ const config = {
     domain5: process.env.NODE_ENV === 'development' ? 'http://47.98.153.101:8118' : 'http://47.98.153.101:8118', // liushaung~
   },
   
+  // 正式服
   // baseUrl: {
   //   // dev: 'http://192.168.1.32:8888', // 虚拟机
   //   dev: 'https://gateway.visualinsur.cn:8888', // wangdong
