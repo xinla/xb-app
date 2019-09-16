@@ -457,7 +457,7 @@
           </li>
           <li>
             <span class="label">证件有效期</span>
-            <span class="desc">{{ item.idValidityDateType | idValidityDateType(item) }}</span>
+            <span class="desc">{{ item.idValidityDateType | idValidityType(item) }}</span>
           </li>
           <li>
             <span class="label">性别</span>
@@ -528,7 +528,7 @@
           </li>
           <li>
             <span class="label">证件有效期</span>
-            <span class="desc">{{ item.idValidityDateType | idValidityDateType(item) }}</span>
+            <span class="desc">{{ item.idValidityDateType | idValidityType(item) }}</span>
           </li>
           <li>
             <span class="label">性别</span>
@@ -790,9 +790,15 @@ export default {
     }
   },
   filters: {
+    // 投保人被保人证件有效期
     idValidityDateType (val, data) {
       //val  0  长期有效   1 非长期
       return val === 0 ? '长期有效' : val === 1 && !!data.idValidateDateStart && !!data.idValidateDateEnd ? `${data.idValidateDateStart} - ${data.idValidateDateEnd}` : '-'
+    },
+    // 受益人证件有效期
+    idValidityType (val, data) {
+      //val  0  长期有效   1 非长期
+      return val === 0 ? '长期有效' : val === 1 && !!data.idValidityStartDate && !!data.idValidityEndDate ? `${data.idValidityStartDate} - ${data.idValidityEndDate}` : '-'
     },
     addressRepeatFlag (val, data) {
       //val  0  代表同投保人  1代表同被保人  不是0或者1就是详细的地址
