@@ -19,14 +19,16 @@ export const getBrandInfo = (id) => {
 
 /**
  * 品牌产品列表
- * @param {*} supplierId 
+ * @param {*} id 
  */
-export const getBrandProductList = (supplierId) => {
+export const getBrandProductList = ({id, page, size}) => {
   return axios.request({
     url: controller + `/getProduct`,
     method: 'GET',
     params: {
-      supplierId
+      supplierId: id,
+      pageSize: size,
+      currentPage: page
     }
   })
 }

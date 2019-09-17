@@ -19,14 +19,14 @@
           <use xlink:href="#icon_fenxiang" />
         </svg>
       </div>
-      
+
       <!-- <img src="http://www.common.visualinsur.com/1561368733229.jpg" class="banner" /> -->
       <img :src="result.supplier.publicityImage" class="banner" />
 
       <div class="title-logo">
         <div class="logo-wrap">
-        <img v-if="result.supplier.logo" :src="result.supplier.logo" class="logo">
-        <!-- <img src="http://www.common.visualinsur.com/1561368733229.jpg" class="logo" /> -->
+          <img v-if="result.supplier.logo" :src="result.supplier.logo" class="logo" />
+          <!-- <img src="http://www.common.visualinsur.com/1561368733229.jpg" class="logo" /> -->
         </div>
         <div class="pro-name">{{result.supplier.name}}</div>
         <div>创立于{{new Date(result.supplier.foundingTime).getFullYear()}}年</div>
@@ -112,21 +112,23 @@
         <ul>
           <li class="li2">
             <div class="left">服务电话</div>
-            <a :href="result.supplier.nationalServicePhone">{{result.supplier.nationalServicePhone}}</a>
+            <span @click="call(result.supplier.nationalServicePhone)">{{result.supplier.nationalServicePhone}}</span>
           </li>
           <li class="li2">
             <div class="left">公司网址</div>
-            <span>{{result.supplier.companyWebsite}}</span>
+            <a :href="result.supplier.companyWebsite">{{result.supplier.companyWebsite}}</a>
           </li>
           <li class="li2">
             <div class="left">总部地址</div>
-            <iframe
-              src="//uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1"
-              frameborder="0"
-            ></iframe>
+            <!-- <iframe src="//uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1" frameborder="0"></iframe> -->
+            <!-- //uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1 -->
             <!-- https://m.amap.com/search/mapview/keywords=合肥国家大学科技园 -->
-
-            <!-- <a :href="`http://api.map.baidu.com/geocoder?address=合肥国家大学科技园&output=html`" target="_blank">
+            
+            <div @click="goMap('合肥国家大学科技园')">合肥国家大学科技园</div>
+            <!-- <a
+              :href="`http://api.map.baidu.com/geocoder?address=合肥国家大学科技园&output=html`"
+              target="_blank"
+            >
               <img
                 style="margin:2px"
                 width="400"
@@ -134,7 +136,7 @@
                 :src="`http://api.map.baidu.com/staticimage? 
             width=400&height=300&zoom=11&center=合肥国家大学科技园`"
               />
-            </a>-->
+            </a> -->
           </li>
         </ul>
       </mt-tab-container-item>
@@ -148,13 +150,13 @@
               <svg class="icon dianhua" aria-hidden="true">
                 <use xlink:href="#dianhua" />
               </svg>
-              <a :href="item.organizationPhone" class="right">{{item.organizationPhone}}</a>
+              <span @click="call(item.organizationPhone)" class="right">{{item.organizationPhone}}</span>
             </div>
             <div>
               <svg class="icon location-" aria-hidden="true">
                 <use xlink:href="#location-" />
               </svg>
-              {{item.organizationAddress}}
+              <span @click="goMap(item.organizationAddress)">{{item.organizationAddress}}</span>
             </div>
           </li>
         </ul>
@@ -201,7 +203,8 @@ export default {
       // offsetTopTitle: 0,
       isSwitch: false,
       query: {
-        id: this.$route.query && this.$route.query.id || "2252792750044872711",
+        id:
+          (this.$route.query && this.$route.query.id) || "2252792750044872711",
         page: 1,
         size: 10
       }
@@ -210,7 +213,7 @@ export default {
   computed: {
     // 是否为分享状态
     isShare() {
-      return this.$route.query && this.$route.query.share
+      return this.$route.query && this.$route.query.share;
     }
   },
   watch: {},
@@ -222,9 +225,19 @@ export default {
   methods: {
     getData() {
       getBrandInfo(this.query.id).then(res => {
-        console.log('BrandInfo：', res);
-        this.result = res;
-
+        console.log("BrandInfo：", res);
+        this.result = {
+          supplier: res.supplier || {},
+          bigEvents: res.bigEvents || [],
+          honors: res.honors || [],
+          list: res.list || []
+        };
+        const website = this.result.supplier.companyWebsite;
+        if (website) {
+          this.result.supplier.companyWebsite = /^http/i.test(website)
+            ? website
+            : "http://" + website;
+        }
         // 用于设置分享标题
         document.title = res.supplier.nameForShort || res.supplier.name;
         this.$nextTick(() => {
@@ -284,8 +297,24 @@ export default {
     share() {
       // 调用两端分享事件
       !(navigator.userAgent.indexOf("Android") > -1)
-        ? window.webkit.messageHandlers.share.postMessage(JSON.stringify(this.result.supplier))
+        ? window.webkit.messageHandlers.share.postMessage(
+            JSON.stringify(this.result.supplier)
+          )
         : window.hello.share(JSON.stringify(this.result.supplier));
+    },
+    call(data) {
+      // window.hello.callPhone(data)
+      // 调用两端拨号事件
+      !(navigator.userAgent.indexOf("Android") > -1)
+        ? window.webkit.messageHandlers.callPhone.postMessage(data)
+        : window.hello.callPhone(data);
+    },
+    goMap(data) {
+      // window.hello.callPhone(data)
+      // 调用两端拨号事件
+      !(navigator.userAgent.indexOf("Android") > -1)
+        ? window.webkit.messageHandlers.skipToMapIntent.postMessage(data)
+        : window.hello.skipToMapIntent(data);
     }
   }
 };
@@ -298,7 +327,7 @@ export default {
   position: absolute;
   width: 100%;
   z-index: 2;
-  padding: 37px 0.5rem 0.3rem;
+  padding: 0.86rem 0.5rem 0.38rem;
   display: flex;
   justify-content: space-between;
   background: #fcfcfc;
@@ -323,13 +352,13 @@ export default {
   height: 3.4rem;
 }
 .title-logo {
-    position: absolute;
-    top: 1.4rem;
-    color: #fff;
-    padding: 0 .6rem;
-    width: 100%;
+  position: absolute;
+  top: 1.4rem;
+  color: #fff;
+  padding: 0 0.6rem;
+  width: 100%;
 }
-.logo-wrap{
+.logo-wrap {
   width: 1.2rem;
   height: 1.2rem;
   border-radius: 50%;
@@ -338,14 +367,14 @@ export default {
   line-height: 1.2rem;
   text-align: center;
 }
-.logo{
-  width: .6rem;
-  height: .6rem;
+.logo {
+    width: .85rem;
+    height: .85rem;
 }
 .pro-name {
   font-weight: 600;
-  font-size: .4rem;
-  margin-bottom: .14rem;
+  font-size: 0.4rem;
+  margin-bottom: 0.14rem;
 }
 .tab2-title-wrap {
   display: flex;
@@ -357,9 +386,9 @@ export default {
   z-index: 1;
   width: 100%;
   margin-bottom: -0.94rem;
-      border-radius: .2rem .2rem 0 0;
-    top: -.2rem;
-    position: relative;
+  border-radius: 0.2rem 0.2rem 0 0;
+  top: -0.2rem;
+  position: relative;
   .current {
     color: #6582ff;
   }
@@ -459,6 +488,10 @@ export default {
   }
   .txt3 {
     font-size: 0.22rem;
+  }
+  .supplier-logo {
+    width: 0.27rem;
+    height: 0.27rem;
   }
 }
 
