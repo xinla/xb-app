@@ -4,7 +4,7 @@
       <svg class="icon icon_fanhui" aria-hidden="true" @click="back" v-if="!isShare">
         <use xlink:href="#icon_fanhui" />
       </svg>
-      <span>{{result.supplier.name}}</span>
+      <span class="oe">{{result.supplier.name}}</span>
       <svg class="icon icon_fenxiang" aria-hidden="true" @click="share" v-if="!isShare">
         <use xlink:href="#icon_fenxiang" />
       </svg>
@@ -21,7 +21,10 @@
       </div>
 
       <!-- <img src="http://www.common.visualinsur.com/1561368733229.jpg" class="banner" /> -->
-      <img :src="result.supplier.publicityImage || require('../assets/default_banner_brand.png')" class="banner" />
+      <img
+        :src="result.supplier.publicityImage || require('../assets/default_banner_brand.png')"
+        class="banner"
+      />
 
       <div class="title-logo">
         <div class="logo-wrap">
@@ -53,7 +56,7 @@
     </ul>
     <mt-tab-container
       v-model="active"
-      style="margin-top: .94rem;min-height: 1rem;padding: 0 0.25rem;"
+      style="margin-top: .84rem;min-height: 1rem;padding: 0 0.25rem;"
     >
       <!-- 公司介绍 -->
       <mt-tab-container-item id="1">
@@ -112,7 +115,9 @@
         <ul>
           <li class="li2">
             <div class="left">服务电话</div>
-            <span @click="call(result.supplier.nationalServicePhone)">{{result.supplier.nationalServicePhone}}</span>
+            <span
+              @click="call(result.supplier.nationalServicePhone)"
+            >{{result.supplier.nationalServicePhone}}</span>
           </li>
           <li class="li2">
             <div class="left">公司网址</div>
@@ -120,11 +125,21 @@
           </li>
           <li class="li2">
             <div class="left">总部地址</div>
-            <!-- <iframe src="//uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1" frameborder="0"></iframe> -->
+            <!-- 高德地图方案 -->
+            <!-- <div @click="goMap('合肥国家大学科技园')">
+              <iframe
+                src="https://uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1"
+                frameborder="0"
+                width="100vw;"
+              ></iframe>
+            </div> -->
+            <!-- 高德URL单点标注 -->
             <!-- //uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1 -->
+
+            <!-- 高德地图地名搜索 -->
             <!-- https://m.amap.com/search/mapview/keywords=合肥国家大学科技园 -->
-            
-            <div @click="goMap('合肥国家大学科技园')">合肥国家大学科技园</div>
+
+            <!-- 百度地图方案 -->
             <!-- <a
               :href="`http://api.map.baidu.com/geocoder?address=合肥国家大学科技园&output=html`"
               target="_blank"
@@ -134,9 +149,19 @@
                 width="400"
                 height="300"
                 :src="`http://api.map.baidu.com/staticimage? 
-            width=400&height=300&zoom=11&center=合肥国家大学科技园`"
+            width=400&height=300&zoom=18&center=合肥国家大学科技园`"
               />
-            </a> -->
+            </a>-->
+            
+            <div @click="goMap('合肥国家大学科技园')">
+              <img
+                style="margin:2px"
+                width="400"
+                height="300"
+                :src="`http://api.map.baidu.com/staticimage? 
+            width=400&height=300&zoom=18&center=合肥国家大学科技园`"
+              />
+            </div>
           </li>
         </ul>
       </mt-tab-container-item>
@@ -216,8 +241,6 @@ export default {
       return this.$route.query && this.$route.query.share;
     }
   },
-  watch: {},
-  created() {},
   mounted() {
     // console.log(this.$route.query)
     this.getData();
@@ -327,7 +350,7 @@ export default {
   position: absolute;
   width: 100%;
   z-index: 2;
-  padding: 0.86rem 0.5rem 0.38rem;
+  padding: 0.64rem 0.32rem 0.3rem;
   display: flex;
   justify-content: space-between;
   background: #fcfcfc;
@@ -340,6 +363,9 @@ export default {
   }
   span {
     flex: 1;
+    font-size: 0.36rem;
+    max-width: 80%;
+    line-height: .5rem;
   }
 }
 .top1 {
@@ -349,13 +375,13 @@ export default {
 }
 .banner {
   width: 100%;
-  height: 3.4rem;
+  height: 3.78rem;
 }
 .title-logo {
   position: absolute;
-  top: 1.4rem;
+  top: 1.47rem;
   color: #fff;
-  padding: 0 0.6rem;
+  padding: 0 0.32rem;
   width: 100%;
 }
 .logo-wrap {
@@ -368,13 +394,14 @@ export default {
   text-align: center;
 }
 .logo {
-    width: .85rem;
-    height: .85rem;
+  width: 0.85rem;
+  height: 0.85rem;
 }
 .pro-name {
   font-weight: 600;
   font-size: 0.4rem;
   margin-bottom: 0.14rem;
+  line-height: .56rem;
 }
 .tab2-title-wrap {
   display: flex;

@@ -1810,7 +1810,7 @@ export default {
         .then(() => {
           if (!this.isAgree) {
             this.Toast("请先同意《投保人声明》");
-            return Promise.rejected();
+            return new Promise((resolve, reject) => {});
           }
 
           // 数据格式判断
