@@ -21,7 +21,7 @@
       </div>
 
       <!-- <img src="http://www.common.visualinsur.com/1561368733229.jpg" class="banner" /> -->
-      <img :src="result.supplier.publicityImage" class="banner" />
+      <img :src="result.supplier.publicityImage || require('../assets/default_banner_brand.png')" class="banner" />
 
       <div class="title-logo">
         <div class="logo-wrap">

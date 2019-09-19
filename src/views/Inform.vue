@@ -1010,7 +1010,7 @@ export default {
           answers: [
             {
               index: 1,
-              insured: 1,
+              insured: 0,
               insuredContent: {
                 childWeek: "",
                 childHeight: "",
