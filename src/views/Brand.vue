@@ -84,7 +84,12 @@
         </div>
 
         <template v-if="result.bigEvents.length">
-          <div class="title">公司里程碑</div>
+          <div class="title-wrap">
+            <svg class="icon zu" aria-hidden="true">
+              <use xlink:href="#zu" />
+            </svg>
+            <span class="title">公司里程碑</span>
+          </div>
           <ul class="ul">
             <li class="li" v-for="(item, index) of result.bigEvents" :key="index">
               <i class="dot"></i>
@@ -99,12 +104,21 @@
         </template>
 
         <template v-if="result.honors.length">
-          <div class="title">公司荣誉</div>
+          <div class="title-wrap">
+            <svg class="icon zu" aria-hidden="true">
+              <use xlink:href="#zu" />
+            </svg>
+            <span class="title">公司荣誉</span>
+          </div>
           <ul class="ul">
             <li class="li" v-for="(item, index) of result.honors" :key="index">
               <i class="dot"></i>
               <div class="time">{{item.prizeTime}}</div>
               <div class="event">{{item.honorName}}</div>
+            </li>
+            <li class="li">
+              <i class="dot"></i>
+              <div class="time">更多荣誉事件等待发生</div>
             </li>
           </ul>
         </template>
@@ -121,7 +135,8 @@
           </li>
           <li class="li2">
             <div class="left">公司网址</div>
-            <a :href="result.supplier.companyWebsite">{{result.supplier.companyWebsite}}</a>
+            <div @click="goLink(result.supplier.companyWebsite)">{{result.supplier.companyWebsite}}</div>
+            <!-- <a :href="result.supplier.companyWebsite" target="_self" rel="noopener noreferrer">{{result.supplier.companyWebsite}}</a> -->
           </li>
           <li class="li2">
             <div class="left">总部地址</div>
@@ -132,7 +147,7 @@
                 frameborder="0"
                 width="100vw;"
               ></iframe>
-            </div> -->
+            </div>-->
             <!-- 高德URL单点标注 -->
             <!-- //uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1 -->
 
@@ -152,14 +167,14 @@
             width=400&height=300&zoom=18&center=合肥国家大学科技园`"
               />
             </a>-->
-            
-            <div @click="goMap('合肥国家大学科技园')">
+
+            <div @click="goMap(result.supplier.companyAddress)">
               <img
                 style="margin:2px"
                 width="400"
                 height="300"
                 :src="`http://api.map.baidu.com/staticimage? 
-            width=400&height=300&zoom=18&center=合肥国家大学科技园`"
+            width=400&height=300&zoom=18&center=${result.supplier.companyAddress}`"
               />
             </div>
           </li>
@@ -248,7 +263,8 @@ export default {
   methods: {
     getData() {
       getBrandInfo(this.query.id).then(res => {
-        console.log("BrandInfo：", res);
+        // console.log("BrandInfo：", res);
+        // this.Toast(JSON.stringify(res.supplier.companyAddress));
         this.result = {
           supplier: res.supplier || {},
           bigEvents: res.bigEvents || [],
@@ -326,18 +342,22 @@ export default {
         : window.hello.share(JSON.stringify(this.result.supplier));
     },
     call(data) {
-      // window.hello.callPhone(data)
       // 调用两端拨号事件
       !(navigator.userAgent.indexOf("Android") > -1)
         ? window.webkit.messageHandlers.callPhone.postMessage(data)
         : window.hello.callPhone(data);
     },
     goMap(data) {
-      // window.hello.callPhone(data)
       // 调用两端拨号事件
       !(navigator.userAgent.indexOf("Android") > -1)
         ? window.webkit.messageHandlers.skipToMapIntent.postMessage(data)
         : window.hello.skipToMapIntent(data);
+    },
+    goLink(data) {
+      // 调用两端跳转网址事件
+      !(navigator.userAgent.indexOf("Android") > -1)
+        ? window.webkit.messageHandlers.goLink.postMessage(data)
+        : window.hello.goLink(data);
     }
   }
 };
@@ -365,7 +385,7 @@ export default {
     flex: 1;
     font-size: 0.36rem;
     max-width: 80%;
-    line-height: .5rem;
+    line-height: 0.5rem;
   }
 }
 .top1 {
@@ -401,7 +421,7 @@ export default {
   font-weight: 600;
   font-size: 0.4rem;
   margin-bottom: 0.14rem;
-  line-height: .56rem;
+  line-height: 0.56rem;
 }
 .tab2-title-wrap {
   display: flex;
@@ -429,15 +449,20 @@ export default {
 }
 .title-wrap {
   margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
   .title {
-    font-size: 0.32rem;
+    font-size: 0.34rem;
     font-weight: 600;
     line-height: 1rem;
+    display: flex;
+    align-items: center;
+    flex: 1;
     &:after {
+      flex: 1;
       content: "";
       display: inline-block;
       border-top: 1px solid #dbdbdb;
-      width: 70%;
       margin-left: 0.18rem;
       vertical-align: middle;
     }
@@ -546,12 +571,13 @@ export default {
   }
   .time {
     color: #bbb;
-    font-size: 0.24rem;
+    font-size: 0.28rem;
   }
   .event {
     padding: 0.2rem 0;
     line-height: 0.5rem;
     color: #666;
+    font-size: 0.32rem;
   }
 }
 iframe {

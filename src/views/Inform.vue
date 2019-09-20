@@ -1737,45 +1737,49 @@ export default {
       });
 
       //获取被保人信息（）
-      getUserInfo(query).then(_res => {
-        // console.log(_res);
-        this.healthTell[0].answers[0].insuredContent.height =
-          _res.stature || "";
-        this.healthTell[0].answers[0].insuredContent.weight =
-          _res.avoirDupois || "";
-        this.otherTell[0].answers[0].insuredContent = {
-          income: _res.annualIncome,
-          incomeFrom: _res.sourceIncomeName
-        };
-        // 判断年龄是否大于两周岁
-        let birthday = _res.birthday.replace(/-/g, "");
-        let now = new Date()
-          .toJSON()
-          .replace(/-/g, "")
-          .slice(0, 8);
-        this.isTwoAge = now - birthday > 20000;
-        this.insuredSex = Number(_res.sex); // 0 男，1 女
-        // this.Toast(`被保人${_res.sex}-${_res.sex==0 ? '男' : '女'}`)
-      }).catch(error => {
-        this.Toast(JSON.stringify(error))
-      });
+      getUserInfo(query)
+        .then(_res => {
+          // console.log(_res);
+          this.healthTell[0].answers[0].insuredContent.height =
+            _res.stature || "";
+          this.healthTell[0].answers[0].insuredContent.weight =
+            _res.avoirDupois || "";
+          this.otherTell[0].answers[0].insuredContent = {
+            income: _res.annualIncome,
+            incomeFrom: _res.sourceIncomeName
+          };
+          // 判断年龄是否大于两周岁
+          let birthday = _res.birthday.replace(/-/g, "");
+          let now = new Date()
+            .toJSON()
+            .replace(/-/g, "")
+            .slice(0, 8);
+          this.isTwoAge = now - birthday > 20000;
+          this.insuredSex = Number(_res.sex); // 0 男，1 女
+          // this.Toast(`被保人${_res.sex}-${_res.sex==0 ? '男' : '女'}`)
+        })
+        .catch(error => {
+          this.Toast(JSON.stringify(error));
+        });
 
       //获取投保人信息
       query.type = 0;
-      getUserInfo(query).then(_res => {
-        // console.log(_res);
-        this.healthTell[0].answers[0].applicantContent.height =
-          _res.stature || "";
-        this.healthTell[0].answers[0].applicantContent.weight =
-          _res.avoirDupois || "";
-        this.otherTell[0].answers[0].applicantContent = {
-          income: _res.annualIncome,
-          incomeFrom: _res.sourceIncomeName
-        };
-        this.applicantSex = Number(_res.sex);
-      }).catch(error => {
-        this.Toast(JSON.stringify(error))
-      });
+      getUserInfo(query)
+        .then(_res => {
+          // console.log(_res);
+          this.healthTell[0].answers[0].applicantContent.height =
+            _res.stature || "";
+          this.healthTell[0].answers[0].applicantContent.weight =
+            _res.avoirDupois || "";
+          this.otherTell[0].answers[0].applicantContent = {
+            income: _res.annualIncome,
+            incomeFrom: _res.sourceIncomeName
+          };
+          this.applicantSex = Number(_res.sex);
+        })
+        .catch(error => {
+          this.Toast(JSON.stringify(error));
+        });
 
       // 判断是否为本人
       getIsSelf(query).then(res => {
@@ -1825,12 +1829,12 @@ export default {
                       iterator1.applicantContent[key] === ""
                     ) {
                       this.Toast("健康告知项投保人信息填写不完整，请修改");
-                      return Promise.rejected();
+                      return new Promise((resolve, reject) => {});
                     }
                   }
                 } else {
                   if (this.isImmunity) {
-                    return Promise.rejected();
+                    return new Promise((resolve, reject) => {});
                   }
 
                   let object = this.healthSpecialExplain[iterator.index - 1]
@@ -1840,7 +1844,7 @@ export default {
                       this.Toast(
                         `健康告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
                       );
-                      return Promise.rejected();
+                      return new Promise((resolve, reject) => {});
                     }
                   }
 
@@ -1855,7 +1859,7 @@ export default {
                   //           this.Toast(
                   //             `健康告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
                   //           );
-                  //           return Promise.rejected();
+                  //           return new Promise((resolve, reject) => {});
                   //         }
                   //       }
                   //     }
@@ -1875,7 +1879,7 @@ export default {
                         this.Toast(
                           `健康告知项被保人第${iterator.index}项信息填写不完整，请修改`
                         );
-                        return Promise.rejected();
+                        return new Promise((resolve, reject) => {});
                       }
                     }
                   }
@@ -1887,7 +1891,7 @@ export default {
                       this.Toast(
                         `健康告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
                       );
-                      return Promise.rejected();
+                      return new Promise((resolve, reject) => {});
                     }
                   }
 
@@ -1902,7 +1906,7 @@ export default {
                   //           this.Toast(
                   //             `健康告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
                   //           );
-                  //           return Promise.rejected();
+                  //           return new Promise((resolve, reject) => {});
                   //         }
                   //       }
                   //     }
@@ -1931,7 +1935,7 @@ export default {
                         this.Toast(
                           `财务及其他告知项投保人第${iterator.index}项信息填写不完整，请修改`
                         );
-                        return Promise.rejected();
+                        return new Promise((resolve, reject) => {});
                       }
                     }
                   }
@@ -1943,7 +1947,7 @@ export default {
                       this.Toast(
                         `财务及其他告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
                       );
-                      return Promise.rejected();
+                      return new Promise((resolve, reject) => {});
                     }
                   }
                   // for (const iteratorB of this.otherSpecialExplain) {
@@ -1957,7 +1961,7 @@ export default {
                   //           this.Toast(
                   //             `财务及其他告知项说明栏投保人第${iterator.index}项信息填写不完整，请修改`
                   //           );
-                  //           return Promise.rejected();
+                  //           return new Promise((resolve, reject) => {});
                   //         }
                   //       }
                   //     }
@@ -1976,7 +1980,7 @@ export default {
                       this.Toast(
                         `财务及其他告知项被保人第${iterator.index}项信息填写不完整，请修改`
                       );
-                      return Promise.rejected();
+                      return new Promise((resolve, reject) => {});
                     }
                   }
                 } else {
@@ -1987,7 +1991,7 @@ export default {
                       this.Toast(
                         `财务及其他告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
                       );
-                      return Promise.rejected();
+                      return new Promise((resolve, reject) => {});
                     }
                   }
                 }
@@ -2002,7 +2006,7 @@ export default {
                 //           this.Toast(
                 //             `财务及其他告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
                 //           );
-                //           return Promise.rejected();
+                //           return new Promise((resolve, reject) => {});
                 //         }
                 //       }
                 //     }
