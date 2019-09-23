@@ -829,7 +829,7 @@ export default {
       return text
     },
     percentage (val) {
-      return val && !isNaN(val) ? (val * 100) + '%' : '-'
+      return val && !isNaN(val) ? parseFloat(val * 100).toFixed(0) + '%' : '-'
     },
     paymentMethod (val) {
       // 交费方式   0  年交  1 半年交  2 季交 3 月交
