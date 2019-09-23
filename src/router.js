@@ -8,14 +8,14 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    {
-      path: '/test',
-      name: 'home',
-      meta: {
-        title: '测试'
-      },
-      component: () => import('./views/Test.vue')
-    },
+    // {
+    //   path: '/test',
+    //   name: 'home',
+    //   meta: {
+    //     title: '测试'
+    //   },
+    //   component: () => import('./views/Test.vue')
+    // },
     {
       path: '/',
       name: 'home',
@@ -128,6 +128,14 @@ export default new Router({
         title: '品牌详情'
       },
       component: () => import('./views/Brand.vue')
-    }
+    },
+    {
+      path: '/book',
+      name: 'book',
+      meta: {
+        title: '提示书'
+      },
+      component: () => import('./views/Book.vue')
+    },
   ]
 })

@@ -148,11 +148,15 @@
                 width="100vw;"
               ></iframe>
             </div>-->
-            <!-- 高德URL单点标注 -->
+
+            <!-- 高德URI根据经纬度单点标记 -->
+            <!-- //uri.amap.com/marker?position=121.287689,31.234527&name=park&src=mypage&coordinate=gaode&callnative=0 -->
+
+            <!-- 高德URI搜索查询 -->
             <!-- //uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1 -->
 
-            <!-- 高德地图地名搜索 -->
-            <!-- https://m.amap.com/search/mapview/keywords=合肥国家大学科技园 -->
+            <!-- 高德地图地名搜索地图点集合 -->
+            <!-- https://m.amap.com/search/mapview/keywords=合肥国家大学科技园&src=mypage&callnative=1 -->
 
             <!-- 百度地图方案 -->
             <!-- <a
