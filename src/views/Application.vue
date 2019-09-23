@@ -472,6 +472,10 @@
             <span class="desc">{{ item.addressRepeatFlag | addressRepeatFlag(item) }}</span>
           </li>
           <li>
+            <span class="label">手机号</span>
+            <span class="desc">{{ item.phone | isNull }}</span>
+          </li>
+          <li>
             <span class="label">职业名称</span>
             <span class="desc">{{ item.jobName | isNull }}</span>
           </li>
@@ -541,6 +545,10 @@
           <li>
             <span class="label">住址</span>
             <span class="desc">{{ item.addressRepeatFlag | addressRepeatFlag(item) }}</span>
+          </li>
+          <li>
+            <span class="label">手机号</span>
+            <span class="desc">{{ item.phone | isNull }}</span>
           </li>
           <li>
             <span class="label">职业名称</span>
