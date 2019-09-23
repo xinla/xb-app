@@ -802,7 +802,7 @@ export default {
     },
     addressRepeatFlag (val, data) {
       //val  0  代表同投保人  1代表同被保人  不是0或者1就是详细的地址
-      return val === '0' || val === 0 ? '同投保人' : val === '1' || val === 1 ? '同被保人' : data.address ? data.address : '-'
+      return val === '0' || val === 0 ? '同投保人' : val === '1' || val === 1 ? '同被保人' : data.addressRepeatFlag ? data.addressRepeatFlag : '-'
     },
     sex (val) {
       return val === 0 ? '先生' : val === 1 ? '女士' : '-'
