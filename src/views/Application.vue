@@ -825,9 +825,9 @@ export default {
       return val && !isNaN(val) ? parseFloat(val).toFixed(0) + units : '-'
     },
     policyPeriodName (val) {
-      // 105岁以上为终生
+      // 105岁以上为终身
       if (val && !isNaN(val)) {
-        return parseInt(val) < 105 ? '保至' + val + '周岁' : '保至终生'
+        return parseInt(val) < 105 ? '保至' + val + '周岁' : '保至终身'
       } else {
         return val
       }

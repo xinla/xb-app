@@ -106,3 +106,18 @@ export const getUserInfo = ({id, type, token}) => {
     }
   })
 }
+
+/**
+ * 获取保单偿付能力信息接口, (获取长城投保提示书信息)
+ * @param {*} id 投保单id 
+ * @param {*} token 
+ */
+export const getPolicyPromptBook = (id, token) => {
+  return axios.request({
+    url: controller + `/greateWall/policySolvency/${id}`,
+    method: 'get',
+    headers: {
+      auth_token: token
+    }
+  })
+}

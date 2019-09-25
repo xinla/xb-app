@@ -245,7 +245,7 @@
 
                     <div v-show="unit.insured">
                       <div v-for="(vUnit, vUnique) in vItem.insured" :key="vUnique">
-                        <div class="form" v-if="vUnit.index === unit.index">
+                        <div class="form" v-show="vUnit.index === unit.index">
                           <div class="title2">被保人</div>
                           <ul>
                             <li>
@@ -1170,7 +1170,7 @@ export default {
           applicant: [
             {
               index: 1,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1197,7 +1197,7 @@ export default {
           applicant: [
             {
               index: 1,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1224,7 +1224,7 @@ export default {
           applicant: [
             {
               index: 1,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1234,7 +1234,7 @@ export default {
             },
             {
               index: 2,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1244,7 +1244,7 @@ export default {
             },
             {
               index: 3,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1254,7 +1254,7 @@ export default {
             },
             {
               index: 4,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1264,7 +1264,7 @@ export default {
             },
             {
               index: 5,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1274,7 +1274,7 @@ export default {
             },
             {
               index: 6,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1284,7 +1284,7 @@ export default {
             },
             {
               index: 7,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1294,7 +1294,7 @@ export default {
             },
             {
               index: 8,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1304,7 +1304,7 @@ export default {
             },
             {
               index: 9,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1314,7 +1314,7 @@ export default {
             },
             {
               index: 10,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1431,7 +1431,7 @@ export default {
           applicant: [
             {
               index: 1,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1458,7 +1458,7 @@ export default {
           applicant: [
             {
               index: 1,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1485,7 +1485,7 @@ export default {
           applicant: [
             {
               index: 1,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1512,7 +1512,7 @@ export default {
           applicant: [
             {
               index: 1,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1522,7 +1522,7 @@ export default {
             },
             {
               index: 2,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1532,7 +1532,7 @@ export default {
             },
             {
               index: 3,
-              explainObject: "被保人",
+              explainObject: "投保人",
               diseaseName: "",
               diseaseTime: "",
               therapies: "",
@@ -1837,8 +1837,14 @@ export default {
                     return new Promise((resolve, reject) => {});
                   }
 
-                  let object = this.healthSpecialExplain[iterator.index - 1]
-                    .applicant[iterator1.index - 1];
+                  let object = {}
+                  for (const objectIterator of this.healthSpecialExplain) {
+                    if (objectIterator.index === iterator.index) {
+                      object = objectIterator.applicant[iterator1.index - 1]
+                      break
+                    }
+                  }
+                  // object = this.healthSpecialExplain[iterator.index - 1].applicant[iterator1.index - 1];
                   for (const key in object) {
                     if (object.hasOwnProperty(key) && object[key] === "") {
                       this.Toast(
@@ -1884,13 +1890,21 @@ export default {
                     }
                   }
                 } else {
-                  let object = this.healthSpecialExplain[iterator.index - 1]
-                    .insured[iterator1.index - 1];
+                  let object = {}
+                  for (const objectIterator of this.healthSpecialExplain) {
+                    if (objectIterator.index === iterator.index) {
+                      object = objectIterator.insured[iterator1.index - 1]
+                      break
+                    }
+                  }
+
+                  // object = this.healthSpecialExplain[iterator.index - 1].insured[iterator1.index - 1];
                   for (const key in object) {
                     if (object.hasOwnProperty(key) && object[key] === "") {
                       this.Toast(
                         `健康告知项说明栏被保人第${iterator.index}项信息填写不完整，请修改`
                       );
+                      console.log(object)
                       return new Promise((resolve, reject) => {});
                     }
                   }
@@ -1940,8 +1954,15 @@ export default {
                     }
                   }
                 } else {
-                  let object = this.otherSpecialExplain[iterator.index - 1]
-                    .applicant[iterator1.index - 1];
+                  let object = {}
+                  for (const objectIterator of this.otherSpecialExplain) {
+                    if (objectIterator.index === iterator.index) {
+                      object = objectIterator.applicant[iterator1.index - 1]
+                      break
+                    }
+                  }
+                  // object = this.otherSpecialExplain[iterator.index - 1].applicant[iterator1.index - 1];
+
                   for (const key in object) {
                     if (object.hasOwnProperty(key) && object[key] === "") {
                       this.Toast(
@@ -1984,8 +2005,15 @@ export default {
                     }
                   }
                 } else {
-                  let object = this.otherSpecialExplain[iterator.index - 1]
-                    .insured[iterator1.index - 1];
+                  let object = {}
+                  for (const objectIterator of this.otherSpecialExplain) {
+                    if (objectIterator.index === iterator.index) {
+                      object = objectIterator.insured[iterator1.index - 1]
+                      break
+                    }
+                  }
+                  // object = this.otherSpecialExplain[iterator.index - 1].insured[iterator1.index - 1];
+
                   for (const key in object) {
                     if (object.hasOwnProperty(key) && object[key] === "") {
                       this.Toast(
@@ -2043,15 +2071,23 @@ export default {
             }
 
             for (let iterator of this.healthSpecialExplain) {
-              if (iterator.index !== 12) {
-                iterator.insured != undefined &&
-                  (iterator.applicant = iterator.insured);
+              if (iterator.index !== 12 && iterator.insured != undefined) {
+                // iterator.applicant = iterator.insured
+                iterator.applicant = []
+                  for (const iterator1 of iterator.insured) {
+                    iterator.applicant.push(Object.assign({}, iterator1, {explainObject: "投保人"}))
+                  }
               }
             }
 
             for (let iterator of this.otherSpecialExplain) {
-              iterator.insured != undefined &&
-                (iterator.applicant = iterator.insured);
+              if (iterator.insured != undefined) {
+                iterator.applicant = []
+                for (const iterator1 of iterator.insured) {
+                    iterator.applicant.push(Object.assign({}, iterator1, {explainObject: "投保人"}))
+                  }
+              }
+              // iterator.insured != undefined && (iterator.applicant = iterator.insured);
             }
           }
 
@@ -2080,6 +2116,7 @@ export default {
         });
     }
   }
+  
 };
 </script>
 <style>

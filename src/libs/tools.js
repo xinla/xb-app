@@ -273,22 +273,24 @@ export function formatFileSize(num) {
 
 export function transInsurancePeriod(data) {
   if (!data.includes("@")) {
-    return `保${data}年`;
+    let age = data >= 105 ? '至终身' : data + '年'
+    return `保${age}`;
   } else if (/@$/.test(data)) {
-    let age = data.replace("@", "") == 105 ? '终身' : data.replace("@", "岁")
+    let age = data.replace("@", "") >= 105 ? '终身' : data.replace("@", "岁")
     return `保至${age}`;
   } else {
     let temp = data.split("@");
-    temp[0] = temp[0] == 105 ? '终身' : temp[0] + '岁'
-    temp[1] = temp[1] == 105 ? '终身' : temp[1] + '岁'
-    return `主险保至${temp[0]}，附加险保至${temp[1]}`;
+    // temp[0] = temp[0] == 105 ? '终身' : temp[0] + '岁'
+    temp[1] = temp[1] >= 105 ? '终身' : temp[1] + '周岁'
+    return `保至${temp[1]}`;
   }
 }
+
 export function transPaymentPeriod(data) {
   if (data.includes("@")) {
     return `交至${data.replace("@", "")}岁`;
-  } else {
-    return `交${data}年`;
+  } else { 
+    return `交${data.includes('年') ? data : data + '年'}`;
   }
 }
 
