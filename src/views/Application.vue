@@ -577,14 +577,14 @@
     </div>
 
     <!-- 投保计划 -->
-    <div class="container" v-if="result.vitPolicyRiskInfoVoList && result.vitPolicyRiskInfoVoList.length">
+    <div class="container" v-if="result.vitPolicyRiskInfoVoListNew && result.vitPolicyRiskInfoVoListNew.length">
       <div class="title title-boder">
         <svg class="icon icon-title icon_toubaoplane" aria-hidden="true">
           <use xlink:href="#icon_toubaoplane"></use>
         </svg>
         <span>投保计划</span>
       </div>
-      <div v-for="(item, index) in result.vitPolicyRiskInfoVoList" :key="item.id">
+      <div v-for="(item, index) in result.vitPolicyRiskInfoVoListNew" :key="item.id">
         <div class="title small">
           <svg v-if="item.productForm === 0" class="icon icon-title icon_zhuxian" aria-hidden="true">
             <use xlink:href="#icon_zhuxian"></use>
@@ -901,6 +901,13 @@ export default {
       }
       getApplicationDetail(this.query).then(res => {
         this.result = res
+        // 投保计划重新排序
+        res.vitPolicyRiskInfoVoListNew = []
+        if (res.vitPolicyRiskInfoVoList) {
+          let one = res.vitPolicyRiskInfoVoList.filter(item => item.productForm === 0)
+          let two = res.vitPolicyRiskInfoVoList.filter(item => item.productForm !== 0)
+          res.vitPolicyRiskInfoVoListNew = one.concat(two)
+        }
       })
       getIsSelf(this.query).then(res => {
         this.isSelf = !!res
