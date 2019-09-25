@@ -602,7 +602,7 @@
             </div>
             <div class="item">
               <p class="key">保障期间</p>
-              <p class="value">{{ item.policyPeriodName | isNull }}</p>
+              <p class="value">{{ item.policyPeriodName | policyPeriodName }}</p>
             </div>
           </div>
           <div class="item-wrap">
@@ -822,7 +822,15 @@ export default {
       return val === 0 ? '没有社保' : val === 1 ? '有社保' : '-'
     },
     addUnits (val, units) {
-      return val ? val + units : '-'
+      return val && !isNaN(val) ? parseFloat(val).toFixed(0) + units : '-'
+    },
+    policyPeriodName (val) {
+      // 105岁以上为终生
+      if (val && !isNaN(val)) {
+        return parseInt(val) < 105 ? '保至' + val + '周岁' : '保至终生'
+      } else {
+        return val
+      }
     },
     isNull (val) {
       return val ? val : '-'
