@@ -276,7 +276,7 @@ export function transInsurancePeriod(data) {
     let age = data >= 105 ? '至终身' : data + '年'
     return `保${age}`;
   } else if (/@$/.test(data)) {
-    let age = data.replace("@", "") >= 105 ? '终身' : data.replace("@", "岁")
+    let age = data.replace("@", "") >= 105 ? '终身' : data.replace("@", "周岁")
     return `保至${age}`;
   } else {
     let temp = data.split("@");
