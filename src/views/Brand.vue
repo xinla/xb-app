@@ -275,6 +275,11 @@ export default {
           honors: res.honors || [],
           list: res.list || []
         };
+        // 兼容ios 时间格式转换
+        if (!!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) && res.supplier.foundingTime) {
+          this.result.supplier.foundingTime = res.supplier.foundingTime.replace(/-/g, '/')
+        }
+        // console.log("foundingTime：", res.supplier.foundingTime)
         const website = this.result.supplier.companyWebsite;
         if (website) {
           this.result.supplier.companyWebsite = /^http/i.test(website)
@@ -287,7 +292,8 @@ export default {
           this.offsetTop =
             this.$refs["tab2-title-wrap"].offsetTop -
             this.$refs["top"].clientHeight;
-          console.log(this.$refs["top"].clientHeight);
+          // console.log(this.offsetTop);
+          // console.log(this.$refs["top"].clientHeight);
           if (this.$refs.describe.clientHeight >= 100) {
             this.isShow = true;
           }
@@ -295,7 +301,7 @@ export default {
         });
       });
       getBrandProductList(this.query).then(res => {
-        console.log(res);
+        // console.log(res);
         this.productList = res.list;
       });
     },
@@ -310,13 +316,17 @@ export default {
           this.$refs["top"].clientHeight + "px";
 
         this.$refs["top"].style.transform = "scale(1)";
+        // this.$refs["top"].style.visibility = "visible";
         this.isSwitch = false;
+        this.Toast(this.$refs["top"].style.transform)
       } else {
         this.$refs["tab2-title-wrap"].style.position = "relative";
-        this.$refs["tab2-title-wrap"].style.top = 0;
+        this.$refs["tab2-title-wrap"].style.top = '-0.2rem';
 
         this.$refs["top"].style.transform = "scale(0)";
+        // this.$refs["top"].style.visibility = "hidden";
         this.isSwitch = true;
+        this.Toast(this.$refs["top"].style.transform)
       }
 
       // if ($event.target.scrollTop >= this.offsetTopTitle) {
@@ -368,10 +378,10 @@ export default {
 </script>
 <style lang="less" scoped>
 .main {
+  // position: relative;
   overflow: scroll;
 }
 .top {
-  position: absolute;
   width: 100%;
   z-index: 2;
   padding: 0.64rem 0.32rem 0.3rem;
@@ -381,6 +391,7 @@ export default {
   align-items: center;
   font-weight: 600;
   transform: scale(0);
+  // visibility: hidden;
   transition: all 0.1s;
   .icon {
     font-size: 0.36rem;
@@ -392,9 +403,14 @@ export default {
     line-height: 0.5rem;
   }
 }
+.top {
+  position: fixed;
+}
 .top1 {
+  position: absolute;
   z-index: 1;
   transform: scale(1);
+  // visibility: visible;
   background: none;
 }
 .banner {
@@ -436,7 +452,7 @@ export default {
   color: #a6abb7;
   z-index: 1;
   width: 100%;
-  margin-bottom: -0.94rem;
+  margin-bottom: -0.8rem;
   border-radius: 0.2rem 0.2rem 0 0;
   top: -0.2rem;
   position: relative;
