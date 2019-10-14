@@ -54,12 +54,11 @@
         <div class="line" v-show="active === '4'"></div>
       </li>
     </ul>
-    <mt-tab-container
-      v-model="active"
+    <div
       style="margin-top: .84rem;min-height: 1rem;padding: 0 0.25rem;"
     >
       <!-- 公司介绍 -->
-      <mt-tab-container-item id="1">
+      <div v-show="active == 1">
         <div class="title-wrap">
           <svg class="icon zu" aria-hidden="true">
             <use xlink:href="#zu" />
@@ -122,32 +121,33 @@
             </li>
           </ul>
         </template>
-      </mt-tab-container-item>
+      </div>
 
       <!-- 联系方式 -->
-      <mt-tab-container-item id="2">
+      <div v-show="active == 2">
         <ul>
           <li class="li2">
             <div class="left">服务电话</div>
-            <span
+            <span class="current"
               @click="call(result.supplier.nationalServicePhone)"
             >{{result.supplier.nationalServicePhone}}</span>
           </li>
           <li class="li2">
             <div class="left">公司网址</div>
-            <div @click="goLink(result.supplier.companyWebsite)">{{result.supplier.companyWebsite}}</div>
+            <span class="current" @click="goLink(result.supplier.companyWebsite)">{{result.supplier.companyWebsite}}</span>
             <!-- <a :href="result.supplier.companyWebsite" target="_self" rel="noopener noreferrer">{{result.supplier.companyWebsite}}</a> -->
           </li>
           <li class="li2">
             <div class="left">总部地址</div>
+            {{result.supplier.companyAddress}}
             <!-- 高德地图方案 -->
-            <!-- <div @click="goMap('合肥国家大学科技园')">
-              <iframe
-                src="https://uri.amap.com/search?keyword=合肥国家大学科技园&center=&city=&view=map&src=mypage&coordinate=gaode&callnative=1"
+            <div class="bfc-o" @click="goMap(result.supplier.companyAddress)">
+              <img :src="`https://restapi.amap.com/v3/staticmap?location=${location}&zoom=18&size=500*300&markers=mid,,A:${location}&labels=${result.supplier.companyAddress.slice(0, 10)}...,2,0,16,0xFFFFFF,0x008000:${location}&key=500a3ef03541f06fac2f747c4ad81ecf`" alt="">
+              <!-- <iframe
+                :src="`//uri.amap.com/search?keyword=${result.supplier.companyAddress}&center=&city=&view=map&src=mypage&coordinate=gaode`"
                 frameborder="0"
-                width="100vw;"
-              ></iframe>
-            </div>-->
+              ></iframe> -->
+            </div>
 
             <!-- 高德URI根据经纬度单点标记 -->
             <!-- //uri.amap.com/marker?position=121.287689,31.234527&name=park&src=mypage&coordinate=gaode&callnative=0 -->
@@ -172,7 +172,7 @@
               />
             </a>-->
 
-            <div @click="goMap(result.supplier.companyAddress)">
+            <!-- <div @click="goMap(result.supplier.companyAddress)">
               <img
                 style="margin:2px"
                 width="400"
@@ -180,13 +180,13 @@
                 :src="`http://api.map.baidu.com/staticimage? 
             width=400&height=300&zoom=18&center=${result.supplier.companyAddress}`"
               />
-            </div>
+            </div> -->
           </li>
         </ul>
-      </mt-tab-container-item>
+      </div>
 
       <!-- 分支机构 -->
-      <mt-tab-container-item id="3">
+      <div v-show="active == 3">
         <ul>
           <li class="li2" v-for="(item, index) of result.list" :key="index">
             <div class="left">{{item.name}}</div>
@@ -204,12 +204,12 @@
             </div>
           </li>
         </ul>
-      </mt-tab-container-item>
+      </div>
 
       <!-- 产品列表 -->
-      <mt-tab-container-item id="4">
+      <div v-show="active == 4">
         <ul>
-          <li class="li-pro bfc-o" v-for="(item, index) of productList" :key="index">
+          <li class="li-pro bfc-o" v-for="(item, index) of productList" :key="index" @click="goProduct(item)">
             <img class="cover-pro fl" :src="item.appNavigation" alt />
             <div class="title-pro">{{item.name}}</div>
             <div class="txt1">{{item.coreBuy}}</div>
@@ -220,13 +220,14 @@
             </div>
           </li>
         </ul>
-      </mt-tab-container-item>
-    </mt-tab-container>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { getBrandInfo, getBrandProductList } from "@/api/brand";
+import { getLocation } from "@/api/map";
 
 export default {
   components: {},
@@ -251,7 +252,8 @@ export default {
           (this.$route.query && this.$route.query.id) || "2252792750044872711",
         page: 1,
         size: 10
-      }
+      },
+      location: ''
     };
   },
   computed: {
@@ -267,7 +269,7 @@ export default {
   methods: {
     getData() {
       getBrandInfo(this.query.id).then(res => {
-        // console.log("BrandInfo：", res);
+        console.log("BrandInfo：", res);
         // this.Toast(JSON.stringify(res.supplier.companyAddress));
         this.result = {
           supplier: res.supplier || {},
@@ -275,6 +277,14 @@ export default {
           honors: res.honors || [],
           list: res.list || []
         };
+
+        // 高德api获取地点经纬度
+        if (res.supplier.companyAddress) {
+          getLocation(res.supplier.companyAddress).then(_res => {
+            this.location = _res.location
+          })
+        }
+        
         // 兼容ios 时间格式转换
         if (!!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) && res.supplier.foundingTime) {
           this.result.supplier.foundingTime = res.supplier.foundingTime.replace(/-/g, '/')
@@ -318,7 +328,6 @@ export default {
         this.$refs["top"].style.transform = "scale(1)";
         // this.$refs["top"].style.visibility = "visible";
         this.isSwitch = false;
-        this.Toast(this.$refs["top"].style.transform)
       } else {
         this.$refs["tab2-title-wrap"].style.position = "relative";
         this.$refs["tab2-title-wrap"].style.top = '-0.2rem';
@@ -326,7 +335,6 @@ export default {
         this.$refs["top"].style.transform = "scale(0)";
         // this.$refs["top"].style.visibility = "hidden";
         this.isSwitch = true;
-        this.Toast(this.$refs["top"].style.transform)
       }
 
       // if ($event.target.scrollTop >= this.offsetTopTitle) {
@@ -372,6 +380,12 @@ export default {
       !(navigator.userAgent.indexOf("Android") > -1)
         ? window.webkit.messageHandlers.goLink.postMessage(data)
         : window.hello.goLink(data);
+    },
+    goProduct(data) {
+      // 调用两端跳转产品详情事件
+      !(navigator.userAgent.indexOf("Android") > -1)
+        ? window.webkit.messageHandlers.skipProductDetail.postMessage(JSON.stringify(data))
+        : window.hello.skipProductDetail(JSON.stringify(data));
     }
   }
 };
@@ -456,9 +470,7 @@ export default {
   border-radius: 0.2rem 0.2rem 0 0;
   top: -0.2rem;
   position: relative;
-  .current {
-    color: #6582ff;
-  }
+  
   .line {
     width: 0.4rem;
     height: 0.06rem;
@@ -467,6 +479,9 @@ export default {
     margin: 0 auto;
   }
 }
+.current {
+    color: #6582ff;
+  }
 .title-wrap {
   margin-top: 0.5rem;
   display: flex;

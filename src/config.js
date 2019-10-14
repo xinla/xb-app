@@ -6,7 +6,7 @@ const config = {
     pro: 'http://192.168.1.26:8888', // wangdong
     domain2: process.env.NODE_ENV === 'development' ? 'http://192.168.1.26:8888' : 'http://192.168.1.26:8888', // liusiyuan
     dev3:  process.env.NODE_ENV === 'development' ? 'http://192.168.1.26:8888' : 'http://192.168.1.26:8888',
-    domain4: process.env.NODE_ENV === 'development' ? 'http://192.168.1.150:8888' : 'http://192.168.1.26:8888', // liushaung~
+    domain4: process.env.NODE_ENV === 'development' ? 'http://192.168.1.26:8888' : 'http://192.168.1.26:8888', // liushaung~
     domain5: process.env.NODE_ENV === 'development' ? 'http://47.98.153.101:8118' : 'http://47.98.153.101:8118', // liushaung~
   },
   
@@ -20,6 +20,7 @@ const config = {
   //   domain4: process.env.NODE_ENV === 'development' ? 'http://192.168.1.150:8888' : 'https://gateway.visualinsur.cn:8888', // liushaung~
   //   domain5: process.env.NODE_ENV === 'development' ? 'http://47.98.153.101:8118' : 'http://47.98.153.101:8118', // liushaung~
   // },
+  
 }
 
 config.controllers = {
