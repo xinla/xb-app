@@ -1,6 +1,6 @@
 <template>
   <div class="main" @scroll="scroll">
-    <img :src="product.appBanner" class="banner" />
+    <img :src="product.banner" class="banner" />
     <div class="title wrapper" ref="title">
       <h1>{{product.product.productFullName}}</h1>
       <p
@@ -10,22 +10,20 @@
 
     <div ref="tab-wrap" class="tab-wrap">
       <div class="tab-title-wrap">
-        <div
+        <!-- <div
           :class="['tab-title', {'active': tabActive == index}]"
           v-for="(item, index) in product.insurableInterest"
           v-if="item.scheduleName"
           :key="index"
           @click="tabActive = index"
-        >{{item.scheduleName}}</div>
+        >{{item.scheduleName}}</div> -->
+        <div class="tab-title active">保障利益</div>
       </div>
       <mt-tab-container v-model="tabActive" swipeable>
-        <mt-tab-container-item
-          v-for="(item, index) in product.insurableInterest"
-          :key="index"
-          :id="index"
+        <mt-tab-container-item :id="0"
         >
           <ul class="tab1">
-            <li v-for="(unit, unique) in item.content" :key="unique">
+            <li v-for="(unit, unique) in product.insurableInterest" :key="unique">
               <span>{{unit.title}}</span>
               <span class="fr">{{unit.algorithm}}</span>
             </li>
@@ -55,7 +53,10 @@
     <mt-tab-container v-model="active" style="margin-top: .94rem;min-height: 1rem;">
       <!-- 保险详情 -->
       <mt-tab-container-item id="1">
+        <div v-if="product.imageText" v-html="product.imageText"></div>
+        <template v-else>
         <img v-for="(item, index) of product.descPicture" :src="item" :key="index" alt />
+        </template>
         <!-- </ul> -->
       </mt-tab-container-item>
       <!-- 费率表 -->
@@ -243,7 +244,7 @@
       <mt-tab-container-item id="3">
         <!-- <div class="insurance-text" v-html="product.underwritingRulesText"></div> -->
         <img
-          v-for="(item, index) in product.attachment.applicationRulesImages"
+          v-for="(item, index) in product.underwritingRulesImage"
           class="policy-wording-images"
           preview="1"
           :src="item"
@@ -258,7 +259,7 @@
             </embed>
         </object>-->
         <img
-          v-for="(item, index) in product.attachment.policyWordingImages"
+          v-for="(item, index) in product.insuranceLiabilityImage"
           class="policy-wording-images"
           preview="2"
           :src="item"
@@ -389,24 +390,24 @@ export default {
       getProductDetail(query)
         .then(res => {
           res.insurableInterest = JSON.parse(res.insurableInterest) || [];
-          res.attachment.productCourse =
-            JSON.parse(res.attachment.productCourse) || [];
+          // res.attachment.productCourse =
+          //   JSON.parse(res.attachment.productCourse) || [];
           this.product = res;
           // 设置文档标题
           document.title = res.product.productFullName;
-
+          // 图集转换
           typeof this.product.descPicture === "string" &&
             (this.product.descPicture = this.product.descPicture.split(","));
-
-          typeof this.product.attachment.policyWordingImages === "string" &&
-            (this.product.attachment.policyWordingImages = this.product.attachment.policyWordingImages.split(
-              ","
-            ));
-
-          typeof this.product.attachment.applicationRulesImages === "string" &&
-            (this.product.attachment.applicationRulesImages = this.product.attachment.applicationRulesImages.split(
-              ","
-            ));
+          // 投保规则图片转换
+          // typeof this.product.insuranceRulePdf === "string" &&
+          //   (this.product.insuranceRulePdf = this.product.insuranceRulePdf.split(
+          //     ","
+          //   ));
+// 产品条款图片转换
+          // typeof this.product.insuranceLiabilityPdf === "string" &&
+          //   (this.product.insuranceLiabilityPdf = this.product.insuranceLiabilityPdf.split(
+          //     ","
+          //   ));
           // console.log("ProductDetail: ", res);
           this.$nextTick(() => {
             this.offsetTop =

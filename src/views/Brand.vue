@@ -383,9 +383,13 @@ export default {
     },
     goProduct(data) {
       // 调用两端跳转产品详情事件
-      !(navigator.userAgent.indexOf("Android") > -1)
-        ? window.webkit.messageHandlers.skipProductDetail.postMessage(JSON.stringify(data))
-        : window.hello.skipProductDetail(JSON.stringify(data));
+      if (this.isShare) {
+        location.href = `http://h5.visualinsur.cn/product?id=${data.id}`
+      } else {
+        !(navigator.userAgent.indexOf("Android") > -1)
+          ? window.webkit.messageHandlers.skipProductDetail.postMessage(JSON.stringify(data))
+          : window.hello.skipProductDetail(JSON.stringify(data));
+      }
     }
   }
 };
