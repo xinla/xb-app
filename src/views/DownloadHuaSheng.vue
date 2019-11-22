@@ -3,19 +3,28 @@
     <img class="pc" src="@/assets/pc_download_huasheng.png" />
 
     <div class="phone ac">
+      <transition name="slide-down">
+      <div class="browser al slide-down" v-if="isWeChat">点击右上角按钮，然后在弹出的菜单中，点击在浏览器中打开，即可下载安装。</div>
+      </transition>
       <img class="background" src="@/assets/back_hsbh.png" alt />
       <img class="logo" src="@/assets/logo_huasheng.png" alt />
       <h1>华圣百惠</h1>
       <div class="slogan">中华圣事，百惠于您</div>
       <div class="version">当前版本：V1.0.0</div>
-      <div class="botton android">
-        <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon_android" />
-            </svg>点击下载</div>
+      <a
+        href="https://xbkj-common-bucket.oss-cn-hangzhou.aliyuncs.com/vit_android1.1.0-20191111-110009-release.apk"
+      >
+        <div class="botton android">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon_android" />
+          </svg>点击下载
+        </div>
+      </a>
       <div class="botton ios">
         <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon_ios" />
-            </svg>正在加急上线</div>
+          <use xlink:href="#icon_ios" />
+        </svg>正在加急上线
+      </div>
       <div class="desc">
         <p>支持任意组织架构，实现所有相关者实时通讯，轻松实现产业链协同；</p>
         <p>用户精准画像，智能管理客户需求；</p>
@@ -33,12 +42,15 @@ export default {
   components: {},
   props: {},
   data() {
-    return {};
+    return {
+      isWeChat: false
+    };
   },
   computed: {},
   watch: {},
   created() {
-    document.title = "现保，现在就保";
+    document.title = "华圣百惠";
+    navigator.userAgent.indexOf("MicroMessenger") > -1 && (this.isWeChat = true)
   },
   mounted() {},
   methods: {}
@@ -48,7 +60,11 @@ export default {
 .router-view {
   max-width: 100%;
 }
-
+.browser{
+  background: #444444;
+  padding: .6rem;
+  color: #888;
+}
 .background {
   position: absolute;
   top: 0;
@@ -73,7 +89,7 @@ export default {
   line-height: 0.9rem;
   color: #fff;
   .icon {
-    font-size: .46rem;
+    font-size: 0.46rem;
     margin-right: 0.2rem;
     vertical-align: sub;
   }
@@ -104,6 +120,17 @@ h1 {
   p {
     margin: 0.2rem 0;
   }
+}
+
+.slide-down-enter-active {
+  transition: all 0.3s ease;
+}
+.slide-down-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-down-enter, .slide-down-leave-to
+/* .slide-down-leave-active for below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
 

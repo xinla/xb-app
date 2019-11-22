@@ -4,7 +4,7 @@
 
     <div class="phone ac">
       <transition name="slide-down">
-      <div class="browser al slide-down" v-if="isWeChat">点击右上角按钮，然后在弹出的菜单中，点击在浏览器中打开，即可安装。</div>
+      <div class="browser al slide-down" v-if="isWeChat">点击右上角按钮，然后在弹出的菜单中，点击在浏览器中打开，即可下载安装。</div>
       </transition>
       <img class="background" src="@/assets/back_xianbao.png" alt />
       <img class="logo" src="@/assets/logo_xianbao.png" alt />
