@@ -244,7 +244,7 @@
       <mt-tab-container-item id="3">
         <!-- <div class="insurance-text" v-html="product.underwritingRulesText"></div> -->
         <img
-          v-for="(item, index) in product.underwritingRulesImage"
+          v-for="(item, index) in product.insuranceRulePdf"
           class="policy-wording-images"
           preview="1"
           :src="item"
@@ -259,7 +259,7 @@
             </embed>
         </object>-->
         <img
-          v-for="(item, index) in product.insuranceLiabilityImage"
+          v-for="(item, index) in product.insuranceLiabilityPdf"
           class="policy-wording-images"
           preview="2"
           :src="item"
@@ -399,15 +399,15 @@ export default {
           typeof this.product.descPicture === "string" &&
             (this.product.descPicture = this.product.descPicture.split(","));
           // 投保规则图片转换
-          // typeof this.product.insuranceRulePdf === "string" &&
-          //   (this.product.insuranceRulePdf = this.product.insuranceRulePdf.split(
-          //     ","
-          //   ));
+          typeof this.product.insuranceRulePdf === "string" &&
+            (this.product.insuranceRulePdf = this.product.insuranceRulePdf.split(
+              ","
+            ));
 // 产品条款图片转换
-          // typeof this.product.insuranceLiabilityPdf === "string" &&
-          //   (this.product.insuranceLiabilityPdf = this.product.insuranceLiabilityPdf.split(
-          //     ","
-          //   ));
+          typeof this.product.insuranceLiabilityPdf === "string" &&
+            (this.product.insuranceLiabilityPdf = this.product.insuranceLiabilityPdf.split(
+              ","
+            ));
           // console.log("ProductDetail: ", res);
           this.$nextTick(() => {
             this.offsetTop =

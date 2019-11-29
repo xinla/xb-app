@@ -62,7 +62,7 @@ export default {
     navigator.userAgent.indexOf("MicroMessenger") > -1 && (this.isWeChat = true)
     getVersionPage().then(res => {
       res.list[0] && (this.version = res.list[0])
-      console.log(this.version)
+      // console.log(this.version)
     })
   },
   methods: {
