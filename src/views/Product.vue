@@ -57,14 +57,7 @@
         <template v-if="product.descPicture">
           <img v-for="(item, index) of product.descPicture" :src="item" :key="index" alt />
         </template>
-        <!-- <ckeditor
-        v-else-if="product.imageText"
-          :editor="editor"
-          v-model="product.imageText"
-          :config="editorConfig"
-          :disabled="true"
-        ></ckeditor> -->
-        <div v-else-if="product.imageText" class="insurance-text btn-bottom editor" v-html="product.imageText"></div>
+        <div v-else-if="product.imageText" class="insurance-text btn-bottom wangeditor" v-html="product.imageText"></div>
         <div class="ac" v-else><br>暂无详情介绍，等待后台更新。</div>
         <!-- </ul> -->
       </mt-tab-container-item>
@@ -253,16 +246,9 @@
       <mt-tab-container-item id="3">
         <div
           v-if="product.underwritingRulesText"
-          class="insurance-text btn-bottom editor"
+          class="insurance-text btn-bottom wangeditor"
           v-html="product.underwritingRulesText"
         ></div>
-        <!-- <ckeditor
-        v-if="product.underwritingRulesText"
-          :editor="editor"
-          v-model="product.underwritingRulesText"
-          :config="editorConfig"
-          :disabled="true"
-        ></ckeditor> -->
         <template v-else-if="product.insuranceRulePdf">
           <img
             v-for="(item, index) in product.insuranceRulePdf"
@@ -302,24 +288,9 @@ import {
 } from "@/api/product";
 import { getWeChatSign } from "@/api/weChatShare";
 
-import CKEditor from "@ckeditor/ckeditor5-vue";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import "@ckeditor/ckeditor5-build-classic/build/translations/zh-cn";
-
 export default {
-  components: {
-    ckeditor: CKEditor.component
-  },
   data() {
     return {
-      editor: ClassicEditor,
-      editorConfig: {
-        // The configuration of the editor.
-        language: "zh-cn",
-        toolbar: {
-          items: []
-        }
-      },
       tabActive: 0,
       active: "1",
       offsetTop: 0,
@@ -588,7 +559,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import url('../styles/editor.css');
+@import url('../styles/wangEditor.css');
 .main {
   overflow: scroll;
 }
