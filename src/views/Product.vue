@@ -57,153 +57,79 @@
         <template v-if="product.descPicture">
           <img v-for="(item, index) of product.descPicture" :src="item" :key="index" alt />
         </template>
-        <div v-else-if="product.imageText" class="insurance-text btn-bottom wangeditor" v-html="product.imageText"></div>
-        <div class="ac" v-else><br>暂无详情介绍，等待后台更新。</div>
+        <div
+          v-else-if="product.imageText"
+          class="insurance-text btn-bottom wangeditor"
+          v-html="product.imageText"
+        ></div>
+        <div class="ac" v-else>
+          <br />暂无详情介绍，等待后台更新。
+        </div>
         <!-- </ul> -->
       </mt-tab-container-item>
       <!-- 费率表 -->
       <mt-tab-container-item id="2">
         <div class="btn-bottom">
           <div class="args-wrap">
-            <mt-cell title="保险金额" v-if="listParams.insuredAmounts.length">
-              <select class="select" v-model="query.amountInsured" @change="search">
-                <!-- <option value="请选择">请选择</option> -->
-                <option
-                  v-for="item in listParams.insuredAmounts"
-                  :value="item"
-                  :key="item"
-                >{{item}}{{listParams.rateUnit[0]}}</option>
-              </select>
-              <svg
-                class="icon icon_xiala-copy"
-                aria-hidden="true"
-                v-if="listParams.insuredAmounts.length > 1"
+            <mt-cell v-for="item in listParams" :title="item.calItemName" :key="item.id">
+              <!-- 保费/保险金额 -->
+              <select
+                v-if="item.calItemTag === 12 || item.calItemTag === 10"
+                class="select"
+                v-model="premium"
               >
-                <use xlink:href="#icon_xiala-copy" />
-              </svg>
-            </mt-cell>
-
-            <mt-cell title="保险期间" v-if="listParams.policyPeriods.length">
-              <select class="select" v-model="query.policyPeriod" @change="search">
-                <!-- <option value="请选择">请选择</option> -->
                 <option
-                  v-for="item in listParams.policyPeriods"
-                  :value="item"
-                  :key="item"
-                >{{$Tool.transInsurancePeriod(item)}}</option>
+                  v-for="unique in item.vitProductCalConfigItems"
+                  :value="unique.option"
+                  :key="unique.id"
+                >{{(+unique.option).toFixed(2)}}{{unique.optionOther}}</option>
               </select>
-              <svg
-                class="icon icon_xiala-copy"
-                aria-hidden="true"
-                v-if="listParams.policyPeriods.length > 1"
+
+              <!-- 性别配置为空时 -->
+              <span
+                class="select"
+                v-else-if="item.calItemTag === 4 && !item.vitProductCalConfigItems.length"
+              >无性别</span>
+
+              <select
+                v-else
+                class="select"
+                v-model="query[paramsDataDict[item.calItemTag]]"
+                @change="search"
               >
-                <use xlink:href="#icon_xiala-copy" />
-              </svg>
-            </mt-cell>
-
-            <mt-cell title="交费期间" v-if="listParams.paymentPeriods.length">
-              <select class="select" v-model="query.paymentPeriod" @change="search">
-                <!-- <option value="请选择">请选择</option> -->
                 <option
-                  v-for="item in listParams.paymentPeriods"
-                  :value="item"
-                  :key="item"
-                >{{$Tool.transPaymentPeriod(item)}}</option>
+                  v-for="unique in item.vitProductCalConfigItems"
+                  :value="JSON.stringify(unique)"
+                  :key="unique.id"
+                >
+                  <!-- 保险区间/交费区间 -->
+                  <template
+                    v-if="item.calItemTag === 5 || item.calItemTag === 7"
+                  >{{unique.option.includes("@") ? `至${unique.option.replace("@", '岁')}` : unique.option + '年'}}</template>
+
+                  <template
+                    v-else-if="item.calItemTag === 15"
+                  >{{unique.optionOther}}{{unique.option}}</template>
+
+                  <template v-else-if="item.calItemTag === 4">{{{1: "男", 2: "女"}[unique.option]}}</template>
+
+                  <template v-else>
+                    {{unique.option}}
+                    <!-- 份数 -->
+                    <template v-if="item.calItemTag === 1">份</template>
+
+                    <!-- 档次 -->
+                    <template v-else-if="item.calItemTag === 3">档</template>
+
+                    <!-- 领取年龄 -->
+                    <template v-else-if="item.calItemTag === 9">岁起</template>
+                  </template>
+                </option>
               </select>
               <svg
                 class="icon icon_xiala-copy"
                 aria-hidden="true"
-                v-if="listParams.paymentPeriods.length > 1"
-              >
-                <use xlink:href="#icon_xiala-copy" />
-              </svg>
-            </mt-cell>
-
-            <mt-cell title="交费方式">
-              <!-- <select class="select" v-model="query.paymentMethod">
-                <option value="请选择">请选择</option>
-                <option v-for="item in listParams.paymentPeriods" :value="item" :key="item">{{item}}</option>
-              </select>-->
-              <mt-button type="primary" size="small" class="paymentMethod-btn">年交</mt-button>
-            </mt-cell>
-
-            <mt-cell title="性别" v-if="listParams.sexs.length">
-              <div class="btn-wrap">
-                <mt-button
-                  v-for="(item, index) in listParams.sexs"
-                  v-if="item != 2"
-                  :type="item === query.sex ? 'primary' : 'default'"
-                  size="small"
-                  :key="index"
-                  @click.native="choice('sex', item)"
-                >{{item === 0 ? '男' : '女'}}</mt-button>
-              </div>
-            </mt-cell>
-
-            <mt-cell title="有无社保" v-if="listParams.socialInsuranceFlag.length">
-              <div class="btn-wrap">
-                <mt-button
-                  v-for="(item, index) in listParams.socialInsuranceFlag"
-                  v-if="item == 0 || item == 1"
-                  :type="item === query.socialInsuranceFlags ? 'primary' : 'default'"
-                  size="small"
-                  :key="index"
-                  @click.native="choice('socialInsuranceFlags', item)"
-                >{{item === 0 ? '无' : '有'}}</mt-button>
-              </div>
-            </mt-cell>
-
-            <mt-cell title="首续保" v-if="listParams.renewalFlags.length">
-              <!-- <select class="select" v-model="query.renewalFlags">
-                <option value="请选择">请选择</option>
-                <option v-for="item in listParams.renewalFlags" :value="item" :key="item">{{item}}</option>
-              </select>-->
-              <div class="btn-wrap">
-                <mt-button
-                  v-for="(item, index) in listParams.renewalFlags"
-                  v-if="item == 2 || item == 1"
-                  :type="item === query.renewalFlags ? 'primary' : 'default'"
-                  size="small"
-                  style="padding: 0;"
-                  :key="index"
-                  @click.native="choice('renewalFlags', item)"
-                >{{item === 1 ? '首保' : '续保'}}</mt-button>
-              </div>
-            </mt-cell>
-
-            <!-- 投保档次 -->
-            <mt-cell title="投保档次" v-if="listParams.applicationGrades.length">
-              <select class="select" v-model="query.applicationGrade" @change="search">
-                <!-- <option value="请选择">请选择</option> -->
-                <option
-                  v-for="item in listParams.applicationGrades"
-                  :value="item"
-                  :key="item"
-                >{{item}}档</option>
-              </select>
-              <svg
-                class="icon icon_xiala-copy"
-                aria-hidden="true"
-                v-if="listParams.applicationGrades.length > 1"
-              >
-                <use xlink:href="#icon_xiala-copy" />
-              </svg>
-            </mt-cell>
-
-            <!-- 职业风险等级 -->
-            <mt-cell title="职业风险等级" v-if="listParams.occupationalRiskGrade.length">
-              <select class="select" v-model="query.occupationalRiskGrade" @change="search">
-                <option value="请选择">请选择</option>
-                <option
-                  v-for="item in listParams.occupationalRiskGrade"
-                  :value="item"
-                  :key="item"
-                >{{item}}</option>
-              </select>
-              <svg
-                class="icon icon_xiala-copy"
-                aria-hidden="true"
-                v-if="listParams.occupationalRiskGrade.length > 1"
+                v-if="item.vitProductCalConfigItems.length > 1"
               >
                 <use xlink:href="#icon_xiala-copy" />
               </svg>
@@ -219,7 +145,7 @@
             </table>
             <!-- 滚动表格 -->
             <div
-              v-show="listRates.length"
+              v-if="listRates.length"
               class="rate-page"
               v-infinite-scroll="loadMore"
               infinite-scroll-disabled="isDisLoading"
@@ -228,17 +154,15 @@
             >
               <table>
                 <tr v-for="(item, index) of listRates" :key="index">
-                  <td v-for="(unit, unique) of columns" :key="unique">{{item[unit.key]}}</td>
+                  <td>{{item.age}}</td>
+                  <td>{{['保额', '保费'][calculator.rateMode]}}{{item[['amountInsured', 'rate'][calculator.rateMode]].toFixed(2)}}{{calculator.unit}}</td>
                 </tr>
               </table>
               <mt-spinner type="fading-circle" v-if="isLoadingRate"></mt-spinner>
               <div v-else style="margin: 10px;">已加载全部</div>
             </div>
-          </div>
 
-          <div class="ac" v-show="!listRates.length">
-            <br />查无结果
-            <br />
+            <div class="ac" style="margin-top: 40px;" v-else>查无结果</div>
           </div>
         </div>
       </mt-tab-container-item>
@@ -258,7 +182,9 @@
             :key="index"
           />
         </template>
-        <div class="ac" v-else><br>暂无规则介绍，等待后台更新。</div>
+        <div class="ac" v-else>
+          <br />暂无规则介绍，等待后台更新。
+        </div>
       </mt-tab-container-item>
       <!-- 产品条款 -->
       <mt-tab-container-item id="4">
@@ -302,87 +228,40 @@ export default {
       query: {
         page: 1,
         size: 20,
-        amountInsured: "",
-        applicationGrade: "",
-        policyPeriod: "",
-        paymentPeriod: "",
-        socialInsuranceFlags: "有",
-        sex: "0", // 0男 1女 2默认
-        renewalFlags: "首保", // 首续保
-        paymentMethod: "年交",
-        occupationalRiskGrade: "",
-        insuranceId: ""
+        productId: this.$route.query.id,
+        policyPeriod: "{}", // 保险区间
+        paymentPeriod: "{}", // 交费区间
+        paymentMethod: "{}", // 交费方式
+        sexs: "{}", // 0男 1女 2默认
+        socialInsuranceFlags: "{}", // 社保
+        insuranceShares: "{}", // 份数
+        applicationGrade: "{}", // 档次
+        insurancePlanContent: "{}", // 计划
+        drawingAge: "{}" // 领取年龄
       },
-      listParams: {
-        insuredAmounts: [],
-        applicationGrades: [],
-        policyPeriods: [],
-        paymentPeriods: [],
-        renewalFlags: [],
-        sexs: [],
-        socialInsuranceFlag: [],
-        paymentMethods: [],
-        occupationalRiskGrade: []
-      },
+      paramsDataDict: Object.freeze({
+        5: "policyPeriod",
+        7: "paymentPeriod",
+        15: "paymentMethod",
+        9: "drawingAge",
+        14: "insurancePlanContent",
+        3: "applicationGrade",
+        1: "insuranceShares",
+        6: "socialInsuranceFlags",
+        4: "sexs"
+      }),
+      listParams: {},
       isDisLoading: true,
       isLoadingRate: true,
       columns: [
-        // {
-        //   title: "性别",
-        //   key: "sex"
-        // },
         {
           title: "投保年龄（岁）",
           key: "age"
         },
-        // {
-        //   title: "保险期间",
-        //   key: "policyPeriod"
-        // },
-        // {
-        //   title: "交费期间",
-        //   key: "paymentPeriod"
-        // },
-        // {
-        //   title: "社保",
-        //   key: "socialInsuranceFlag"
-        // },
-        // {
-        //   title: "首续保",
-        //   key: "renewalFlag"
-        // },
-        // {
-        //   title: "保险金额",
-        //   key: "occupationalRiskGrade"
-        // },
-        // {
-        //   title: "保险金额",
-        //   key: "occupationalRiskGrade"
-        // },
-        // {
-        //   title: "投保档次",
-        //   key: "applicationGrade"
-        // },
-        // {
-        //   title: "保险金额",
-        //   key: "amountInsured"
-        // },
         {
           title: "费率（元）",
           key: "rate"
         }
-        // {
-        //   title: "费率单位",
-        //   key: "rateUnit"
-        // },
-        // {
-        //   title: "计算单位",
-        //   key: "countMethod"
-        // },
-        // {
-        //   title: "缴费方式",
-        //   key: "paymentMethod"
-        // }
       ],
       listRates: [],
       planOptionList: Object.freeze({
@@ -391,12 +270,17 @@ export default {
         2: "无社保",
         3: "男性",
         4: "女性"
-      })
+      }),
+      calculator: {
+        rateMode: 0, // 费率计算模式  0  保费推算保额    1  保额推算保费
+        unit: "" // 费率表返回单位
+      },
+      premium: ""
     };
   },
   mounted() {
     let query = {
-      id: this.$route.query.id, // 2291257061117263872
+      id: this.$route.query.id, // 2402850435158245385
       token: this.$route.query.token
     };
     this.getData(query);
@@ -481,28 +365,52 @@ export default {
       // 获取产品费率条件参数
       getProductRateParams(query)
         .then(res => {
-          console.log("ProductRateParams: ", res);
-          this.listParams = res;
+          // console.log("ProductRateParams: ", res);
+          this.calculator = res.vitProductCalculator;
+          // 参数排序
+          res.vitProductCalConfigs.sort((a, b) => a - b);
+
+          this.listParams = res.vitProductCalConfigs;
           // 过虑性别出男女外的不合法选项
-          res.sexs = res.sexs.filter(data => data == 1 || data == 0);
-          this.query.amountInsured = res.insuredAmounts[0] || "";
-          this.query.applicationGrade = res.applicationGrades[0] || "";
-          this.query.policyPeriod = res.policyPeriods[0] || "";
-          this.query.paymentPeriod = res.paymentPeriods[0] || "";
-          this.query.socialInsuranceFlags = res.socialInsuranceFlag[0] || "";
-          this.query.sex = JSON.stringify(res.sexs[0]) ? res.sexs[0] : "";
-          this.query.renewalFlags = res.renewalFlags[0] || "";
-          this.query.paymentMethod = res.paymentMethods[0] || "";
-          this.query.occupationalRiskGrade = res.occupationalRiskGrade[0] || "";
-          this.query.insuranceId = this.$route.query.id;
+          // res.sexs = res.sexs.filter(data => data == 1 || data == 0);
+          // this.query.amountInsured = res.insuredAmounts[0] || "";
+          // this.query.applicationGrade = res.applicationGrades[0] || "";
+          // this.query.policyPeriod = res.policyPeriods[0] || "";
+          // this.query.paymentPeriod = res.paymentPeriods[0] || "";
+          // this.query.socialInsuranceFlags = res.socialInsuranceFlag[0] || "";
+          // this.query.sex = JSON.stringify(res.sexs[0]) ? res.sexs[0] : "";
+          // this.query.renewalFlags = res.renewalFlags[0] || "";
+          // this.query.paymentMethod = res.paymentMethods[0] || "";
+          // this.query.occupationalRiskGrade = res.occupationalRiskGrade[0] || "";
+          // 设置默认参数
+          for (const iterator of res.vitProductCalConfigs) {
+            if (this.paramsDataDict[iterator.calItemTag]) {
+              this.query[
+                this.paramsDataDict[iterator.calItemTag]
+              ] = JSON.stringify(iterator.vitProductCalConfigItems[0]);
+            } else if (
+              iterator.calItemTag === 12 ||
+              iterator.calItemTag === 10
+            ) {
+              // 保费/保险金额
+              iterator.vitProductCalConfigItems[0] &&
+                (this.premium = iterator.vitProductCalConfigItems[0].option);
+            }
+          }
         })
         .then(() => {
           this.getRate();
         });
     },
     getRate() {
+      // this.isLoadingRate = true
+      let arr = Object.values(this.paramsDataDict);
+      let query = { ...this.query };
+      for (const iterator of arr) {
+        query[iterator] = query[iterator] && JSON.parse(query[iterator]);
+      }
       // 获取费率详情
-      getProductRateDetail(this.query, this.$route.query.token).then(res => {
+      getProductRateDetail(query, this.$route.query.token).then(res => {
         this.isDisLoading = false;
         this.listRates = this.listRates.concat(res.list);
         !res.list.length &&
@@ -559,7 +467,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import url('../styles/wangEditor.css');
+@import url("../styles/wangEditor.css");
 .main {
   overflow: scroll;
 }
@@ -600,7 +508,7 @@ export default {
   padding: 0.2rem 0;
   line-height: 0.7rem;
   span {
-    color: #444;
+    color: #515a6e;
   }
 }
 .tab2-title-wrap {
@@ -615,7 +523,7 @@ export default {
   margin-bottom: -0.94rem;
   width: 100%;
   .current {
-    color: #444;
+    color: #515a6e;
   }
   .line {
     width: 0.4rem;
@@ -629,10 +537,10 @@ export default {
   margin: 0.2rem;
 }
 .select {
-  border: 1px solid #ddd;
+  // border: 1px solid #ddd;
   width: 2rem;
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
   color: #fff;
   font-size: 0.24rem;
   background: #6582ff;
@@ -653,7 +561,7 @@ option {
 .rate-page-wrap {
   overflow-x: auto;
   margin: 20px 10px;
-  height: 10rem;
+  max-height: 10rem;
 }
 .rate-page {
   width: 100%;
@@ -665,14 +573,14 @@ option {
 table {
   width: 100%;
   text-align: center;
-  line-height: 0.5rem;
-  // border: 1px solid #ddd;
+  color: #515a6e;
   th,
   td {
-    border: 1px solid #ddd;
+    border: 1px solid #e8eaec;
+    padding: 13px 0;
     // border-right: 1px solid #ddd;
     &:first-child {
-      width: 30%;
+      width: 40%;
     }
   }
 }
@@ -682,14 +590,13 @@ table {
 .table-header {
   position: relative;
   top: 1px;
-  background: #fff;
+  background: #f8f8f9;
 }
 .icon_xiala-copy {
   display: inline-block;
   position: absolute;
   right: 21px;
   top: 9px;
-  color: #fff;
   // transform: rotate(90deg);
   font-size: 0.32rem;
 }
@@ -729,6 +636,7 @@ table {
 .mint-cell {
   min-height: 36px;
   margin: 5px 0;
+  color: #515a6e;
   &:last-child {
     background-image: none;
   }
@@ -739,10 +647,5 @@ table {
 /deep/.mint-spinner-fading-circle {
   margin: 10px auto;
 }
-
-/deep/.ck.ck-editor {
-    line-height: .44rem;
-}
-
 </style>
 
