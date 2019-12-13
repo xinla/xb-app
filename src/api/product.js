@@ -13,7 +13,7 @@ export const getProductDetail = ({id, token}) => {
     url: controller2 + '/desc/h5',
     method: 'get',
     params: {
-      productId: id
+      id
     },
     headers: {
       auth_token: token
