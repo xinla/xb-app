@@ -1,6 +1,6 @@
 <template>
   <div class="main" @scroll="scroll">
-    <img :src="product.banner" class="banner" />
+    <img :src="product.banner" class="banner" @load="setPosition" />
     <div class="title wrapper" ref="title">
       <h1>{{product.product.productFullName}}</h1>
       <p
@@ -9,27 +9,28 @@
     </div>
 
     <div ref="tab-wrap" class="tab-wrap">
-      <template v-if="product.insurancePlan">
-        <div class="tab-title-wrap">
-          <div
-            :class="['tab-title', {'active': tabActive == index}]"
-            v-for="(item, index) in product.insurancePlanContent"
-            :key="index"
-            @click="tabActive = index"
-          >{{item.name}}</div>
-          <!-- <div class="tab-title active">保障利益</div> -->
-        </div>
-        <mt-tab-container v-model="tabActive" swipeable>
-          <mt-tab-container-item :id="0">
-            <ul class="tab1">
-              <li v-for="(unit, unique) in product.insurancePlanContent" :key="unique">
-                <span>{{planOptionList[unit.option]}}</span>
-                <span class="fr">{{unit.amount}}{{['万元', '元', '元/天'][unit.unit]}}</span>
-              </li>
-            </ul>
-          </mt-tab-container-item>
-        </mt-tab-container>
-      </template>
+      <div class="tab-title-wrap">
+        <div
+          :class="['tab-title', {'active': tabActive == index}]"
+          v-for="(item, index) in product.insurancePlanContent"
+          :key="index"
+          @click="tabActive = index"
+        >{{item.name}}</div>
+      </div>
+      <mt-tab-container v-model="tabActive" swipeable>
+        <mt-tab-container-item
+          v-for="(item, index) in product.insurancePlanContent"
+          :key="index"
+          :id="index"
+        >
+          <ul class="tab1">
+            <li v-for="(unit, unique) in item.liability" :key="unique">
+              <span>{{unit.title}}</span>
+              <span class="fr">{{unit.algorithm}}</span>
+            </li>
+          </ul>
+        </mt-tab-container-item>
+      </mt-tab-container>
     </div>
 
     <ul ref="tab2-title-wrap" class="tab2-title-wrap wrapper">
@@ -50,7 +51,7 @@
         <div class="line" v-show="active === '4'"></div>
       </li>
     </ul>
-    <mt-tab-container v-model="active" style="margin-top: .94rem;min-height: 1rem;">
+    <mt-tab-container v-model="active" style="margin-top: 0.94rem;">
       <!-- 保险详情 -->
       <mt-tab-container-item id="1">
         <!-- 优先展示图集 -->
@@ -62,84 +63,85 @@
           class="insurance-text btn-bottom wangeditor"
           v-html="product.imageText"
         ></div>
-        <div class="ac" v-else>
-          <br />暂无详情介绍，等待后台更新。
-        </div>
-        <!-- </ul> -->
+        <div class="ac empty" v-else>暂无详情介绍，等待后台更新。</div>
       </mt-tab-container-item>
       <!-- 费率表 -->
       <mt-tab-container-item id="2">
-        <div class="btn-bottom">
-          <ul class="args-wrap">
+        <div class="btn-bottom" style="margin: 0 0.2rem;">
+          <ul class="args-wrap" v-if="listParams.length">
             <template v-for="item in listParams">
               <li class="li left" :key="item.id + 'a'">{{item.calItemName}}</li>
               <li class="li right" :key="item.id">
-                <div
-                  v-for="unique in item.vitProductCalConfigItems"
-                  :class="['select-btn', {'select-icon':query[paramsDataDict[item.calItemTag]] == JSON.stringify(unique)}]"
-                  :key="unique.id"
-                  @click="query[paramsDataDict[item.calItemTag]] = JSON.stringify(unique), search()"
-                >
-
-                  <!-- 保险区间/交费区间 -->
-                  <template
-                    v-if="item.calItemTag === 5 || item.calItemTag === 7"
-                  >{{unique.option | filterAge}}</template>
-
-                  <template
-                    v-else-if="item.calItemTag === 15"
-                  >{{unique.optionOther}}{{unique.option}}</template>
-<!-- 性别 -->
-                  <template v-else-if="item.calItemTag === 4">{{{1: "男", 2: "女"}[unique.option]}}</template>
-<!-- 有无社保 -->
-                  <template v-else-if="item.calItemTag === 6">{{{1: "有", 0: "无"}[unique.option]}}</template>
-
-                  <template v-else>
-                    {{unique.option}}<!-- 份数 -->
-                    <template v-if="item.calItemTag === 1">份</template>
-
-                    <!-- 档次 -->
-                    <template v-else-if="item.calItemTag === 3">档</template>
-
-                    <!-- 领取年龄 -->
-                    <template v-else-if="item.calItemTag === 9">岁起</template>
+                <template v-for="(unique, index) in item.vitProductCalConfigItems">
+                  <div
+                    v-show="item.calItemTag !== 9 || (item.calItemTag === 9 && sexType === unique.optionOther)"
+                    :class="['select-btn', {'select-icon':query[paramsDataDict[item.calItemTag]] == JSON.stringify(unique)}]"
+                    :key="unique.id"
+                    @click="choice(item.calItemTag, unique, index)"
+                  >
+                    <!-- 保险区间/交费区间 -->
+                    <template v-if="item.calItemTag === 5 || item.calItemTag === 7">{{unique.unit}}</template>
+                    <!-- 交费方式 -->
+                    <template v-else-if="item.calItemTag === 15">{{unique.option}}</template>
+                    <!-- 性别 -->
+                    <template v-else-if="item.calItemTag === 4">{{{1: "男", 2: "女"}[unique.option]}}</template>
+                    <!-- 有无社保 -->
+                    <template v-else-if="item.calItemTag === 6">{{{1: "有", 0: "无"}[unique.option]}}</template>
+                    <!-- 领取方式 -->
+                    <template
+                      v-else-if="item.calItemTag === 11"
+                    >{{{1: "月领", 0: "年领"}[unique.option]}}</template>
 
                     <!-- 保费/保险金额 -->
-                    <template v-else-if="item.calItemTag === 12 || item.calItemTag === 10">{{unique.unit}}</template>
-                  </template>
-                </div>
+                    <template
+                      v-else-if="item.calItemTag === 12 || item.calItemTag === 10"
+                    >{{+unique.option}}{{unique.unit}}</template>
+
+                    <template v-else>
+                      {{unique.option}}
+                      <!-- 份数 -->
+                      <template v-if="item.calItemTag === 1">份</template>
+
+                      <!-- 档次 -->
+                      <template v-else-if="item.calItemTag === 3">档</template>
+
+                      <!-- 领取年龄 -->
+                      <template v-else-if="item.calItemTag === 9">岁起</template>
+                    </template>
+                  </div>
+                </template>
               </li>
             </template>
           </ul>
-
           <div class="rate-page-wrap">
-            <!-- 表头表格 -->
-            <table class="table-header">
-              <tr>
-                <th>周岁</th>
-                <th>{{['保额', '保费'][calculator.rateMode]}}（{{calculator.unit}}）</th>
-              </tr>
-            </table>
-            <!-- 滚动表格 -->
-            <div
-              v-if="listRates.length"
-              class="rate-page"
-              v-infinite-scroll="loadMore"
-              infinite-scroll-disabled="isDisLoading"
-              infinite-scroll-distance="10"
-              infinite-scroll-immediate-check="true"
-            >
-              <table>
-                <tr v-for="(item, index) of listRates" :key="index">
-                  <td>{{item.age}}</td>
-                  <td>{{item.result.toFixed(2)}}</td>
+            <div v-show="listRates.length">
+              <!-- 表头表格 -->
+              <table class="table-header">
+                <tr>
+                  <th>周岁</th>
+                  <th>{{['保额', '保费'][calculator.rateMode]}}（{{calculator.unit}}）</th>
                 </tr>
               </table>
-              <mt-spinner type="fading-circle" v-if="isLoadingRate"></mt-spinner>
-              <div v-else style="margin: 10px;">已加载全部</div>
+              <!-- 滚动表格 -->
+              <div
+                class="rate-page"
+                v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="isDisLoading"
+                infinite-scroll-distance="10"
+                infinite-scroll-immediate-check="true"
+              >
+                <table>
+                  <tr v-for="(item, index) of listRates" :key="index">
+                    <td>{{item.age}}</td>
+                    <td>{{item.result.toFixed(2)}}</td>
+                  </tr>
+                </table>
+                <mt-spinner type="fading-circle" v-if="!isDisLoading"></mt-spinner>
+                <div v-else style="margin: 10px;">已加载全部</div>
+              </div>
             </div>
 
-            <div v-else class="ac" style="margin-top: 40px;">查无结果</div>
+            <div v-show="!listRates.length && !isLoadingRate" class="ac empty">{{tips || '暂无相关数据'}}</div>
           </div>
         </div>
       </mt-tab-container-item>
@@ -159,7 +161,7 @@
             :key="index"
           />
         </template>
-        <div class="ac" v-else>
+        <div class="ac empty" v-else>
           <br />暂无规则介绍，等待后台更新。
         </div>
       </mt-tab-container-item>
@@ -194,7 +196,9 @@ import { getWeChatSign } from "@/api/weChatShare";
 export default {
   filters: {
     filterAge(val) {
-      return val.includes("@") ? `至${val.replace("@", '') == 120 ? '终身' : val.replace("@", '岁')}` : val + '年'
+      return val.includes("@")
+        ? `至${val.replace("@", "") == 105 ? "终身" : val.replace("@", "岁")}`
+        : val + "年";
     }
   },
   data() {
@@ -211,20 +215,20 @@ export default {
         page: 1,
         size: 20,
         productId: this.$route.query.id,
-        policyPeriod: "1", // 保险区间
-        paymentPeriod: "{}", // 交费区间
-        paymentMethod: "{}", // 交费方式
-        sexs: "{}", // 0男 1女 2默认
-        socialInsuranceFlags: "{}", // 社保
-        insuranceShares: "{}", // 份数
-        applicationGrade: "{}", // 档次
-        insurancePlanContent: "{}", // 计划
-        drawingAge: "{}", // 领取年龄
-        premium: '{}', // 保费
-        amountInsured: '{}', // 保险金额
-        jobCodes: '{}', // 职业（风险）类别
-        receiveType: '{}', // 领取方式
-        receivePeriod: '{}', // 领取期间
+        policyPeriod: null, // 保险区间
+        paymentPeriod: null, // 交费区间
+        paymentMethod: null, // 交费方式
+        sexs: null, // 0男 1女 2默认
+        socialInsuranceFlags: null, // 社保
+        insuranceShares: null, // 份数
+        applicationGrade: null, // 档次
+        insurancePlanContent: null, // 计划
+        drawingAge: null, // 领取年龄
+        premium: null, // 保费
+        amountInsured: null, // 保险金额
+        jobCodes: null, // 职业（风险）类别
+        receiveType: null, // 领取方式
+        receivePeriod: null // 领取期间
       },
       paramsDataDict: Object.freeze({
         5: "policyPeriod",
@@ -236,14 +240,14 @@ export default {
         1: "insuranceShares",
         6: "socialInsuranceFlags",
         4: "sexs",
-        12: 'premium',
-        10: 'amountInsured',
-        8: 'jobCodes', // 职业（风险）类别
-        11: 'receiveType', // 领取方式
-        13: 'receivePeriod', // 领取期间
+        12: "premium",
+        10: "amountInsured",
+        8: "jobCodes", // 职业（风险）类别
+        11: "receiveType", // 领取方式
+        13: "receivePeriod" // 领取期间
       }),
-      listParams: {},
-      isDisLoading: true,
+      listParams: [],
+      isDisLoading: false,
       isLoadingRate: true,
       listRates: [],
       planOptionList: Object.freeze({
@@ -257,6 +261,13 @@ export default {
         rateMode: 0, // 费率计算模式  0  保费推算保额    1  保额推算保费
         unit: "" // 费率表返回单位
       },
+      sexType: "", // 性别
+      paramsListOjb: {
+        drawingAge: [], // 领取年龄
+        amountInsured: [], // 保险金额
+        insurancePlanContent: [] // 保险计划
+      },
+      tips: ""
     };
   },
   mounted() {
@@ -271,7 +282,8 @@ export default {
       // console.log(query.token)
       // 获取产品详情
       getProductDetail(query).then(res => {
-        res.insurancePlanContent = JSON.parse(res.insurancePlanContent) || [];
+        res.insurancePlanContent = JSON.parse(res.insurancePlanContent || "[]");
+        res.insuranceLiability = JSON.parse(res.insuranceLiability || "[]");
         // res.attachment.productCourse =
         //   JSON.parse(res.attachment.productCourse) || [];
         this.product = res;
@@ -292,16 +304,7 @@ export default {
           ));
         // console.log("ProductDetail: ", res);
         this.$nextTick(() => {
-          this.offsetTop =
-            this.$refs["tab2-title-wrap"].offsetTop -
-            this.$refs["title"].clientHeight;
-          this.offsetTopTitle = this.$refs["title"].offsetTop;
-
-          // 动态设置标题css
-          this.$refs["tab-wrap"].style.marginTop =
-            this.$refs["title"].clientHeight + "px";
-          this.$refs["title"].style.marginBottom =
-            -this.$refs["title"].clientHeight + "px";
+          this.setPosition();
         });
         // return getWeChatSign(location.href);
       });
@@ -346,30 +349,51 @@ export default {
       // 获取产品费率条件参数
       getProductRateParams(query)
         .then(res => {
-          // console.log("ProductRateParams: ", res);
-          this.calculator = res.vitProductCalculator;
-          // 参数排序
-          res.vitProductCalConfigs.sort((a, b) => a - b);
+          if (res.vitProductCalculator) {
+            // console.log("ProductRateParams: ", res);
+            this.calculator = res.vitProductCalculator;
+            this.listParams = res.vitProductCalConfigs;
+            // 设置默认参数
+            for (const iterator of res.vitProductCalConfigs) {
+              if (this.paramsDataDict[iterator.calItemTag]) {
+                // 保险计划/保险金额/领取年龄切换引用
+                if (
+                  iterator.calItemTag === 9 ||
+                  iterator.calItemTag === 10 ||
+                  iterator.calItemTag === 14
+                ) {
+                  this.paramsListOjb[this.paramsDataDict[iterator.calItemTag]] =
+                    iterator.vitProductCalConfigItems;
+                }
+// 如果有默认参数，则使用，没有则默认为数组第一个项
+                let haveDefault = false;
+                for (const item of iterator.vitProductCalConfigItems) {
+                  if (item.isDefault) {
+                    this.query[
+                      this.paramsDataDict[iterator.calItemTag]
+                    ] = JSON.stringify(item);
+                    haveDefault = true;
+                    break;
+                  }
+                }
 
-          this.listParams = res.vitProductCalConfigs;
-          // 过虑性别出男女外的不合法选项
-          // res.sexs = res.sexs.filter(data => data == 1 || data == 0);
-          // this.query.amountInsured = res.insuredAmounts[0] || "";
-          // this.query.applicationGrade = res.applicationGrades[0] || "";
-          // this.query.policyPeriod = res.policyPeriods[0] || "";
-          // this.query.paymentPeriod = res.paymentPeriods[0] || "";
-          // this.query.socialInsuranceFlags = res.socialInsuranceFlag[0] || "";
-          // this.query.sex = JSON.stringify(res.sexs[0]) ? res.sexs[0] : "";
-          // this.query.renewalFlags = res.renewalFlags[0] || "";
-          // this.query.paymentMethod = res.paymentMethods[0] || "";
-          // this.query.occupationalRiskGrade = res.occupationalRiskGrade[0] || "";
-          // 设置默认参数
-          for (const iterator of res.vitProductCalConfigs) {
-            if (this.paramsDataDict[iterator.calItemTag]) {
-              this.query[
-                this.paramsDataDict[iterator.calItemTag]
-              ] = JSON.stringify(iterator.vitProductCalConfigItems[0]);
+                haveDefault ||
+                  (this.query[
+                    this.paramsDataDict[iterator.calItemTag]
+                  ] = JSON.stringify(iterator.vitProductCalConfigItems[0]));
+              }
             }
+            // 根据性别类型选择默认领取年龄参数
+            this.sexType = JSON.parse(this.query.sexs || "{}").option;
+            for (const iterator of this.paramsListOjb.drawingAge) {
+              if (this.sexType === iterator.optionOther) {
+                this.query.drawingAge === JSON.stringify(iterator);
+              }
+            }
+          } else {
+            this.isLoadingRate = false;
+            this.tips = res;
+            return Promise.reject();
           }
         })
         .then(() => {
@@ -377,7 +401,7 @@ export default {
         });
     },
     getRate() {
-      // this.isLoadingRate = true
+      this.isLoadingRate = true;
       let arr = Object.values(this.paramsDataDict);
       let query = { ...this.query };
       for (const iterator of arr) {
@@ -385,11 +409,10 @@ export default {
       }
       // 获取费率详情
       getProductRateDetail(query, this.$route.query.token).then(res => {
-        this.isDisLoading = false;
+        this.isLoadingRate = false;
         if (res.list) {
           this.listRates = this.listRates.concat(res.list);
-          !res.list.length &&
-            ((this.isDisLoading = true), (this.isLoadingRate = false));
+          res.list.length < this.query.size && (this.isDisLoading = true);
           // console.log("ProductRateDetail: ", this.listRates);
         } else {
           this.Toast({
@@ -423,26 +446,51 @@ export default {
       }
     },
     loadMore() {
-      this.isDisLoading = true;
-      // console.log('loadMore')
       this.query.page++;
       this.getRate();
     },
-    search() {
-      // console.log('search')
+    choice(type, data, index) {
+      if (type === 4) {
+        // 当切换性别时设置对应性别的领取年龄默认参数
+        this.sexType = data.option;
+        for (const iterator of this.paramsListOjb.drawingAge) {
+          if (this.sexType === iterator.optionOther) {
+            this.query.drawingAge = JSON.stringify(iterator);
+            break;
+          }
+        }
+      } else if (type === 14 || type === 3) {
+        // 当切换保险计划/投保档次时，自动切换对应保险金额
+        this.query.amountInsured = JSON.stringify(
+          this.paramsListOjb.amountInsured[index]
+        );
+      } else if (type === 10) {
+        // 当切换保险金额时，自动切换对应保险计划
+        this.query.insurancePlanContent = JSON.stringify(
+          this.paramsListOjb.insurancePlanContent[index]
+        );
+      }
+
+      this.query[this.paramsDataDict[type]] = JSON.stringify(data);
+
+      this.isDisLoading = false;
       this.query.page = 1;
       this.listRates = [];
       this.getRate();
-    },
-    choice(type, data) {
-      this.query[type] = data;
-      this.search();
       // console.log(this.query[type])
+    },
+    setPosition() {
+      this.offsetTop =
+        this.$refs["tab2-title-wrap"].offsetTop -
+        this.$refs["title"].clientHeight;
+      this.offsetTopTitle = this.$refs["title"].offsetTop;
+
+      // 动态设置标题css
+      this.$refs["tab-wrap"].style.marginTop =
+        this.$refs["title"].clientHeight + "px";
+      this.$refs["title"].style.marginBottom =
+        -this.$refs["title"].clientHeight + "px";
     }
-    // change() {
-    //   this.search()
-    //   // console.log(1)
-    // },
   }
 };
 </script>
@@ -451,10 +499,12 @@ export default {
 @import url("../styles/wangEditor.less");
 .main {
   overflow: scroll;
+  position: relative;
+  z-index: 0;
 }
 .banner {
   width: 100%;
-  height: 3.4rem;
+  // height: 3.4rem;
 }
 .tab-title-wrap {
   overflow: auto;
@@ -499,7 +549,6 @@ export default {
   border-bottom: solid 1px #f1f3f5;
   line-height: 0.8rem;
   color: #a6abb7;
-  z-index: 1;
   padding: 0 0.32rem;
   margin-bottom: -0.94rem;
   width: 100%;
@@ -532,16 +581,13 @@ option {
   background: #fff;
 }
 .rate-page-wrap {
-  overflow-x: auto;
-  margin: 0.2rem 0.32rem 0;
-  max-height: 10rem;
+  height: 6rem; // 用于控制切换参数页面不跳动,高度类似无限加载框
 }
 .rate-page {
   width: 100%;
-  // width: 800px;
   overflow-y: auto;
   text-align: center;
-  height: 9.3rem;
+  height: 5.3rem;
 }
 table {
   width: 100%;
@@ -602,7 +648,7 @@ table {
 }
 
 .args-wrap {
-  margin: 0.4rem 0.32rem 0;
+  margin: 0.4rem 0 0.2rem;
   .li {
     display: inline-block;
     white-space: nowrap;
@@ -621,7 +667,7 @@ table {
   .select-btn {
     position: relative;
     display: inline-block;
-    width: 1rem;
+    min-width: 1rem;
     overflow: hidden;
     text-align: center;
     line-height: 0.5rem;
@@ -630,6 +676,7 @@ table {
     font-size: 0.24rem;
     margin-right: 0.2rem;
     white-space: nowrap;
+    padding: 0 5px;
     &:last-child {
       margin-right: 0;
     }
@@ -665,6 +712,18 @@ table {
       transform: rotate(-45deg);
     }
   }
+}
+.empty {
+  margin-top: 40px;
+}
+/deep/.mint-tab-container {
+  position: relative;
+  z-index: -1;
+}
+// loading图标
+/deep/.mint-spinner-fading-circle {
+  display: inline-block;
+  margin-top: 0.2rem;
 }
 </style>
 

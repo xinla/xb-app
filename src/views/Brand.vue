@@ -24,6 +24,7 @@
       <img
         :src="result.supplier.publicityImage || require('../assets/default_banner_brand.png')"
         class="banner"
+        @load="setPosition"
       />
 
       <div class="title-logo">
@@ -54,9 +55,7 @@
         <div class="line" v-show="active === '4'"></div>
       </li>
     </ul>
-    <div
-      style="margin-top: .84rem;min-height: 1rem;padding: 0 0.25rem;"
-    >
+    <div style="margin-top: .84rem;min-height: 1rem;padding: 0 0.25rem;">
       <!-- 公司介绍 -->
       <div v-show="active == 1">
         <div class="title-wrap">
@@ -128,13 +127,17 @@
         <ul>
           <li class="li2">
             <div class="left">服务电话</div>
-            <span class="current"
+            <span
+              class="current"
               @click="call(result.supplier.nationalServicePhone)"
             >{{result.supplier.nationalServicePhone}}</span>
           </li>
           <li class="li2">
             <div class="left">公司网址</div>
-            <span class="current" @click="goLink(result.supplier.companyWebsite)">{{result.supplier.companyWebsite}}</span>
+            <span
+              class="current"
+              @click="goLink(result.supplier.companyWebsite)"
+            >{{result.supplier.companyWebsite}}</span>
             <!-- <a :href="result.supplier.companyWebsite" target="_self" rel="noopener noreferrer">{{result.supplier.companyWebsite}}</a> -->
           </li>
           <li class="li2">
@@ -142,11 +145,14 @@
             {{result.supplier.companyAddress}}
             <!-- 高德地图方案 -->
             <div class="bfc-o" @click="goMap(result.supplier.companyAddress)">
-              <img :src="`https://restapi.amap.com/v3/staticmap?location=${location}&zoom=18&size=500*300&markers=mid,,A:${location}&labels=${result.supplier.companyAddress.slice(0, 10)}...,2,0,16,0xFFFFFF,0x008000:${location}&key=500a3ef03541f06fac2f747c4ad81ecf`" alt="">
+              <img
+                :src="`https://restapi.amap.com/v3/staticmap?location=${location}&zoom=18&size=500*300&markers=mid,,A:${location}&labels=${result.supplier.companyAddress.slice(0, 10)}...,2,0,16,0xFFFFFF,0x008000:${location}&key=500a3ef03541f06fac2f747c4ad81ecf`"
+                alt
+              />
               <!-- <iframe
                 :src="`//uri.amap.com/search?keyword=${result.supplier.companyAddress}&center=&city=&view=map&src=mypage&coordinate=gaode`"
                 frameborder="0"
-              ></iframe> -->
+              ></iframe>-->
             </div>
 
             <!-- 高德URI根据经纬度单点标记 -->
@@ -180,7 +186,7 @@
                 :src="`http://api.map.baidu.com/staticimage? 
             width=400&height=300&zoom=18&center=${result.supplier.companyAddress}`"
               />
-            </div> -->
+            </div>-->
           </li>
         </ul>
       </div>
@@ -209,7 +215,12 @@
       <!-- 产品列表 -->
       <div v-show="active == 4">
         <ul>
-          <li class="li-pro bfc-o" v-for="(item, index) of productList" :key="index" @click="goProduct(item)">
+          <li
+            class="li-pro bfc-o"
+            v-for="(item, index) of productList"
+            :key="index"
+            @click="goProduct(item)"
+          >
             <img class="cover-pro fl" :src="item.appNavigation" alt />
             <div class="title-pro">{{item.name}}</div>
             <div class="txt1">{{item.coreBuy}}</div>
@@ -241,7 +252,7 @@ export default {
         honors: [],
         list: []
       },
-      productList: {},
+      productList: [],
       allShow: false,
       isShow: false,
       offsetTop: 0,
@@ -253,7 +264,7 @@ export default {
         page: 1,
         size: 10
       },
-      location: ''
+      location: ""
     };
   },
   computed: {
@@ -281,13 +292,19 @@ export default {
         // 高德api获取地点经纬度
         if (res.supplier.companyAddress) {
           getLocation(res.supplier.companyAddress).then(_res => {
-            this.location = _res.location
-          })
+            this.location = _res.location;
+          });
         }
-        
+
         // 兼容ios 时间格式转换
-        if (!!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) && res.supplier.foundingTime) {
-          this.result.supplier.foundingTime = res.supplier.foundingTime.replace(/-/g, '/')
+        if (
+          !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) &&
+          res.supplier.foundingTime
+        ) {
+          this.result.supplier.foundingTime = res.supplier.foundingTime.replace(
+            /-/g,
+            "/"
+          );
         }
         // console.log("foundingTime：", res.supplier.foundingTime)
         const website = this.result.supplier.companyWebsite;
@@ -298,12 +315,9 @@ export default {
         }
         // 用于设置分享标题
         document.title = res.supplier.nameForShort || res.supplier.name;
+
         this.$nextTick(() => {
-          this.offsetTop =
-            this.$refs["tab2-title-wrap"].offsetTop -
-            this.$refs["top"].clientHeight;
-          // console.log(this.offsetTop);
-          // console.log(this.$refs["top"].clientHeight);
+          this.setPosition()
           if (this.$refs.describe.clientHeight >= 100) {
             this.isShow = true;
           }
@@ -330,7 +344,7 @@ export default {
         this.isSwitch = false;
       } else {
         this.$refs["tab2-title-wrap"].style.position = "relative";
-        this.$refs["tab2-title-wrap"].style.top = '-0.2rem';
+        this.$refs["tab2-title-wrap"].style.top = "-0.2rem";
 
         this.$refs["top"].style.transform = "scale(0)";
         // this.$refs["top"].style.visibility = "hidden";
@@ -384,12 +398,19 @@ export default {
     goProduct(data) {
       // 调用两端跳转产品详情事件
       if (this.isShare) {
-        location.href = `http://h5.visualinsur.cn/product?id=${data.id}`
+        location.href = `http://h5.visualinsur.cn/product?id=${data.id}`;
       } else {
         !(navigator.userAgent.indexOf("Android") > -1)
-          ? window.webkit.messageHandlers.skipProductDetail.postMessage(JSON.stringify(data))
+          ? window.webkit.messageHandlers.skipProductDetail.postMessage(
+              JSON.stringify(data)
+            )
           : window.hello.skipProductDetail(JSON.stringify(data));
       }
+    },
+    setPosition() {
+      this.offsetTop =
+        this.$refs["tab2-title-wrap"].offsetTop -
+        this.$refs["top"].clientHeight;
     }
   }
 };
@@ -433,7 +454,7 @@ export default {
 }
 .banner {
   width: 100%;
-  height: 3.78rem;
+  // height: 3.78rem;
 }
 .title-logo {
   position: absolute;
@@ -474,7 +495,7 @@ export default {
   border-radius: 0.2rem 0.2rem 0 0;
   top: -0.2rem;
   position: relative;
-  
+
   .line {
     width: 0.4rem;
     height: 0.06rem;
@@ -484,8 +505,8 @@ export default {
   }
 }
 .current {
-    color: #6582ff;
-  }
+  color: #6582ff;
+}
 .title-wrap {
   margin-top: 0.5rem;
   display: flex;
