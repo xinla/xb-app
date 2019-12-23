@@ -597,8 +597,8 @@
         <div class="content">
           <div class="item-wrap">
             <div class="item">
-              <p class="key">保障额度</p>
-              <p class="value">{{ item.guaranteeName | addUnits('万元') }}</p>
+              <p class="key">{{ item.tag | productTag }}</p>
+              <p class="value">{{ item.coverageShow | isNull }}</p>
             </div>
             <div class="item">
               <p class="key">保障期间</p>
@@ -798,6 +798,11 @@ export default {
     }
   },
   filters: {
+    // 保障额度
+    productTag (val) {
+      //val  0份数 1档次  2计划  3保额
+      return val === 0 ? '份数' : val === 1 ? '档次' : val === 2 ? '计划' : val === 3 ? '保额' : '-'
+    },
     // 投保人被保人证件有效期
     idValidityDateType (val, data) {
       //val  0  长期有效   1 非长期
