@@ -55,6 +55,7 @@
         <span>投保计划</span>
       </div>
 
+      <!-- 主附险 -->
       <div v-for="(item, index) in result.vitPolicyRightRiskVoList" :key="index">
         <div class="title">
           <svg v-if="index === 0" class="icon icon-title icon_zhuxian" aria-hidden="true" key="0">
@@ -73,8 +74,8 @@
         <div class="content">
           <div class="item-wrap">
             <div class="item">
-              <p class="key">保障额度</p>
-              <p class="value">{{item.guaranteeValue || 0}}万元</p>
+              <p class="key">份数/档次/计划/保额</p>
+              <p class="value">{{item.tag == 4 ? item.premium + '元' : item.coverageShow || '-'}}</p>
             </div>
             <div class="item">
               <p class="key">保障期间</p>
@@ -96,17 +97,39 @@
               <p class="key">保费</p>
             </div>
             <div class="item">
-              <span class="blue">￥{{item.premium}}</span>
-              <span class="key">元/年</span>
+              <span class="blue">¥{{item.tag == 4 ? item.coverageShow + '/年' : item.premium + '元/年'}}</span>
+              <!-- <span class="key">元/年</span> -->
             </div>
           </div>
         </div>
-        <div
+        <!-- <div
           class="blue ac"
           :style="{'padding': (index === 0 ? '.4rem 0 .2rem' : '.4rem 0')}"
           @click="getPolicyImg(item.productId)"
-        >查看保单条款详情></div>
+        >查看保单条款详情></div>-->
       </div>
+
+      <div class="content" v-if="result.vitPolicyRightRiskVoList.length > 1">
+        <div class="title2">
+          <svg class="icon icon-title icon_baofei" aria-hidden="true">
+            <use xlink:href="#icon_baofei" />
+          </svg>
+          <span>
+            合计
+            保费
+          </span>
+
+          <div class="fr blue">¥{{result.countTotalPremium}}元</div>
+        </div>
+      </div>
+
+      <!-- <div class="title2">
+            <svg class="icon icon-title icon_baofei" aria-hidden="true">
+              <use xlink:href="#icon_baofei" />
+            </svg>
+            <span>累计保费</span>
+            <span>累计保费</span>
+      </div>-->
 
       <!-- <div class="title">
         <svg class="icon icon-title icon_fuxian" aria-hidden="true">
@@ -138,7 +161,7 @@
         <div class="item-wrap" style="line-height:1.4rem;">
           <div class="item">保费</div>
           <div class="item">
-            <span class="blue ac">￥1000</span>万/年
+            <span class="blue ac">¥1000</span>万/年
           </div>
         </div>
       </div>
@@ -153,7 +176,8 @@
         <span>利益说明</span>
       </div>
 
-      <div style="margin: .8rem 0 .3rem;">
+      <!-- 滑块 -->
+      <!-- <div style="margin: .8rem 0 .3rem;">
         <mt-range
           v-model="age"
           :min="query.insuredCurrentAge"
@@ -185,13 +209,14 @@
             </svg>
           </div>
         </mt-range>
-      </div>
-
+      </div>-->
+      <!-- 主附险说明 -->
       <div v-for="(item, index) in result.vitPolicyRightRiskVoList" :key="index">
         <div class="title">
           <span>{{item.productName}}</span>
         </div>
-        <div class="content">
+        <!-- 保费 -->
+        <!-- <div class="content">
           <div class="title2">
             <svg class="icon icon-title icon_baofei" aria-hidden="true">
               <use xlink:href="#icon_baofei" />
@@ -214,8 +239,9 @@
               <p class="value ar">{{item.totalPremium}}元</p>
             </div>
           </div>
-        </div>
+        </div>-->
 
+        <!-- 保险金 -->
         <div
           class="content"
           v-for="(item, index) in JSON.parse(item.insurableInterest)"
@@ -225,7 +251,7 @@
             <svg class="icon icon-title icon_bao" aria-hidden="true">
               <use xlink:href="#icon_bao" />
             </svg>
-            <span>{{item.scheduleName}}</span>
+            <span>保障利益</span>
           </div>
           <div class="item-wrap2" style="padding: .2rem 0;">
             <div v-for="(unit, unqiue) in item.content" class="item-wrap2" :key="unqiue">
@@ -238,6 +264,11 @@
             </div>
           </div>
         </div>
+        <div
+          class="blue ac"
+          :style="{'padding': (index === 0 ? '.4rem 0 .2rem' : '.4rem 0')}"
+          @click="getPolicyImg(item.productId)"
+        >查看保单条款详情></div>
       </div>
 
       <!-- <div class="title">
@@ -288,14 +319,20 @@
             </div>
           </div>
         </div>
-      </div> -->
+      </div>-->
 
-      <div class="content" v-if="result.vitPolicyRightRiskVoList.length > 1">
+      <!-- 合计当期保费 -->
+      <!-- <div class="content">
         <div class="title2">
           <svg class="icon icon-title icon_baofei" aria-hidden="true">
             <use xlink:href="#icon_baofei" />
           </svg>
-          <span>合计保费</span>
+          <span>
+            {{result.vitPolicyRightRiskVoList.length > 1 ? '累计' : ''}}
+            保费
+          </span>
+
+          <div class="fr blue">¥{{result.countTotalPremium}}元</div>
         </div>
         <div class="item-wrapitem-wrap2">
           <div class="item-wrap2">
@@ -315,7 +352,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
 
       <div class="content card" v-if="$route.query.proposalId">
         <div class="head">
@@ -430,7 +467,12 @@ export default {
       this.$route.query.type &&
         getBeneficiaryCover(this.query).then(res => {
           // 获取封面
-          res && ((this.cover = res.cover), (this.title = res.title));
+          if (res) {
+            this.cover = res.cover;
+            this.title = res.title;
+            // 设置文档标题
+            document.title = res.title;
+          }
         });
 
       // 设置已读状态
@@ -688,6 +730,7 @@ export default {
   left: 36%;
 }
 /deep/.mt-range-thumb {
+  display: none;
   width: 20px;
   height: 20px;
   top: 4px;

@@ -221,7 +221,7 @@
             :key="index"
             @click="goProduct(item)"
           >
-            <img class="cover-pro fl" :src="item.appNavigation" alt />
+            <img class="cover-pro fl" :src="item.appNavigation || '../assets/pic_moren.png'" alt />
             <div class="title-pro">{{item.name}}</div>
             <div class="txt1">{{item.coreBuy}}</div>
             <div class="txt2">{{item.typicalRate}}</div>

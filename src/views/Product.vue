@@ -59,6 +59,7 @@
           <img v-for="(item, index) of product.descPicture" :src="item" :key="index" alt />
         </template>
         <div
+        ref="imageText"
           v-else-if="product.imageText"
           class="insurance-text btn-bottom wangeditor"
           v-html="product.imageText"
@@ -148,6 +149,7 @@
       <!-- 投保规则 -->
       <mt-tab-container-item id="3">
         <div
+        ref="underwritingRulesText"
           v-if="product.underwritingRulesText"
           class="insurance-text btn-bottom wangeditor"
           v-html="product.underwritingRulesText"
@@ -174,6 +176,7 @@
         </object>-->
         <!-- <div v-if="product.insuranceLiability" class="insurance-text" v-html="product.insuranceLiability"></div> -->
         <img
+        ref="preview-img"
           v-for="(item, index) in product.insuranceLiabilityPdf"
           class="policy-wording-images"
           preview="2"
@@ -290,10 +293,10 @@ export default {
         // 设置文档标题
         document.title = res.product.productFullName;
         // 图集转换
-        typeof this.product.descPicture === "string" &&
+        this.product.descPicture &&
           (this.product.descPicture = this.product.descPicture.split(","));
         // 投保规则图片转换
-        typeof this.product.insuranceRulePdf === "string" &&
+        typeof this.product.insuranceRulePdf === "string" && this.product.insuranceRulePdf && 
           (this.product.insuranceRulePdf = this.product.insuranceRulePdf.split(
             ","
           ));
@@ -302,8 +305,12 @@ export default {
           (this.product.insuranceLiabilityPdf = this.product.insuranceLiabilityPdf.split(
             ","
           ));
+          this.$previewRefresh()
         // console.log("ProductDetail: ", res);
         this.$nextTick(() => {
+          // 判断保险详情和投保规则富文本是否为空
+          this.$refs.imageText && this.$refs.imageText.textContent == false && (this.product.imageText = '')
+          this.$refs.underwritingRulesText && this.$refs.underwritingRulesText.textContent == false && (this.product.underwritingRulesText = '')
           this.setPosition();
         });
         // return getWeChatSign(location.href);

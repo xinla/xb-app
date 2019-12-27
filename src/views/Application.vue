@@ -597,7 +597,7 @@
         <div class="content">
           <div class="item-wrap">
             <div class="item">
-              <p class="key">{{ item.tag | productTag }}</p>
+              <p class="key">份数/档次/计划/保额</p>
               <p class="value">{{ item.coverageShow | isNull }}</p>
             </div>
             <div class="item">
@@ -618,7 +618,7 @@
           <div class="item-wrap">
             <div class="item">保费</div>
             <div class="item">
-              <span class="blue small">￥{{ item.premium }}</span>元/{{ item.paymentMethod | paymentMethod}}
+              <span class="blue small">¥{{ item.premium }}</span>元/{{ item.paymentMethod | paymentMethod}}
             </div>
           </div>
         </div>
