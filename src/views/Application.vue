@@ -598,7 +598,7 @@
           <div class="item-wrap">
             <div class="item">
               <p class="key">份数/档次/计划/保额</p>
-              <p class="value">{{ item.coverageShow | isNull }}</p>
+              <p class="value">{{item.tag == 4 ? item.result + '元' : item.coverageShow || '-'}}</p>
             </div>
             <div class="item">
               <p class="key">保障期间</p>
@@ -618,7 +618,7 @@
           <div class="item-wrap">
             <div class="item">保费</div>
             <div class="item">
-              <span class="blue small">¥{{ item.premium }}</span>元/{{ item.paymentMethod | paymentMethod}}
+              <span class="blue small">¥{{item.tag == 4 ? item.coverageShow + '/年' : item.result + '元/年'}}</span>
             </div>
           </div>
         </div>
