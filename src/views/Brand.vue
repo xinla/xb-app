@@ -221,7 +221,7 @@
             :key="index"
             @click="goProduct(item)"
           >
-            <img class="cover-pro fl" :src="item.appNavigation || '../assets/pic_moren.png'" alt />
+            <img class="cover-pro fl" :src="item.appNavigation || require('../assets/pic_moren.png')" alt />
             <div class="title-pro">{{item.name}}</div>
             <div class="txt1">{{item.coreBuy}}</div>
             <div class="txt2">{{item.typicalRate}}</div>
@@ -384,7 +384,7 @@ export default {
         : window.hello.callPhone(data);
     },
     goMap(data) {
-      // 调用两端拨号事件
+      // 调用两端跳转地图事件
       !(navigator.userAgent.indexOf("Android") > -1)
         ? window.webkit.messageHandlers.skipToMapIntent.postMessage(data)
         : window.hello.skipToMapIntent(data);

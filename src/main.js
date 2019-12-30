@@ -17,7 +17,7 @@ import store from './store'
 import Tool from './libs/tools'
 Vue.use(Tool);
 
-import { TabContainer, TabContainerItem, Cell, Navbar, TabItem, Range, Switch, Toast, InfiniteScroll, Button, Spinner } from 'mint-ui';
+import { TabContainer, TabContainerItem, Cell, Navbar, TabItem, Range, Switch, Toast, InfiniteScroll, Button, Spinner, Indicator } from 'mint-ui';
 
 Vue.use(InfiniteScroll);
 Vue.component(Spinner.name, Spinner);
@@ -30,6 +30,7 @@ Vue.component(Cell.name, Cell);
 Vue.component(TabContainer.name, TabContainer);
 Vue.component(TabContainerItem.name, TabContainerItem);
 Vue.prototype.Toast = Toast
+Vue.prototype.Indicator = Indicator
 
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'

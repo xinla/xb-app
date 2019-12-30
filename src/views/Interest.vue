@@ -97,7 +97,9 @@
               <p class="key">保费</p>
             </div>
             <div class="item">
-              <span class="blue">¥{{item.tag == 4 ? item.coverageShow + '/年' : item.premium + '元/年'}}</span>
+              <span
+                class="blue"
+              >¥{{item.tag == 4 ? item.coverageShow + '/年' : item.premium + '元/年'}}</span>
               <!-- <span class="key">元/年</span> -->
             </div>
           </div>
@@ -114,10 +116,7 @@
           <svg class="icon icon-title icon_baofei" aria-hidden="true">
             <use xlink:href="#icon_baofei" />
           </svg>
-          <span>
-            合计
-            保费
-          </span>
+          <span>合计保费</span>
 
           <div class="fr blue">¥{{result.countTotalPremium}}元</div>
         </div>
@@ -267,7 +266,7 @@
         <div
           class="blue ac"
           :style="{'padding': (index === 0 ? '.4rem 0 .2rem' : '.4rem 0')}"
-          @click="getPolicyImg(item.productId)"
+          @click="getPolicyImg(item.productId, index)"
         >查看保单条款详情></div>
       </div>
 
@@ -367,9 +366,7 @@
           <svg class="icon icon_phone" aria-hidden="true">
             <use xlink:href="#icon_phone" />
           </svg>
-          <a
-            :href="'tel:' + result.agentMobile"
-          >{{result.agentMobile ? '+86 ' + result.agentMobile : '暂未联系方式'}}</a>
+          {{result.agentMobile ? result.agentMobile : '暂未联系方式'}}
         </div>
         <div class="gray slogan">{{result.companySlogan}}</div>
       </div>
@@ -501,11 +498,15 @@ export default {
     getPolicyImg(data) {
       getPolicyDetail({ id: data, token: this.$route.query.token })
         .then(res => {
-          if (!res.policyWordingImages) {
+          if (!res.insuranceLiabilityPdf) {
             this.Toast("暂无保单条款详情");
             return;
           }
-          this.imgList = res.policyWordingImages.split(",");
+          this.Indicator.open({
+            spinnerType: "fading-circle",
+            text: "请稍后"
+          });
+          this.imgList = res.insuranceLiabilityPdf.split(",");
           this.$nextTick(() => {
             // console.log(this.$refs['preview-img'][0])
 
@@ -514,11 +515,13 @@ export default {
             let e = {
               target: this.$refs["preview-img"][0]
             };
+            this.Indicator.close();
             this.onThumbnailsClick(e);
           });
           // console.log(this.imgList)
         })
         .catch(error => {
+          this.Indicator.close();
           this.Toast("系统正忙，请稍后再试");
         });
     }
