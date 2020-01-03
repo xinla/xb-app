@@ -625,7 +625,7 @@
       </div>
       <div class="total">
         <span>首次交费合计</span>
-        <span class="num"><i>{{ result.vitPolicyRiskInfoVoList | total }}</i>元</span>
+        <span class="num"><i>{{ result.totalPremium | isNull }}</i>元</span>
       </div>
     </div>
 
