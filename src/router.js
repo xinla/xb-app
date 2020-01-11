@@ -137,5 +137,13 @@ export default new Router({
       },
       component: () => import('./views/Book.vue')
     },
+    {
+      path: '/join',
+      name: 'entryApplications',
+      meta: {
+        title: '入职申请表'
+      },
+      component: () => import('./views/EntryApplications.vue')
+    }
   ]
 })

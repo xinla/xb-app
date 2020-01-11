@@ -2,7 +2,7 @@ const config = {
   // 测试服
   baseUrl: {
     // dev: 'http://192.168.1.32:8888', // 虚拟机
-    dev: 'https://gateway.visualinsur.cn:8888', // wangdong
+    dev: 'http://192.168.1.150:8888', // wangdong
     pro: 'http://192.168.1.26:8888', // wangdong
     domain2: process.env.NODE_ENV === 'development' ? 'http://192.168.1.26:8888' : 'http://192.168.1.26:8888', // liusiyuan
     dev3:  process.env.NODE_ENV === 'development' ? 'http://192.168.1.26:8888' : 'http://192.168.1.26:8888',

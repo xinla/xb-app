@@ -138,11 +138,11 @@
               <div class="title2">投保人</div>
               <div class="half">
                 身高
-                <input readonly class="input" v-model="unit.applicantContent.height"><span>厘米</span>
+                <input disabled class="input" v-model="unit.applicantContent.height"><span>厘米</span>
               </div>
               <div class="half">
                 体重
-                <input readonly class="input" v-model="unit.applicantContent.weight"><span>公斤</span>
+                <input disabled class="input" v-model="unit.applicantContent.weight"><span>公斤</span>
               </div>
             </div>
 
@@ -150,11 +150,11 @@
               <div class="title2">被保人</div>
               <div class="half">
                 身高
-                <input readonly class="input" v-model="unit.insuredContent.height"><span>厘米</span>
+                <input disabled class="input" v-model="unit.insuredContent.height"><span>厘米</span>
               </div>
               <div class="half">
                 体重
-                <input readonly class="input" v-model="unit.insuredContent.weight"><span>公斤</span>
+                <input disabled class="input" v-model="unit.insuredContent.weight"><span>公斤</span>
               </div>
             </div>
           </template>
@@ -164,19 +164,19 @@
               <div class="title2">投保人吸烟情况</div>
               <div class="half">
                 吸烟
-                <input readonly class="input" v-model="unit.applicantContent.smokeYear"><span>年</span>
+                <input disabled class="input" v-model="unit.applicantContent.smokeYear"><span>年</span>
               </div>
               <div class="half">
                 每天
-                <input readonly class="input" v-model="unit.applicantContent.smokeNumEveryDay"><span>支</span>
+                <input disabled class="input" v-model="unit.applicantContent.smokeNumEveryDay"><span>支</span>
               </div>
               <div class="half">
                 若已戒烟，戒烟
-                <input readonly class="input" v-model="unit.applicantContent.stopSmoke"><span>年</span>
+                <input disabled class="input" v-model="unit.applicantContent.stopSmoke"><span>年</span>
               </div>
               <div class="half">
                 原因
-                <input readonly class="input input-width" v-model="unit.applicantContent.stopReason">
+                <input disabled class="input input-width" v-model="unit.applicantContent.stopReason">
               </div>
             </div>
 
@@ -184,19 +184,19 @@
               <div class="title2">被保人吸烟情况</div>
               <div class="half">
                 吸烟
-                <input readonly class="input" v-model="unit.insuredContent.smokeYear"><span>年</span>
+                <input disabled class="input" v-model="unit.insuredContent.smokeYear"><span>年</span>
               </div>
               <div class="half">
                 每天
-                <input readonly class="input" v-model="unit.insuredContent.smokeNumEveryDay"><span>支</span>
+                <input disabled class="input" v-model="unit.insuredContent.smokeNumEveryDay"><span>支</span>
               </div>
               <div class="half">
                 若已戒烟，戒烟
-                <input readonly class="input" v-model="unit.insuredContent.stopSmoke"><span>年</span>
+                <input disabled class="input" v-model="unit.insuredContent.stopSmoke"><span>年</span>
               </div>
               <div class="half">
                 原因
-                <input readonly class="input input-width" v-model="unit.insuredContent.stopReason">
+                <input disabled class="input input-width" v-model="unit.insuredContent.stopReason">
               </div>
             </div>
           </template>
@@ -206,19 +206,19 @@
               <div class="title2">投保人饮酒情况</div>
               <div class="half">
                 喝酒
-                <input readonly class="input" v-model="unit.applicantContent.drinkYear"><span>年</span>
+                <input disabled class="input" v-model="unit.applicantContent.drinkYear"><span>年</span>
               </div>
               <div class="half">
                 每天
-                <input readonly class="input" v-model="unit.applicantContent.drinkNumEveryTime"><span>两</span>
+                <input disabled class="input" v-model="unit.applicantContent.drinkNumEveryTime"><span>两</span>
               </div>
               <div class="half">
                 若已戒酒，戒酒
-                <input readonly class="input" v-model="unit.applicantContent.stopDrink"><span>年</span>
+                <input disabled class="input" v-model="unit.applicantContent.stopDrink"><span>年</span>
               </div>
               <div class="half">
                 原因
-                <input readonly class="input input-width" v-model="unit.applicantContent.stopReason">
+                <input disabled class="input input-width" v-model="unit.applicantContent.stopReason">
               </div>
             </div>
 
@@ -226,19 +226,19 @@
               <div class="title2">被保人饮酒情况</div>
               <div class="half">
                 喝酒
-                <input readonly class="input" v-model="unit.insuredContent.drinkYear"><span>年</span>
+                <input disabled class="input" v-model="unit.insuredContent.drinkYear"><span>年</span>
               </div>
               <div class="half">
                 每天
-                <input readonly class="input" v-model="unit.insuredContent.drinkNumEveryTime"><span>两</span>
+                <input disabled class="input" v-model="unit.insuredContent.drinkNumEveryTime"><span>两</span>
               </div>
               <div class="half">
                 若已戒酒，戒酒
-                <input readonly class="input" v-model="unit.insuredContent.stopDrink"><span>年</span>
+                <input disabled class="input" v-model="unit.insuredContent.stopDrink"><span>年</span>
               </div>
               <div class="half">
                 原因
-                <input readonly class="input input-width" v-model="unit.insuredContent.stopReason">
+                <input disabled class="input input-width" v-model="unit.insuredContent.stopReason">
               </div>
             </div>
           </template>
@@ -249,14 +249,14 @@
               <div class="title2">投保人</div>
               <div class="half">
                 已怀孕
-                <input readonly class="input" v-model="unit.applicantContent.pregnant"><span>周</span>
+                <input disabled class="input" v-model="unit.applicantContent.pregnant"><span>周</span>
               </div>
             </div>
             <div class="input-wrap" v-show="unit.insured">
               <div class="title2">被保人</div>
               <div class="half">
                 已怀孕
-                <input readonly class="input" v-model="unit.insuredContent.pregnant"><span>周</span>
+                <input disabled class="input" v-model="unit.insuredContent.pregnant"><span>周</span>
               </div>
             </div>
           </template>
@@ -275,35 +275,35 @@
                     <ul>
                       <li>
                         <span>序号</span>
-                        <input readonly class="input" v-model="vUnit.index">
+                        <input disabled class="input" v-model="vUnit.index">
                       </li>
                       <li>
                         <span>说明对象</span>
-                        <input readonly class="input" v-model="vUnit.explainObject">
+                        <input disabled class="input" v-model="vUnit.explainObject">
                       </li>
                       <li>
                         <span>疾病名称</span>
-                        <input readonly class="input" v-model="vUnit.diseaseName">
+                        <input disabled class="input" v-model="vUnit.diseaseName">
                       </li>
                       <li>
                         <span>发病时间</span>
-                        <input readonly class="input" v-model="vUnit.diseaseTime">
+                        <input disabled class="input" v-model="vUnit.diseaseTime">
                       </li>
                       <li>
                         <span>治疗方法</span>
-                        <input readonly class="input" v-model="vUnit.therapies">
+                        <input disabled class="input" v-model="vUnit.therapies">
                       </li>
                       <li>
                         <span>治疗医院</span>
-                        <input readonly class="input" v-model="vUnit.hospital">
+                        <input disabled class="input" v-model="vUnit.hospital">
                       </li>
                       <li>
                         <span>最后治疗时间</span>
-                        <input readonly class="input" v-model="vUnit.lastTherapyTime">
+                        <input disabled class="input" v-model="vUnit.lastTherapyTime">
                       </li>
                       <li>
                         <span>现在情况</span>
-                        <input readonly class="input" v-model="vUnit.currentState">
+                        <input disabled class="input" v-model="vUnit.currentState">
                       </li>
                     </ul>
                   </div>
@@ -320,35 +320,35 @@
                     <ul>
                       <li>
                         <span>序号</span>
-                        <input readonly class="input" v-model="vUnit.index">
+                        <input disabled class="input" v-model="vUnit.index">
                       </li>
                       <li>
                         <span>说明对象</span>
-                        <input readonly class="input" v-model="vUnit.explainObject">
+                        <input disabled class="input" v-model="vUnit.explainObject">
                       </li>
                       <li>
                         <span>疾病名称</span>
-                        <input readonly class="input" v-model="vUnit.diseaseName">
+                        <input disabled class="input" v-model="vUnit.diseaseName">
                       </li>
                       <li>
                         <span>发病时间</span>
-                        <input readonly class="input" v-model="vUnit.diseaseTime">
+                        <input disabled class="input" v-model="vUnit.diseaseTime">
                       </li>
                       <li>
                         <span>治疗方法</span>
-                        <input readonly class="input" v-model="vUnit.therapies">
+                        <input disabled class="input" v-model="vUnit.therapies">
                       </li>
                       <li>
                         <span>治疗医院</span>
-                        <input readonly class="input" v-model="vUnit.hospital">
+                        <input disabled class="input" v-model="vUnit.hospital">
                       </li>
                       <li>
                         <span>最后治疗时间</span>
-                        <input readonly class="input" v-model="vUnit.lastTherapyTime">
+                        <input disabled class="input" v-model="vUnit.lastTherapyTime">
                       </li>
                       <li>
                         <span>现在情况</span>
-                        <input readonly class="input" v-model="vUnit.currentState">
+                        <input disabled class="input" v-model="vUnit.currentState">
                       </li>
                     </ul>
                   </div>
@@ -361,11 +361,11 @@
           <!-- <template v-if="item.index === 6">
               <div class="input-wrap">
                 <div class="title2">说明情况</div>
-                <input readonly class="input" v-model="item.applicantInput">
+                <input disabled class="input" v-model="item.applicantInput">
               </div>
               <div class="input-wrap">
                 <div class="title2">说明情况</div>
-                <input readonly class="input" v-model="item.insuredInput">
+                <input disabled class="input" v-model="item.insuredInput">
               </div>
           </template>-->
 
@@ -374,25 +374,25 @@
               <div class="title2">被保人</div>
               <div class="half">
                 出生时孕周
-                <input readonly class="input" v-model="unit.insuredContent.childWeek"><span>周</span>
+                <input disabled class="input" v-model="unit.insuredContent.childWeek"><span>周</span>
               </div>
               <div class="half">
                 身高
-                <input readonly
+                <input disabled
                   class="input"
                   v-model="unit.insuredContent.childHeight"
                 ><span>厘米</span>
               </div>
               <div class="half">
                 体重
-                <input readonly
+                <input disabled
                   class="input"
                   v-model="unit.insuredContent.childWeight"
                 ><span>公斤</span>
               </div>
               <div class="half">
                 出生时留院
-                <input readonly
+                <input disabled
                   class="input"
                   v-model="unit.insuredContent.stayHospital"
                 ><span>天</span>
@@ -420,35 +420,35 @@
                       <ul>
                         <li>
                           <span>序号</span>
-                          <input readonly class="input" v-model="vUnit.index" disabled="true">
+                          <input disabled class="input" v-model="vUnit.index">
                         </li>
                         <li>
                           <span>说明对象</span>
-                          <input readonly class="input" v-model="vUnit.explainObject">
+                          <input disabled class="input" v-model="vUnit.explainObject">
                         </li>
                         <li>
                           <span>疾病名称</span>
-                          <input readonly class="input" v-model="vUnit.diseaseName">
+                          <input disabled class="input" v-model="vUnit.diseaseName">
                         </li>
                         <li>
                           <span>发病时间</span>
-                          <input readonly class="input" v-model="vUnit.diseaseTime">
+                          <input disabled class="input" v-model="vUnit.diseaseTime">
                         </li>
                         <li>
                           <span>治疗方法</span>
-                          <input readonly class="input" v-model="vUnit.therapies">
+                          <input disabled class="input" v-model="vUnit.therapies">
                         </li>
                         <li>
                           <span>治疗医院</span>
-                          <input readonly class="input" v-model="vUnit.hospital">
+                          <input disabled class="input" v-model="vUnit.hospital">
                         </li>
                         <li>
                           <span>最后治疗时间</span>
-                          <input readonly class="input" v-model="vUnit.lastTherapyTime">
+                          <input disabled class="input" v-model="vUnit.lastTherapyTime">
                         </li>
                         <li>
                           <span>现在情况</span>
-                          <input readonly class="input" v-model="vUnit.currentState">
+                          <input disabled class="input" v-model="vUnit.currentState">
                         </li>
                       </ul>
                     </div>
@@ -495,22 +495,22 @@
                 <div class="title2">投保人</div>
                 <div class="half">
                   固定收入
-                  <input readonly class="input" v-model="unit.applicantContent.income"><span>万元</span>
+                  <input disabled class="input" v-model="unit.applicantContent.income"><span>万元</span>
                 </div>
                 <div class="half">
                   来源
-                  <input readonly class="input input-width" v-model="unit.applicantContent.incomeFrom">
+                  <input disabled class="input input-width" v-model="unit.applicantContent.incomeFrom">
                 </div>
               </div>
               <div class="input-wrap">
                 <div class="title2">被保险人</div>
                 <div class="half">
                   固定收入
-                  <input readonly class="input" v-model="unit.insuredContent.income"><span>万元</span>
+                  <input disabled class="input" v-model="unit.insuredContent.income"><span>万元</span>
                 </div>
                 <div class="half">
                   来源
-                  <input readonly class="input input-width" v-model="unit.insuredContent.incomeFrom">
+                  <input disabled class="input input-width" v-model="unit.insuredContent.incomeFrom">
                 </div>
               </div>
             </template>
@@ -520,7 +520,7 @@
                 <div class="title2">投保人</div>
                 <div class="half">
                   驾照执照类型为
-                  <input readonly class="input" v-model="unit.applicantContent.driverLicense">
+                  <input disabled class="input" v-model="unit.applicantContent.driverLicense">
                 </div>
               </div>
 
@@ -528,7 +528,7 @@
                 <div class="title2">被保人</div>
                 <div class="half">
                   驾照执照类型为
-                  <input readonly class="input" v-model="unit.insuredContent.driverLicense">
+                  <input disabled class="input" v-model="unit.insuredContent.driverLicense">
                 </div>
               </div>
             </template>
@@ -538,7 +538,7 @@
                 <div class="title2">投保人</div>
                 <div class="half">
                   具体类型为
-                  <input readonly class="input" v-model="unit.applicantContent.medicalInsurance">
+                  <input disabled class="input" v-model="unit.applicantContent.medicalInsurance">
                 </div>
               </div>
 
@@ -546,7 +546,7 @@
                 <div class="title2">被保人</div>
                 <div class="half">
                   具体类型为
-                  <input readonly class="input" v-model="unit.insuredContent.medicalInsurance">
+                  <input disabled class="input" v-model="unit.insuredContent.medicalInsurance">
                 </div>
               </div>
             </template>
@@ -564,15 +564,15 @@
                       <ul>
                         <li>
                           <span>序号</span>
-                          <input readonly class="input" v-model="vUnit.index">
+                          <input disabled class="input" v-model="vUnit.index">
                         </li>
                         <li>
                           <span>说明对象</span>
-                          <input readonly class="input" v-model="vUnit.explainObject">
+                          <input disabled class="input" v-model="vUnit.explainObject">
                         </li>
                         <li>
                           <span>说明内容</span>
-                          <input readonly class="input" v-model="vUnit.explainContent">
+                          <input disabled class="input" v-model="vUnit.explainContent">
                         </li>
                       </ul>
                     </div>
@@ -588,15 +588,15 @@
                       <ul>
                         <li>
                           <span>序号</span>
-                          <input readonly class="input" v-model="vUnit.index">
+                          <input disabled class="input" v-model="vUnit.index">
                         </li>
                         <li>
                           <span>说明对象</span>
-                          <input readonly class="input" v-model="vUnit.explainObject">
+                          <input disabled class="input" v-model="vUnit.explainObject">
                         </li>
                         <li>
                           <span>说明内容</span>
-                          <input readonly class="input" v-model="vUnit.explainContent">
+                          <input disabled class="input" v-model="vUnit.explainContent">
                         </li>
                       </ul>
                     </div>
@@ -610,11 +610,11 @@
                 <div class="title2">投保人</div>
                 <div class="half">
                   项目
-                  <input readonly class="input input-width" v-model="unit.applicantContent.project">
+                  <input disabled class="input input-width" v-model="unit.applicantContent.project">
                 </div>
                 <div class="half">
                   频次
-                  <input readonly class="input" v-model="unit.applicantContent.frequency">
+                  <input disabled class="input" v-model="unit.applicantContent.frequency">
                 </div>
               </div>
 
@@ -622,11 +622,11 @@
                 <div class="title2">被保人</div>
                 <div class="half">
                   项目
-                  <input readonly class="input input-width" v-model="unit.insuredContent.project">
+                  <input disabled class="input input-width" v-model="unit.insuredContent.project">
                 </div>
                 <div class="half">
                   频次
-                  <input readonly class="input" v-model="unit.insuredContent.frequency">
+                  <input disabled class="input" v-model="unit.insuredContent.frequency">
                 </div>
               </div>
             </template>

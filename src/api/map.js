@@ -35,3 +35,20 @@ export const getLocation = (address) => {
     }]
   })
 }
+
+
+/**
+ * 获取行政区划
+ * @param {*} subdistrict 省市区街道，层级
+ * 5f70e232462daa68522e88bc11193c93
+ */
+export const getCityData = () => {
+  return axios.request({
+    url: 'https://restapi.amap.com/v3/config/district',
+    params: {
+      key: '500a3ef03541f06fac2f747c4ad81ecf',
+      subdistrict: 3,
+    },
+    method: 'get'
+  })
+}

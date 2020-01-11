@@ -1,0 +1,37 @@
+{
+  "remarks":[
+    {"key":"gender","value":"性别"},
+    {"key":"marriage","value":"婚姻状况"},
+    {"key":"education","value":"学历"},
+    {"key":"relation","value":"关系"}
+  ],
+  "gender":[
+    {"code":"0","name":"男"},
+    {"code":"1","name":"女"}
+  ],
+  "marriage":[
+    {"code":"0","name":"未婚"},
+    {"code":"1","name":"已婚"},
+    {"code":"2","name":"鳏寡"},
+    {"code":"3","name":"离异"}
+  ],
+  "education":[
+    {"code":"0","name":"博士"},
+    {"code":"1","name":"硕士"},
+    {"code":"2","name":"本科"},
+    {"code":"3","name":"专科"},
+    {"code":"4","name":"中专"},
+    {"code":"5","name":"高中"},
+    {"code":"6","name":"初中"},
+    {"code":"7","name":"小学"}
+  ],
+  "relation":[
+    {"code":"0","name":"父亲"},
+    {"code":"1","name":"母亲"},
+    {"code":"2","name":"配偶"},
+    {"code":"3","name":"儿子"},
+    {"code":"4","name":"女儿"},
+    {"code":"5","name":"朋友"},
+    {"code":"6","name":"亲戚"}
+  ]
+}
