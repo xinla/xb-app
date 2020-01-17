@@ -10,6 +10,7 @@
 
 <script>
 import { uploadFileApi } from "@/api/entry"
+import { compressImage } from '@/utils/compressImageUtils'
 export default {
   name: 'uploadImg',
   props: {
@@ -30,15 +31,38 @@ export default {
     upload() {
       this.$refs.file.click()
     },
+    //压缩图片上传
+    _compressAndUploadFile(file) {
+      compressImage(file.content).then(result => {
+        // console.log('压缩前:' + file.file.size, '压缩后:' + result.size)
+        if (result.size > file.file.size){
+          //压缩后比原来更大，则将原图上传
+          this._uploadFile(file.file, file.file.name);
+        } else {
+          //压缩后比原来小，上传压缩后的
+          this._uploadFile(result, file.file.name)
+        }
+      })
+    },
     fileChanged() {
-      let self = this
-      const list = this.$refs.file.files;
+      const list = this.$refs.file.files
+      let fileInfo = {}
       if (list.length > 1) {
         this.Toast('最多只能选择1张图片')
         return
       }
+      fileInfo.file = list[0]
+      const reader = new FileReader()
+      reader.onload = e => {
+        fileInfo.content = e.target.result
+        this._compressAndUploadFile(fileInfo);
+      };
+      reader.readAsDataURL(list[0])
+    },
+    //上传图片
+    _uploadFile(file, filename) {
       const formData = new FormData()
-      formData.append("file", list[0])
+      formData.append("file", file, filename)
       uploadFileApi(formData).then(res => {
         this.$emit('input', res.url)
       })
