@@ -546,14 +546,14 @@ export default {
         academicDegree: {required: false},
         school: {required: true,  message: '请输入学校全称'},
         graduationDate: {required: true,  message: '请选择毕业时间'},
-        enrollmentDate: {required: true,  message: '请选择入学时间'}
+        enrollmentDate: {required: true,  message: '请选择入学时间', timeRule: 'graduationDate', timeErrMsg: '毕业时间不得早于入学时间'}
       },
       workItem: {
         organization: {required: true,  message: '请输入单位名称'},
         position: {required: true,  message: '请输入职位名称'},
         salary: {required: true,  message: '请输入薪资', pattern: rules.number, errMsg: '薪资为大于零的正整数'},
         quitDate: {required: true,  message: '请选择离职时间'},
-        joinDate: {required: true,  message: '请选择入职时间'},
+        joinDate: {required: true,  message: '请选择入职时间', timeRule: 'quitDate', timeErrMsg: '离职时间不得早于入职时间'},
         witness: {required: true,  message: '请输入证明人姓名'},
         witnessPosition: {required: true,  message: '请输入证明人职位'},
         witnessMobile: {required: true,  message: '请输入证明人手机号', pattern: rules.mobile, errMsg: '证明人手机号格式错误'}
@@ -844,6 +844,10 @@ export default {
               // 校验格式
               if (Object.prototype.toString.call(pData.pattern).slice(8, -1).toLowerCase() === 'regexp' && !pData.pattern.test(item[it])) {
                 reject(pData.errMsg)
+              }
+              // 校验时间
+              if (pData.timeRule && pData.timeErrMsg && item[it] && item[pData.timeRule] && !(new Date(item[it]) < new Date(item[pData.timeRule]))) {
+                reject(pData.timeErrMsg)
               }
             }
           }
