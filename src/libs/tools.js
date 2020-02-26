@@ -272,6 +272,9 @@ export function formatFileSize(num) {
 }
 
 export function transInsurancePeriod(data) {
+  if (!data) {
+    return
+  }
   if (!data.includes("@")) {
     let age = data >= 105 ? '至终身' : data + '年'
     return `保${age}`;
@@ -287,6 +290,9 @@ export function transInsurancePeriod(data) {
 }
 
 export function transPaymentPeriod(data) {
+  if (!data) {
+    return
+  }
   if (data.includes("@")) {
     return `交至${data.replace("@", "")}岁`;
   } else { 

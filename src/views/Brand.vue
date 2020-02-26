@@ -1,5 +1,5 @@
 <template>
-  <div class="main" @scroll="scroll">
+  <div class="main" @scroll.passive="scroll">
     <div class="top wrapper ac" ref="top" :style="{paddingTop: isShare && '.3rem'}">
       <svg class="icon icon_fanhui" aria-hidden="true" @click="back" v-if="!isShare">
         <use xlink:href="#icon_fanhui" />
@@ -214,14 +214,18 @@
 
       <!-- 产品列表 -->
       <div v-show="active == 4">
-        <ul>
+        <ul class="scroll-pro" ref="scrollPro" @scroll.passive="scrollPro">
           <li
             class="li-pro bfc-o"
             v-for="(item, index) of productList"
             :key="index"
             @click="goProduct(item)"
           >
-            <img class="cover-pro fl" :src="item.appNavigation || require('../assets/pic_moren.png')" alt />
+            <img
+              class="cover-pro fl"
+              :src="item.appNavigation || require('../assets/pic_moren.png')"
+              alt
+            />
             <div class="title-pro">{{item.name}}</div>
             <div class="txt1">{{item.coreBuy}}</div>
             <div class="txt2">{{item.typicalRate}}</div>
@@ -259,8 +263,7 @@ export default {
       // offsetTopTitle: 0,
       isSwitch: false,
       query: {
-        id:
-          (this.$route.query && this.$route.query.id) || "2252792750044872711",
+        id: this.$route.query && this.$route.query.id,
         page: 1,
         size: 10
       },
@@ -317,16 +320,19 @@ export default {
         document.title = res.supplier.nameForShort || res.supplier.name;
 
         this.$nextTick(() => {
-          this.setPosition()
+          this.setPosition();
           if (this.$refs.describe.clientHeight >= 100) {
             this.isShow = true;
           }
           // console.log(this.$refs.describe.offsetHeight);
         });
       });
+      this.getBrandProductList();
+    },
+    getBrandProductList() {
       getBrandProductList(this.query).then(res => {
         // console.log(res);
-        this.productList = res.list;
+        this.productList = this.productList.concat(res.list);
       });
     },
     scroll($event) {
@@ -359,6 +365,13 @@ export default {
       //   this.$refs["title"].style.position = "relative";
       //   this.$refs["title"].style.zIndex = 1;
       // }
+    },
+    scrollPro() {
+      let el = this.$refs.scrollPro;
+      if (el.scrollHeight <= el.scrollTop + el.offsetHeight) {
+        this.query.page++;
+        this.getBrandProductList();
+      }
     },
     toggle() {
       this.allShow = !this.allShow;
@@ -643,6 +656,11 @@ export default {
 iframe {
   width: 100%;
   height: 10rem;
+}
+
+.scroll-pro {
+  height: calc(100vh - 2rem);
+  overflow: auto;
 }
 </style>
 <style lang='less'>

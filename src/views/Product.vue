@@ -372,7 +372,7 @@ export default {
                   this.paramsListOjb[this.paramsDataDict[iterator.calItemTag]] =
                     iterator.vitProductCalConfigItems;
                 }
-// 如果有默认参数，则使用，没有则默认为数组第一个项
+            // 如果有默认参数，则使用，没有则默认为数组第一个项
                 let haveDefault = false;
                 for (const item of iterator.vitProductCalConfigItems) {
                   if (item.isDefault) {
